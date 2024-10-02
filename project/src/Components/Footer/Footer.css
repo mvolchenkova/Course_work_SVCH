@@ -1,0 +1,18 @@
+.footerLogo{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 70px;
+    margin-top: 70px;
+}
+.footerBlocks{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items:center;
+    justify-content: center;
+}
+.contactBlock{
+    display: flex;
+    flex-direction: row;
+    gap:20px;
+}
