@@ -11,3 +11,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.ArchivoFont{
+  font-family: "Archivo", sans-serif;
+}
+.ArchivoBlackFont{
+  font-family: "Archivo Black", sans-serif;
+}
