@@ -1,17 +1,17 @@
 import './App.css';
-import Header from './Components/HeaderLog/HeaderLog.jsx'
-import Footer from './Components/Footer/Footer.jsx'
-import Toolbar from './Components/Toolbar/Toolbar.jsx'
-import PlanCard from './Components/PlanCard/PlanCard.jsx'
+import StartPage from './Pages/StartPage'
+import HomePage from './Pages/HomePage'
+import {BrowserRouter, Route, Routes} from 'react-router-dom'
 
 
 function App() {
   return (
-   <div>
-      <Header/>
-      <Toolbar/>
-      <Footer/>
-   </div>
+   <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<StartPage />} />
+        <Route path="/homePage" element={<HomePage />} />
+      </Routes>
+   </BrowserRouter>
   );
 }
 

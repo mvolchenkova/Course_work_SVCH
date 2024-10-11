@@ -1,0 +1,14 @@
+[
+    {
+      "id": 1,
+      "title": "Jane Smith",
+      "description": "10 workouts x 30 minutes",
+      "image": "/images/planCard1.png"
+    },
+    {
+      "id": 2,
+      "title": "Emily Johnson",
+      "description": "15 workouts x 20 minutes",
+      "image": "/images/planCard2.svg"
+    }
+  ]

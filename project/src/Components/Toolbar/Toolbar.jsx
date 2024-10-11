@@ -1,8 +1,6 @@
-import { Component } from 'react'
 import '../Toolbar/Toolbar.css'
 
-class Toolbar extends Component{
-    render(){
+export default function Toolbar(){
         return(
             <div className="toolbarDiv">
                 <div className="toolbar ArchivoFont">
@@ -40,5 +38,3 @@ class Toolbar extends Component{
             
         )
     }
-}
-export default Toolbar;

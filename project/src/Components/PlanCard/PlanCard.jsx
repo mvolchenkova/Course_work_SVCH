@@ -1,8 +1,8 @@
-import { Component } from 'react'
+import React, { useEffect, useState } from 'react';
+
 import '../PlanCard/PlanCard.css'
 
-class PlanCard extends Component{
-    render(){
+export default function PlanCard(){
         return(
             <div className="planCard">
                 <div>
@@ -18,5 +18,3 @@ class PlanCard extends Component{
             </div>
         )
     }
-}
-export default PlanCard;
