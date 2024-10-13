@@ -1,4 +1,5 @@
 
+import { Link } from 'react-router-dom'
 import '../Footer/Footer.css'
 
 
@@ -22,9 +23,10 @@ export default function Footer(){
                             <img src="data/images/footerINST.svg" alt="" />
                             <p>hhoornyyy</p>
                         </div>
+                       
                     </div>
                     <div>
-
+                        <Link to = "/homePage">home</Link>
                     </div>
                 </div>
             </footer>

@@ -1,0 +1,16 @@
+.goalDiv{
+    display: flex;
+    flex-direction: row;
+    align-items:center;
+    justify-content: space-around;
+    gap: 150px;
+}
+.goalText{
+    font-size: 4.5em;
+}
+.backDiv{
+    margin-bottom: -612px;
+    height: 500px;
+    width: 100%;
+    background-color:rgba(255, 156, 189, 0.35);
+}

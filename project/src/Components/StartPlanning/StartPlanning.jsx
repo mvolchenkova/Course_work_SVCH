@@ -1,5 +1,6 @@
 import '../StartPlanning/StartPlanning.css';
 import Popup from 'reactjs-popup';
+import Button from '../Button/Button.jsx'
 import React, {Link, useState } from 'react';
 
 export default function StartPlanning() {
@@ -14,7 +15,7 @@ export default function StartPlanning() {
             <p className="changeText ArchivoBlackFont">
                 You deserve to be the best version of yourself. Let's create this miracle together! Keep moving forward, never stop, and one day you'll look in the mirror and see your proudest victory staring back at you – the victory over yourself.
             </p>
-            <button className="ArchivoBlackFont startPlanningButton">START PLANNING</button>
+            <Button text="START PLANNING" />
             {/* <Popup trigger={<button className="ArchivoBlackFont startPlanningButton">START PLANNING</button>} modal nested>
                 {close => (
                     <div className="modal">

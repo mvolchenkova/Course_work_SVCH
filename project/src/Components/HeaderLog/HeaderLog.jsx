@@ -5,7 +5,7 @@ export default function HeaderUnlog(){
             <header>
                 <img src="data/images/headerLogo.svg" alt="" />
                 <div>
-                    <button>LOG OUT</button>
+                    <button className="logoutButton">LOG OUT</button>
                     <button className="themeButton">LIGHT</button>
                     <button>EN</button>
                 </div>
