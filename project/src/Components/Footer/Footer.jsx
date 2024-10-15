@@ -26,6 +26,8 @@ export default function Footer(){
                        
                     </div>
                     <div>
+                        <p>Ask a question</p>
+                        <p>Become a coach</p>
                         <Link to = "/homePage">home</Link>
                     </div>
                 </div>

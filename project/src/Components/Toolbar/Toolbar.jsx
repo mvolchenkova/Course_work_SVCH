@@ -1,4 +1,5 @@
 import '../Toolbar/Toolbar.css'
+import {Link} from 'react-router-dom'
 
 export default function Toolbar(){
         return(
@@ -7,30 +8,30 @@ export default function Toolbar(){
                 <div className="listDiv">
                     <p className="name">TRAINING PLANS</p>
                     <div className="list">
-                        <p>All training plans</p>
-                        <p>All exercises</p>
+                        <Link to="/allPlans" className="listItem">All training plans</Link>
+                        <Link to="/allExercises" className="listItem">All exercises</Link>
                     </div>
                 </div>
                 <div className="listDiv">
                     <p className="name">NUTRITION</p>
                     <div className="list">
-                        <p>All nutrition plans</p>
-                        <p>All recipes</p>
+                        <Link className="listItem">All nutrition plans</Link>
+                        <Link className="listItem">All recipes</Link>
                     </div>
                 </div>
                 <div className="listDiv">
                     <p className="name">ACCOUNT</p>
                     <div className="list">
-                        <p>Account info</p>
-                        <p>Schedule</p>
-                        <p>Progress</p>
+                        <Link to="/profile" className="listItem">Account info</Link>
+                        <Link className="listItem">Schedule</Link>
+                        <Link className="listItem">Progress</Link>
                     </div>
                 </div>
                 <div className="listDiv">
                     <p className="name">RECOURSES</p>
                     <div className="list">
-                        <p>Articles</p>
-                        <p>Advices</p>
+                        <Link className="listItem">Articles</Link>
+                        <Link className="listItem">Advices</Link>
                     </div>
                 </div>
             </div>

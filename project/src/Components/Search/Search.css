@@ -1,0 +1,17 @@
+.searchTitle{
+    font-size: 2em;
+    text-align: center;
+}
+.searchDiv{
+    display:flex;
+    flex-direction: column;
+    align-items:center;
+    justify-content: center;
+}
+.searchInput{
+    width: 60%;
+    height: 50px;
+    font-size: 1.7em;
+    padding-left: 20px;
+    border-radius:10px;
+}

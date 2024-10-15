@@ -31,3 +31,9 @@
     justify-content: center;
     flex-direction: column;
 }
+.listItem{
+    text-decoration: none;
+    color:black;
+    padding: 30px;
+    margin:0;
+}
