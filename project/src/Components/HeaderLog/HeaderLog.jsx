@@ -6,10 +6,17 @@ export default function HeaderUnlog(){
         return(
             <header>
                 <Link to="/"><img src="data/images/headerLogo.svg" alt="" /></Link>
-                <div>
-                    <Button className="logoutButton" text="LOG OUT" />
-                    <button className="themeButton">LIGHT</button>
-                    <button>EN</button>
+                <div className="options">
+                    <button className="logoutButton ArchivoFont">LOG OUT</button>
+                    <select className="themeButton">
+                        <option value="light">LIGHT</option>
+                        <option value="dark">DARK</option>
+                    </select>
+
+                    <select className="langButton">
+                        <option value="en">EN</option>
+                        <option value="ru">RU</option>
+                    </select>
                 </div>
 
             </header>
