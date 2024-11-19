@@ -9,6 +9,7 @@ export default function Plans(){
             <HeaderLog />
             <Search />
             <Categories />
+            
             <Footer />
         </>
     )

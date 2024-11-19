@@ -7,7 +7,7 @@ export default function Footer(){
         return(
             <footer>
                 <div className="footerLogo">
-                    <img src="data/images/FooterLogo.svg" alt=""></img>
+                    <img src="data/images/logo.png" alt=""></img>
                 </div>
                 <div className="footerBlocks">
                     <div className="contact">

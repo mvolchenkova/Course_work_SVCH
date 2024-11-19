@@ -7,7 +7,8 @@
 .AboutSiteBlock{
     display: flex;
     width: 80%;
-
+    align-items:center;
+    gap: 30px;
 }
 .AboutSiteDiv{
     display: flex;
@@ -16,4 +17,8 @@
     align-items: center;
     margin-top: 200px;
     margin-bottom: 100px;
+}
+.runGirlImg, .cookGirlImg{
+    width: 50%;
+    height:fit-content
 }

@@ -1,4 +1,7 @@
-.toolbarDiv{
+
+
+
+/* .toolbarDiv{
     display: flex;
     justify-content: center;
     align-items:center;
@@ -9,7 +12,7 @@
     padding-bottom: 50px;
     display: flex;
     width: 88%;
-    background-color: white;
+    background-color: rgb(245,245,245);
     border-radius: 40px;
     justify-content: space-around;
     align-items:flex-start;
@@ -36,4 +39,4 @@
     color:black;
     padding: 30px;
     margin:0;
-}
+} */

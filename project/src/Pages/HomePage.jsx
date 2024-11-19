@@ -8,7 +8,11 @@ import ReviewsFromUsers from '../Components/ReviewsFromUsers/ReviewsFromUsers.js
     return(
         <>
             <HeaderLog />
-            <Toolbar />
+            <div className="">
+                <Toolbar />
+                
+            </div>
+            
             <TrackYourProgress />
             <OurGoal />
             <ReviewsFromUsers />

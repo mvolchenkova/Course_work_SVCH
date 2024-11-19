@@ -1,7 +1,6 @@
 .trackProgressTitle{
     font-size: 4em;
     text-align: center;
-    color: rgb(173, 99, 89);
 }
 .trackProgressText{
     font-size: 1.5em;
@@ -16,6 +15,7 @@
     align-items: center;
     padding-top: 100px;
     flex-wrap: wrap;
+    gap: 20px;
 }
 .featName{
     font-size: 1.5em;
@@ -49,4 +49,7 @@
     justify-content: center;
     padding-top: 70px;
     margin-bottom: 250px;
+}
+.diary, .measurement, .track, .meal{
+    width: 220px;
 }

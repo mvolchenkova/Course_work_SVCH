@@ -10,20 +10,20 @@ export default function TrackYourProgress(){
             </div>
             <div className="featuresDiv ArchivoFont">
                 <div className="featDiv">
-                    <img src="/data/images/diary.svg" alt="" />
+                    <img src="/data/images/diary.png" alt="" className="diary"/>
                     <p className="featName">TRAINING DIARY</p>
                 </div>
                 <div className="featDiv">
                     <p className="featName">BODY MEASUREMENTS</p>
-                    <img src="/data/images/measurements.svg" alt="" />
+                    <img src="/data/images/measurement.png" alt="" className="measurement"/>
                 </div>
                 <div className="featDiv">
-                    <img src="/data/images/history.svg" alt="" />
+                    <img src="/data/images/track.png" alt="" className="track"/>
                     <p className="featName">HISTORY OF PROGRESS</p>
                 </div>
                 <div className="featDiv">
                     <p className="featName">MEAL PLANNING</p>
-                    <img src="/data/images/mealPlanning.svg" alt="" />
+                    <img src="/data/images/meal.png" alt="" className="meal"/>
                 </div>
             </div>
             <div className="whereToStartDiv">
