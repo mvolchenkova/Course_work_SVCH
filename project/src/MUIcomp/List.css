@@ -1,0 +1,10 @@
+
+.PixelFont{
+    font-family: "Pixelify Sans", sans-serif;
+  }
+  .listDiv{
+    background-color: rgb(160,216,230);
+    border-radius: 20px;
+    width: 250px;
+    margin-left: 50px;
+  }

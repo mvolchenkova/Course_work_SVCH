@@ -1,0 +1,165 @@
+import * as React from 'react';
+import List from '@mui/material/List';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import Collapse from '@mui/material/Collapse';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { IconButton } from '@mui/material';
+import '../MUIcomp/List.css';
+
+export default function NestedList() {
+  // Состояние для каждого списка
+  const [openList1, setOpenList1] = React.useState(false);
+  const [openList2, setOpenList2] = React.useState(false);
+  const [openList3, setOpenList3] = React.useState(false);
+  const [openList4, setOpenList4] = React.useState(false);
+
+  const handleClick1 = () => setOpenList1(!openList1);
+  const handleClick2 = () => setOpenList2(!openList2);
+  const handleClick3 = () => setOpenList3(!openList3);
+  const handleClick4 = () => setOpenList4(!openList4);
+
+  return (
+    <div className="listDiv">
+      {/* Первый список */}
+      <List
+        sx={{ width: '100%', maxWidth: 360, bgcolor: 'rgb(160,216,230)', borderRadius: '30px' }}
+        component="nav"
+        aria-labelledby="nested-list-subheader"
+      >
+        <ListItemButton onClick={handleClick1}>
+          <ListItemText 
+            style={{ fontFamily: 'Pixelify Sans' }}
+            disableTypography={true}
+            primary="Progress 1" 
+          />
+          <IconButton edge="end" aria-label="expand" size="small">
+            <ExpandMoreIcon 
+              sx={{ 
+                transform: openList1 ? 'rotate(180deg)' : 'rotate(0deg)', 
+                transition: 'transform 0.2s ease',
+                color: '#000000', // Цвет стрелки
+              }} 
+            />
+          </IconButton>
+        </ListItemButton>
+        <Collapse in={openList1} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemText 
+                primary="Starred" 
+                style={{ fontFamily: 'Pixelify Sans' }}
+                disableTypography={true}
+              />
+            </ListItemButton>
+          </List>
+        </Collapse>
+      </List>
+
+      {/* Второй список */}
+      <List
+        sx={{ width: '100%', maxWidth: 360, bgcolor: 'rgb(160,216,230)', borderRadius: '30px', marginTop: '10px' }}
+        component="nav"
+        aria-labelledby="nested-list-subheader"
+      >
+        <ListItemButton onClick={handleClick2}>
+          <ListItemText 
+            style={{ fontFamily: 'Pixelify Sans' }}
+            disableTypography={true}
+            primary="Progress 2" 
+          />
+          <IconButton edge="end" aria-label="expand" size="small">
+            <ExpandMoreIcon 
+              sx={{ 
+                transform: openList2 ? 'rotate(180deg)' : 'rotate(0deg)', 
+                transition: 'transform 0.2s ease',
+                color: '#000000', // Цвет стрелки
+              }} 
+            />
+          </IconButton>
+        </ListItemButton>
+        <Collapse in={openList2} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemText 
+                primary="Starred" 
+                style={{ fontFamily: 'Pixelify Sans' }}
+                disableTypography={true}
+              />
+            </ListItemButton>
+          </List>
+        </Collapse>
+      </List>
+
+      {/* Третий список */}
+      <List
+        sx={{ width: '100%', maxWidth: 360, bgcolor: 'rgb(160,216,230)', borderRadius: '30px', marginTop: '10px' }}
+        component="nav"
+        aria-labelledby="nested-list-subheader"
+      >
+        <ListItemButton onClick={handleClick3}>
+          <ListItemText 
+            style={{ fontFamily: 'Pixelify Sans' }}
+            disableTypography={true}
+            primary="Progress 3" 
+          />
+          <IconButton edge="end" aria-label="expand" size="small">
+            <ExpandMoreIcon 
+              sx={{ 
+                transform: openList3 ? 'rotate(180deg)' : 'rotate(0deg)', 
+                transition: 'transform 0.2s ease',
+                color: '#000000', // Цвет стрелки
+              }} 
+            />
+          </IconButton>
+        </ListItemButton>
+        <Collapse in={openList3} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemText 
+                primary="Starred" 
+                style={{ fontFamily: 'Pixelify Sans' }}
+                disableTypography={true}
+              />
+            </ListItemButton>
+          </List>
+        </Collapse>
+      </List>
+
+      {/* Четвертый список */}
+      <List
+        sx={{ width: '100%', maxWidth: 360, bgcolor: 'rgb(160,216,230)', borderRadius: '30px', marginTop: '10px' }}
+        component="nav"
+        aria-labelledby="nested-list-subheader"
+      >
+        <ListItemButton onClick={handleClick4}>
+          <ListItemText 
+            style={{ fontFamily: 'Pixelify Sans' }}
+            disableTypography={true}
+            primary="Progress 4" 
+          />
+          <IconButton edge="end" aria-label="expand" size="small">
+            <ExpandMoreIcon 
+              sx={{ 
+                transform: openList4 ? 'rotate(180deg)' : 'rotate(0deg)', 
+                transition: 'transform 0.2s ease',
+                color: '#000000', // Цвет стрелки
+              }} 
+            />
+          </IconButton>
+        </ListItemButton>
+        <Collapse in={openList4} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemText 
+                primary="Starred" 
+                style={{ fontFamily: 'Pixelify Sans' }}
+                disableTypography={true}
+              />
+            </ListItemButton>
+          </List>
+        </Collapse>
+      </List>
+    </div>
+  );
+}

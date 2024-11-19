@@ -1,0 +1,9 @@
+.progressDiv{
+    width: inherit;
+}
+.yourProgress{
+    font-size: 2em;
+    font-weight: bold;
+    text-align: center;
+    margin: 0;
+}
