@@ -29,12 +29,13 @@ export default function HomePage() {
             <div className="header">
                 <HeaderLog />
             </div>
-            <div className={`toolbar ${sticky ? 'sticky' : ''} container`} ref={scrollableRef} onScroll={handleScroll}>
+            <div className="container">
                 <Toolbar />
-                <div className={`scrollable-content container ${sticky ? 'sticky' : ''}`}>
+                <div className="progressDiv">
                     <Progress />
                 </div>
             </div>
+            <Footer/>
         </div>
     );
 }

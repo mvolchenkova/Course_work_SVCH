@@ -5,10 +5,10 @@
     right: 0;
     height: 100px; /* Высота заголовка */
     z-index: 1000;
+
 }
 
 .toolbar {
-    position: fixed;
     top: 100px; /* Под заголовком */
     left: 0;
     right: 0;
@@ -16,21 +16,17 @@
     z-index: 999;
 }
 
-.scrollable-content {
-    overflow-y: auto; /* Прокрутка по вертикали */
-    height: calc(100vh - 220px); /* Высота с учетом заголовка и панели инструментов */
-}
-
-.scrollable-content.sticky {
-    margin-top: 0; /* Убираем отступ, когда закреплено */
-}
 
 
 .container {
     display: flex; 
     flex-direction: row; /* Выравнивание по вертикали */
-    top: 150px;
+    margin-top: 150px;
     width: 100%;
+}
+.progressDiv{
+    display: flex;
+    flex-direction: column;
 }
 .homeDiv{
     display: flex;

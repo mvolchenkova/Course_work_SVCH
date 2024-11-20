@@ -5,9 +5,12 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: rgb(156,34,156);
+  background-image: url('../public/data/images/layoutBody.png'); 
+  
 }
-
+.yellowText{
+  color: rgb(255,194,14)
+}
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

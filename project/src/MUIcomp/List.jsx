@@ -23,15 +23,16 @@ export default function NestedList() {
     <div className="listDiv">
       {/* Первый список */}
       <List
-        sx={{ width: '100%', maxWidth: 360, bgcolor: 'rgb(160,216,230)', borderRadius: '30px' }}
+        sx={{ width: '100%', maxWidth: 360, bgcolor: 'rgb(160,216,230)', borderRadius: '30px',
+      fontSize: '1.5em', margin: 0}}
         component="nav"
         aria-labelledby="nested-list-subheader"
       >
         <ListItemButton onClick={handleClick1}>
           <ListItemText 
-            style={{ fontFamily: 'Pixelify Sans' }}
+            style={{ fontFamily: 'Pixelify Sans', margin: 0 }}
             disableTypography={true}
-            primary="Progress 1" 
+            primary="PLANS" 
           />
           <IconButton edge="end" aria-label="expand" size="small">
             <ExpandMoreIcon 
@@ -47,7 +48,16 @@ export default function NestedList() {
           <List component="div" disablePadding>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemText 
-                primary="Starred" 
+                primary="All training plans" 
+                style={{ fontFamily: 'Pixelify Sans' }}
+                disableTypography={true}
+              />
+            </ListItemButton>
+          </List>
+          <List component="div" disablePadding>
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemText 
+                primary="Favourite plans" 
                 style={{ fontFamily: 'Pixelify Sans' }}
                 disableTypography={true}
               />
@@ -58,15 +68,16 @@ export default function NestedList() {
 
       {/* Второй список */}
       <List
-        sx={{ width: '100%', maxWidth: 360, bgcolor: 'rgb(160,216,230)', borderRadius: '30px', marginTop: '10px' }}
+        sx={{ width: '100%', maxWidth: 360, bgcolor: 'rgb(160,216,230)', borderRadius: '30px', marginTop: '10px',
+        fontSize: '1.5em', margin: 0 }}
         component="nav"
         aria-labelledby="nested-list-subheader"
       >
         <ListItemButton onClick={handleClick2}>
           <ListItemText 
-            style={{ fontFamily: 'Pixelify Sans' }}
+            style={{ fontFamily: 'Pixelify Sans', margin: 0 }}
             disableTypography={true}
-            primary="Progress 2" 
+            primary="NUTRITION" 
           />
           <IconButton edge="end" aria-label="expand" size="small">
             <ExpandMoreIcon 
@@ -82,7 +93,25 @@ export default function NestedList() {
           <List component="div" disablePadding>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemText 
-                primary="Starred" 
+                primary="All nutrition plans" 
+                style={{ fontFamily: 'Pixelify Sans' }}
+                disableTypography={true}
+              />
+            </ListItemButton>
+          </List>
+          <List component="div" disablePadding>
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemText 
+                primary="All recipes" 
+                style={{ fontFamily: 'Pixelify Sans' }}
+                disableTypography={true}
+              />
+            </ListItemButton>
+          </List>
+          <List component="div" disablePadding>
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemText 
+                primary="Favourite recipes" 
                 style={{ fontFamily: 'Pixelify Sans' }}
                 disableTypography={true}
               />
@@ -93,15 +122,16 @@ export default function NestedList() {
 
       {/* Третий список */}
       <List
-        sx={{ width: '100%', maxWidth: 360, bgcolor: 'rgb(160,216,230)', borderRadius: '30px', marginTop: '10px' }}
+        sx={{ width: '100%', maxWidth: 360, bgcolor: 'rgb(160,216,230)', borderRadius: '30px', marginTop: '10px',
+        fontSize: '1.5em', margin: 0 }}
         component="nav"
         aria-labelledby="nested-list-subheader"
       >
         <ListItemButton onClick={handleClick3}>
           <ListItemText 
-            style={{ fontFamily: 'Pixelify Sans' }}
+            style={{ fontFamily: 'Pixelify Sans', margin: 0 }}
             disableTypography={true}
-            primary="Progress 3" 
+            primary="ACCOUNT" 
           />
           <IconButton edge="end" aria-label="expand" size="small">
             <ExpandMoreIcon 
@@ -117,7 +147,16 @@ export default function NestedList() {
           <List component="div" disablePadding>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemText 
-                primary="Starred" 
+                primary="Account info" 
+                style={{ fontFamily: 'Pixelify Sans' }}
+                disableTypography={true}
+              />
+            </ListItemButton>
+          </List>
+          <List component="div" disablePadding>
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemText 
+                primary="Schedule" 
                 style={{ fontFamily: 'Pixelify Sans' }}
                 disableTypography={true}
               />
@@ -128,15 +167,16 @@ export default function NestedList() {
 
       {/* Четвертый список */}
       <List
-        sx={{ width: '100%', maxWidth: 360, bgcolor: 'rgb(160,216,230)', borderRadius: '30px', marginTop: '10px' }}
+        sx={{ width: '100%', maxWidth: 360, bgcolor: 'rgb(160,216,230)', borderRadius: '30px', marginTop: '10px',
+        fontSize: '1.5em', margin: 0 }}
         component="nav"
         aria-labelledby="nested-list-subheader"
       >
         <ListItemButton onClick={handleClick4}>
           <ListItemText 
-            style={{ fontFamily: 'Pixelify Sans' }}
+            style={{ fontFamily: 'Pixelify Sans', margin: 0 }}
             disableTypography={true}
-            primary="Progress 4" 
+            primary="RESOURCES" 
           />
           <IconButton edge="end" aria-label="expand" size="small">
             <ExpandMoreIcon 
@@ -152,7 +192,16 @@ export default function NestedList() {
           <List component="div" disablePadding>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemText 
-                primary="Starred" 
+                primary="Articles" 
+                style={{ fontFamily: 'Pixelify Sans' }}
+                disableTypography={true}
+              />
+            </ListItemButton>
+          </List>
+          <List component="div" disablePadding>
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemText 
+                primary="Advices" 
                 style={{ fontFamily: 'Pixelify Sans' }}
                 disableTypography={true}
               />

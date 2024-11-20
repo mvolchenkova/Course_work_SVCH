@@ -1,8 +1,7 @@
 .footerLogo{
     display: flex;
     justify-content: center;
-    margin-bottom: 70px;
-    margin-top: 70px;
+    margin-bottom: 20px;
 }
 .footerBlocks{
     display: flex;
@@ -23,7 +22,7 @@
     align-items:flex-start;
 }
 footer{
-    background-color: white;
+    background-color: transparent;
     padding-top: 40px;
     padding-bottom: 40px;
 }
