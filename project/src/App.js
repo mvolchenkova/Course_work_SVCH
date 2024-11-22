@@ -8,6 +8,7 @@ import RegAuthPage from './Pages/RegAuthPage'
 
 
 function App() {
+
   
   return (
    <BrowserRouter>
