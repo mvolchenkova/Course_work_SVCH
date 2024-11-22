@@ -4,23 +4,23 @@ export default function Categories(){
     return(
         <>
             <div className="CategoriesDiv">
-                <p className="categTitle ArchivoBlackFont">Choose your aim:</p>
+                <p className="categTitle  PixelFont">Choose your aim:</p>
                 <div className="categories">
                     <div className="category">
-                        <p className="categName ArchivoFont">WEIGHT LOSS</p>
-                        <img src="/data/images/weightLoss.svg" alt="" />
+                        <p className="categName PixelFont">WEIGHT LOSS</p>
+                        <img src="/data/images/tr1.png" alt="" />
                     </div>
                     <div className="category">
-                        <p className="categName ArchivoFont">FLEXIBILITY</p>
-                        <img src="/data/images/flexibility.svg" alt="" />
+                        <p className="categName PixelFont">FLEXIBILITY</p>
+                        <img src="/data/images/tr2.png" alt="" />
                     </div>
                     <div className="category">
-                        <p className="categName ArchivoFont">HEALTH</p>
-                        <img src="/data/images/health.svg" alt="" />
+                        <p className="categName PixelFont">HEALTH</p>
+                        <img src="/data/images/tr3.png" alt="" />
                     </div>
                     <div className="category">
-                        <p className="categName ArchivoFont">STRENGTH</p>
-                        <img src="/data/images/strength.svg" alt="" />
+                        <p className="categName PixelFont">STRENGTH</p>
+                        <img src="/data/images/tr4.png" alt="" />
                     </div>
                 </div>
             </div>

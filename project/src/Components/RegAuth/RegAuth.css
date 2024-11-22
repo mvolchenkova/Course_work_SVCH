@@ -44,3 +44,6 @@ Link{
     justify-content: space-between;
     width: 30%;
 }
+a{
+    text-decoration: none;
+}

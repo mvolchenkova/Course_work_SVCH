@@ -1,0 +1,61 @@
+.allPlansMain{
+    display: flex;
+    flex-direction: column;
+    padding-top: 100px;
+}
+.allPlansTitle{
+    text-align: center;
+    font-size: 1.8em;
+    font-weight: bold;
+    margin-top: 50px;
+}
+.inputSearch{
+    width: 240px;
+    border: 2px solid black;
+    
+}
+
+.inputSearch::placeholder{
+    color: black;
+    font-family: "Pixelify Sans", sans-serif;
+    font-size: 1.3em;
+}
+.searchFilter{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+}
+.planImg{
+    height: 200px;
+    
+}
+.planDiv{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap:30px;
+    justify-content: space-around;
+    align-items:center;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+.planData{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 250px;
+    align-items:center;
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 20px;
+    background-color: rgba(130,130,130,0.3);
+}
+.planData>p{
+    margin: 0;
+}
+.planText{
+    font-weight:600;
+    font-size: 1.2em;
+}

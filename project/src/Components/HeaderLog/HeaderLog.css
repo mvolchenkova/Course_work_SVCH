@@ -1,7 +1,7 @@
 header{
     display: flex;
     justify-content: space-between;
-    padding: 30px 20px 0 20px;
+    padding: 30px;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(15px);
 }

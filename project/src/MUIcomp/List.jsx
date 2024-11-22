@@ -5,6 +5,8 @@ import ListItemText from '@mui/material/ListItemText';
 import Collapse from '@mui/material/Collapse';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { IconButton } from '@mui/material';
+import {Link} from 'react-router-dom'
+
 import '../MUIcomp/List.css';
 
 export default function NestedList() {
@@ -45,7 +47,8 @@ export default function NestedList() {
           </IconButton>
         </ListItemButton>
         <Collapse in={openList1} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
+          <Link to="/allPlans">
+            <List component="div" disablePadding>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemText 
                 primary="All training plans" 
@@ -54,6 +57,8 @@ export default function NestedList() {
               />
             </ListItemButton>
           </List>
+          </Link>
+          
           <List component="div" disablePadding>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemText 
