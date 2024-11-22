@@ -1,51 +1,35 @@
+require('dotenv').config();
 const express = require('express');
-const { Client } = require('pg');
+const sequelize = require('./db');
+const cors = require('cors');
+const models = require('./models/models');
+const router = require('./routes/index')
 
+const PORT = process.env.PORT;
+
+const tplanRouter = require('./routes/tplanRouter');
+const favtplanRouter = require('./routes/favtplanRouter');
+const userRouter = require('./routes/userRouter') 
 const app = express();
-const port = 5000;
+app.use(cors());
+app.use(express.json());
+app.use('/api/tplans', tplanRouter); 
+app.use('/api/users', userRouter); 
+app.use('/api/favtplans', favtplanRouter); 
+app.use('/api', router);
+app.use(express.static('public/data/images'));
 
-const client = new Client({
-    user: 'postgres',
-    password: '315101315',
-    host: 'localhost',
-    port: 5432,
-    database: 'Gymside',
-});
+const start = async () => {
+  try {
+      await sequelize.authenticate();
+      console.log('Соединение с базой данных успешно!');
+      await sequelize.sync(); 
+      app.listen(PORT, () => {
+          console.log(`Server running at http://localhost:${PORT}`);
+      });
+  } catch (e) {
+      console.error('Ошибка при подключении к базе данных:', e);
+  }
+};
 
-// Connect to the database
-client.connect()
-    .then(() => {
-        console.log('Connected to PostgreSQL database');
-
-        // Execute your query here
-        return client.query('SELECT * FROM public."Authenticate"');
-    })
-    .then(result => {
-        console.log('Query result:', result.rows);
-    })
-    .catch(err => {
-        console.error('Error connecting to PostgreSQL database', err);
-    });
-
-// Setup routes
-app.get('/', (req, res) => {
-    res.send('Hello World');
-});
-
-// Start the server
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
-});
-
-// Ensure the connection is closed when the application ends
-process.on('SIGINT', () => {
-    client.end()
-        .then(() => {
-            console.log('Connection to PostgreSQL closed');
-            process.exit();
-        })
-        .catch(err => {
-            console.error('Error closing connection', err);
-            process.exit(1);
-        });
-});
+start();
