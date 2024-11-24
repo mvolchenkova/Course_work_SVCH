@@ -12,6 +12,4 @@ router.put('/:id', userController.update);
 router.delete('/:id', userController.delete);
 router.get('/exists/:id', userController.exists);
 
-// router.put('/', userController.updateUser)
-
 module.exports = router

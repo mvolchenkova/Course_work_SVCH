@@ -2,7 +2,7 @@ const { User } = require('../models/models');
 const { Op } = require('sequelize');
 
 class UserController {
-    // 1. Создание новой записи
+    // Создание новой записи
     async create(req, res) {
         try {
             const { surname, name, phone, password, birthdate, sex, role } = req.body;
@@ -14,7 +14,7 @@ class UserController {
         }
     }
 
-    // 2. Получение списка записей с поддержкой пагинации
+    // Получение списка записей с поддержкой пагинации
     async getAll(req, res) {
         try {
             const { page = 1, limit = 10 } = req.query;
@@ -30,10 +30,10 @@ class UserController {
         }
     }
 
-    // 3. Получение списка записей с поддержкой сортировки
+    // Получение списка записей с поддержкой сортировки
     async getAllSorted(req, res) {
         try {
-            const { sortBy = 'idUser', order = 'ASC' } = req.query;
+            const { sortBy = 'surname', order = 'ASC' } = req.query;
             const users = await User.findAll({
                 order: [[sortBy, order]],
             });
@@ -44,7 +44,7 @@ class UserController {
         }
     }
 
-    // 4. Получение списка записей с поддержкой фильтрации
+    // Получение списка записей с поддержкой фильтрации
     async getAllFiltered(req, res) {
         try {
             const { surname, role } = req.query;
@@ -60,7 +60,7 @@ class UserController {
         }
     }
 
-    // 5. Получение списка записей с поддержкой поиска
+    // Получение списка записей с поддержкой поиска
     async search(req, res) {
         try {
             const { query } = req.query;
@@ -80,7 +80,7 @@ class UserController {
         }
     }
 
-    // 6. Получение детальной информации по ID
+    // Получение детальной информации по ID
     async getById(req, res) {
         try {
             const { id } = req.params;
@@ -95,7 +95,7 @@ class UserController {
         }
     }
 
-    // 8. Обновление записи
+    // Обновление записи
     async update(req, res) {
         try {
             const { id } = req.params;
@@ -113,7 +113,7 @@ class UserController {
         }
     }
 
-    // 9. Удаление записи
+    // Удаление записи
     async delete(req, res) {
         try {
             const { id } = req.params;
@@ -130,7 +130,7 @@ class UserController {
         }
     }
 
-    // 10. Проверка существования записи
+    // Проверка существования записи
     async exists(req, res) {
         try {
             const { id } = req.params;
