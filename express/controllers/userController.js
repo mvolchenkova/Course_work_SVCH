@@ -1,5 +1,6 @@
 const { User } = require('../models/models');
 const { Op } = require('sequelize');
+const bcrypt = require('bcrypt');
 
 class UserController {
     // Создание новой записи
@@ -139,6 +140,26 @@ class UserController {
         } catch (error) {
             console.error('Ошибка при проверке существования пользователя:', error);
             return res.status(500).json({ message: 'Ошибка при проверке существования пользователя' });
+        }
+    }
+
+    async getChecked(req, res) {
+        try {
+            const { phone, password } = req.body;
+    
+            const user = await User.findOne({ where: { phone } });
+            if (!user) {
+                return res.status(404).json({ message: 'Пользователь не найден' });
+            }
+    
+            if (password !== user.password) {
+                return res.status(401).json({ message: 'Неверный пароль' });
+            }
+    
+            res.status(200).json({ phone: user.phone, name: user.name }); // Возвращаем данные пользователя
+        } catch (error) {
+            console.error('Ошибка при аутентификации:', error);
+            res.status(500).json({ message: 'Ошибка сервера' });
         }
     }
 }

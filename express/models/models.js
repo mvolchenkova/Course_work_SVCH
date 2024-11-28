@@ -46,7 +46,10 @@ const TrainingPlan = sequelize.define('trainingplan', {
         allowNull: false,
         notEmpty: { msg: 'Ссылка на картинку не может быть пустой' },
     },
-    
+    category:{
+        type: DataTypes.TEXT,
+        allowNull: false
+    }
 },{
     timestamps: true,
     tableName: 'trainingplans',
@@ -179,14 +182,60 @@ const FavTplan = sequelize.define('favtplans', {
             model: User,
             key: 'idUser',
         },
+    },
+    category:{
+        type: DataTypes.TEXT,
+        allowNull: false
     }
 },{
     timestamps: true,
     tableName: 'favtplans',
 })
 
+const Task = sequelize.define('Task', {
+    idTask:{
+        type: DataTypes.BIGINT,
+        allowNull: false,
+        primaryKey: true,
+        autoIncrement: true 
+    },
+    idUser:{
+        type: DataTypes.BIGINT,
+        allowNull: false,
+        references: {
+            model: User,
+            key: 'idUser',
+    },
+    },
+    title: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+    },
+    description: {
+        type: DataTypes.TEXT, 
+        allowNull: true,
+    },
+    dueDate: {
+        type: DataTypes.DATE, 
+        allowNull: true,
+    },
+    status: {
+        type: DataTypes.ENUM('pending', 'in_progress', 'completed'), // Status of the task
+        defaultValue: 'pending',
+    },
+},
+{
+    tableName: 'tasks',
+    timestamps: true,
+}
+)
+
 //user-favtplans
 User.hasMany(FavTplan, { foreignKey: 'userIdUser', sourceKey: 'idUser' });
 FavTplan.belongsTo(User, { foreignKey: 'userIdUser', targetKey: 'idUser' });
+
+//user-tasks
+User.hasMany(Task, { foreignKey: 'userIdUser', sourceKey: 'idUser' });
+Task.belongsTo(User, { foreignKey: 'userIdUser', targetKey: 'idUser' });
 
 module.exports = { User, FavTplan, TrainingPlan};

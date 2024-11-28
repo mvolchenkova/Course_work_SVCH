@@ -9,7 +9,8 @@ const PORT = process.env.PORT;
 
 const tplanRouter = require('./routes/tplanRouter');
 const favtplanRouter = require('./routes/favtplanRouter');
-const userRouter = require('./routes/userRouter') 
+const userRouter = require('./routes/userRouter');
+const taskRouter = require('./routes/taskRouter');
 const app = express();
 app.use(cors());
 app.use(express.json());

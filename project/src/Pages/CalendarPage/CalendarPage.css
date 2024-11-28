@@ -1,0 +1,90 @@
+.calendar{
+    margin-top: 120px;
+    width: 90%;
+    
+}
+.calMain{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+/* CalendarStyles.css */
+
+.react-calendar {
+    width: 300px; /* Set a fixed width */
+    background-color: transparent; /* Transparent background */
+    border: none; /* Remove default border */
+}
+
+.react-calendar__month-view__days__day {
+    width: 40px; /* Set width for each day */
+    height: 40px; /* Set height for each day */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0; /* Square corners */
+    background-color: transparent; /* Transparent background for each day */
+    color: #000; /* Text color */
+    font-weight: bold; /* Make text bold */
+}
+
+.react-calendar__month-view__days__day--today {
+    background-color: #e0e0e0; /* Highlight today's date */
+}
+
+.react-calendar__month-view__days__day--neighboringMonth {
+    color: #aaa; /* Color for dates from neighboring months */
+}
+
+.react-calendar__navigation {
+    background-color: transparent; /* Transparent background for navigation */
+    border: none; /* Remove default border */
+}
+
+.react-calendar__month-view__days__day--selected {
+    background-color: #007bff; /* Color for selected day */
+    color: white; /* Text color for selected day */
+}   
+.react-calendar__navigation {
+    background-color: transparent; /* Transparent background for navigation */
+    border: none; /* Remove default border */
+    display: flex; /* Use flexbox for layout */
+    justify-content: space-between; /* Space between prev and next buttons */
+    align-items: center; /* Center items vertically */
+    margin-bottom: 10px; /* Space below the navigation */
+}
+
+.react-calendar__navigation__label {
+    font-weight: bold; /* Bold font for the month/year label */
+    color: #000; /* Text color */
+}
+
+/* Pagination Button Styles */
+.react-calendar__navigation button {
+    background-color: transparent; /* Transparent background */
+    border: none; /* Remove borders */
+    cursor: pointer; /* Pointer cursor on hover */
+    font-size: 22px; /* Font size */
+    color: black; /* Color for navigation buttons */
+    font-family: 'Pixelify Font';
+}
+
+.react-calendar__navigation button:hover {
+    color: #0056b3; /* Darker color on hover */
+}
+
+.react-calendar__navigation button:disabled {
+    color: #ccc; /* Color for disabled buttons */
+    cursor: not-allowed; /* Not allowed cursor for disabled buttons */
+}
+button{
+    background-color:transparent;
+    border: 1px solid black;
+    border-radius:5px;
+    padding: 5px;
+    font-size: 1.2em;
+}
+.addDel{
+    margin: 10px;
+}

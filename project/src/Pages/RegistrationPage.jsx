@@ -1,11 +1,11 @@
 import Footer from "../Components/Footer/Footer";
-import HeaderUnlog from "../Components/HeaderUnlog/HeaderUnlog";
+import HeaderLog from "../Components/HeaderLog/HeaderLog";
 import Registration from "../Components/Registration/Registration";
 
 export default function RegistrationPage(){
     return(
         <main>
-            <HeaderUnlog/>
+            <HeaderLog/>
             <Registration/>
             <Footer/>
         </main>

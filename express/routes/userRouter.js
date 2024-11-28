@@ -11,5 +11,6 @@ router.get('/:id', userController.getById);
 router.put('/:id', userController.update);
 router.delete('/:id', userController.delete);
 router.get('/exists/:id', userController.exists);
+router.post('/check', userController.getChecked)
 
 module.exports = router

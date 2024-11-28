@@ -15,7 +15,7 @@ export default function StartPlanning() {
             <p className="changeText PixelFont">
                 You deserve to be the best version of yourself. Let's create this miracle together! Keep moving forward, never stop, and one day you'll look in the mirror and see your proudest victory staring back at you – the victory over yourself.
             </p>
-                <Button text="START PLANNING" link="/registration"/>
+                <Button text="START PLANNING" link="/authorization"/>
             {/* <Popup trigger={<button className="ArchivoBlackFont startPlanningButton">START PLANNING</button>} modal nested>
                 {close => (
                     <div className="modal">
