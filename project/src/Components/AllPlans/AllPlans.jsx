@@ -67,7 +67,7 @@ export default function AllPlans() {
                         placeholder='Search'
                         onChange={handleGetInput}
                     />
-                    <button className='Search-button' onClick={sortItemsById}>Filter</button>
+                    <button className='Search-button' onClick={sortItemsById}>Search</button>
                 </div>
                 <Categories/>
                 <div className="planDiv">

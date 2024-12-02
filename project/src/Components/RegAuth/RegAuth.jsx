@@ -12,18 +12,18 @@ export default function RegAuth() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
         try {
             const resultAction = await dispatch(loginUser({ phone, password })).unwrap();
-
-            // Сохранение данных в localStorage (если необходимо)
-            localStorage.setItem('userPhone', resultAction.phone); // Предполагается, что ответ содержит номер телефона
-
+            
+            // Сохранение данных пользователя в localStorage
+            localStorage.setItem('user', JSON.stringify(resultAction)); // Предполагается, что resultAction содержит данные пользователя
+    
             // Переход на домашнюю страницу
             navigate('/homePage');
         } catch (error) {
             console.error('Ошибка входа:', error);
-            alert(error.message || 'Неизвестная ошибка'); // Показать сообщение об ошибке
+            alert(error.message || 'Неизвестная ошибка');
         }
     };
 

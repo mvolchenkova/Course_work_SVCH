@@ -1,0 +1,108 @@
+const { Recipe } = require('../models/models'); 
+const uuid =require("uuid")
+const path=require("path")
+const fs = require('fs');
+
+class RecipeController {
+    async create(req, res) {
+        try {
+            const { title, ingredients, instructions } = req.body;
+    
+            let fileName = null;
+            if (req.files && req.files.img) { 
+                const { img } = req.files;
+                fileName = uuid.v4() + ".jpg";
+                img.mv(path.resolve(__dirname, '..', 'static', fileName));
+            }
+    
+            const rec = await Recipe.create({ title, ingredients, instructions, img: fileName });
+            return res.status(201).json(rec);
+    
+        } catch (error) {
+            console.error('Error creating recipe:', error);
+            return res.status(500).json({ message: 'Error creating recipe' });
+        }
+    }
+
+    async getAll(req, res) {
+        try {
+            const recipes = await Recipe.findAll();
+            return res.json(recipes);
+        } catch (error) {
+            console.error('Error retrieving recipes:', error);
+            return res.status(500).json({ message: 'Error retrieving recipes' });
+        }
+    }
+
+    async getOne(req, res) {
+        try {
+            const { idRecipe } = req.params;
+            const recipe = await Recipe.findByPk(idRecipe);
+            if (!recipe) {
+                return res.status(404).json({ message: 'Recipe not found' });
+            }
+            return res.json(recipe);
+        } catch (error) {
+            console.error('Error retrieving recipe:', error);
+            return res.status(500).json({ message: 'Error retrieving recipe' });
+        }
+    }
+
+    async update(req, res) {
+        try {
+            const { idRecipe } = req.params;
+            const { title, ingredients, instructions } = req.body;
+            const recipe = await Recipe.findByPk(idRecipe);
+    
+            if (!recipe) {
+                return res.status(404).json({ message: 'Recipe not found' });
+            }
+    
+            let fileName = recipe.img; 
+    
+            if (req.files && req.files.img) {
+                const { img } = req.files;
+    
+               
+                if (fileName) {
+                    const filePath = path.resolve(__dirname, '..', 'static', fileName);
+                    if (fs.existsSync(filePath)) {
+                        fs.unlinkSync(filePath);
+                    }
+                }
+    
+                fileName = uuid.v4() + ".jpg"; // Generate new filename
+                img.mv(path.resolve(__dirname, '..', 'static', fileName));
+            }
+    
+            await recipe.update({ title, ingredients, instructions, img: fileName });
+            return res.json(recipe);
+    
+        } catch (error) {
+            console.error('Error updating recipe:', error);
+            if (error.name === 'SequelizeValidationError') {
+                return res.status(400).json({ errors: error.errors.map(e => e.message) });
+            }
+            return res.status(500).json({ message: 'Error updating recipe' });
+        }
+    }
+    
+
+    async delete(req, res) {
+        try {
+            const { idRecipe } = req.params;
+            const recipe = await Recipe.findByPk(idRecipe);
+            if (!recipe) {
+                return res.status(404).json({ message: 'Recipe not found' });
+            }
+            await recipe.destroy();
+            return res.json({ message: 'Recipe deleted successfully' });
+        } catch (error) {
+            console.error('Error deleting recipe:', error);
+            return res.status(500).json({ message: 'Error deleting recipe' });
+        }
+    }
+}
+
+
+module.exports = new RecipeController();

@@ -1,17 +1,26 @@
 const { TrainingPlan } = require('../models/models')
 const { Op } = require('sequelize');
+const uuid =require("uuid")
+const path=require("path")
 
 class tplanController {
-    
+   
     // Создание новой записи
     async create(req, res) {
         try {
-            const{ idTplan, author, title, amount, img } = req.body
-            const tplan = await TrainingPlan.create({ idTplan, author, title, amount, img });
+            const { author, title, amount } = req.body;
+
+            let fileName = null;
+                const { img } = req.files;
+                fileName = uuid.v4() + ".jpg";
+                img.mv(path.resolve(__dirname, '..', 'static', fileName));
+
+            const tplan = await TrainingPlan.create({ author, title, amount, img: fileName }); 
             return res.status(201).json(tplan);
+
         } catch (error) {
-            console.error('Ошибка при создании тренировочного плана:', error);
-            return res.status(500).json({ message: 'Ошибка при создании тренировочного плана' });
+            console.error('Error creating training plan:', error);
+            return res.status(500).json({ message: 'Error creating training plan' });
         }
     }
 

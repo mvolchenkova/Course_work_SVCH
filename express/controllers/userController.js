@@ -1,6 +1,23 @@
 const { User } = require('../models/models');
 const { Op } = require('sequelize');
 const bcrypt = require('bcrypt');
+const fs = require('fs');
+
+const multer = require('multer');
+const path = require('path');
+
+// Настройка хранилища для multer
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, path.join(__dirname, '../project/public/data/diplomas'));
+    },
+    filename: (req, file, cb) => {
+        const fileName = `${Date.now()}-${file.originalname}`;
+        cb(null, fileName);
+    },
+});
+
+const upload = multer({ storage }); 
 
 class UserController {
     // Создание новой записи
@@ -156,10 +173,83 @@ class UserController {
                 return res.status(401).json({ message: 'Неверный пароль' });
             }
     
-            res.status(200).json({ phone: user.phone, name: user.name }); // Возвращаем данные пользователя
+            res.status(200).json({ phone: user.phone, 
+                                    name: user.name, 
+                                    surname: user.surname, 
+                                    sex: user.sex,  
+                                    userId: user.idUser, 
+                                    trAim: user.trAim,
+                                    birthdate: user.birthdate,
+                                    role: user.role,
+                                    finishedTr: user.finishedTr}); 
         } catch (error) {
             console.error('Ошибка при аутентификации:', error);
             res.status(500).json({ message: 'Ошибка сервера' });
+        }
+    }
+     
+    async logoutUser(req, res) {
+        try {
+            req.session = null;
+    
+            res.status(200).json({ message: 'Вы успешно вышли из системы' });
+        } catch (error) {
+            console.error('Ошибка при выходе:', error);
+            res.status(500).json({ message: 'Ошибка сервера' });
+        }
+    }
+
+    // Метод для изменения роли пользователя и загрузки диплома
+    async becomeCoach(req, res) {
+        try {
+            const diplomaFile = req.file; // Получаем загруженный файл
+    
+            // Проверяем, загружен ли файл
+            if (!diplomaFile) {
+                return res.status(400).json({ message: 'Файл диплома не загружен.' });
+            }
+    
+            const fileName = diplomaFile.filename; // Имя файла уже установлено multer
+            const userId = req.body.userId; // Получаем userId
+            const user = await User.findByPk(userId);
+    
+            if (!user) {
+                return res.status(404).json({ message: 'Пользователь не найден.' });
+            }
+    
+            // Обновляем пользователя
+            user.role = 'trainer';
+            user.diploma = fileName;
+    
+            await user.save();
+            return res.status(200).json(user);
+        } catch (error) {
+            console.error('Ошибка при обработке запроса:', error);
+            return res.status(500).json({ message: 'Ошибка при изменении роли.', details: error.message });
+        }
+    }
+
+    async updateTrainingAim(req, res) {
+        console.log('Request body:', req.body); 
+        const { userId, trAim } = req.body;
+        console.log('Received:', { userId, trAim });
+    
+        try {
+            if (!userId || trAim == null) {
+                return res.status(400).json({ message: 'Invalid input: userId or trAim is missing' });
+            }
+    
+            const [updated] = await User.update({ trAim }, { where: { id: userId } });
+    
+            if (updated) {
+                const updatedUser = await User.findOne({ where: { id: userId } });
+                return res.status(200).json(updatedUser);
+            }
+    
+            throw new Error('User not found');
+        } catch (error) {
+            console.error('Error updating training aim:', error);
+            return res.status(500).json({ message: error.message });
         }
     }
 }

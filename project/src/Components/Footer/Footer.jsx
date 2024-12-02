@@ -25,9 +25,9 @@ export default function Footer(){
                         </div>
                        
                     </div>
-                    <div className="PixelFont">
+                    <div className="PixelFont footerLinks">
                         <p>Ask a question</p>
-                        <p>Become a coach</p>
+                        <Link to="/becomecoach">Become a coach</Link>
                         <Link to = "/homePage">home</Link>
                     </div>
                 </div>

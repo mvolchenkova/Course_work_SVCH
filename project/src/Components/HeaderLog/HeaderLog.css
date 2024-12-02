@@ -1,11 +1,15 @@
-header{
+header {
     display: flex;
+    position: sticky; 
+    top: 0;
     justify-content: space-between;
     padding: 30px;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(15px);
+    z-index: 1000; 
 }
-.logoutButton,.themeButton, .langButton{
+
+.logoutButton, .themeButton, .langButton {
     background-color: transparent;
     border-radius: 10px;
     padding: 10px;
@@ -14,9 +18,20 @@ header{
     border-width: 3px;
     border: none;
     background-color: rgb(0, 200, 220);
-    
 }
-.options{
+
+.options {
     display: flex;
-    gap:20px;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+.userName {
+    font-size: 1.5em;
+}
+.profileImage {
+    width: 70px; 
+    height: 70px; 
+    display: inline-block;
 }

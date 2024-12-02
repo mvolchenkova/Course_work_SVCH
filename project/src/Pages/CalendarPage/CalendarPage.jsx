@@ -41,7 +41,6 @@ export default function CalendarPage() {
     return (
         <div className="calMain ">
             <HeaderLog />
-            
             <div className="calendar PixelFont">
                 <Calendar onChange={onChange} value={value} />
                 <h2>Plans for {value.toDateString()}</h2>

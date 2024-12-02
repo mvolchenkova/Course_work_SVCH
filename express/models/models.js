@@ -45,10 +45,6 @@ const TrainingPlan = sequelize.define('trainingplan', {
         type: DataTypes.TEXT,
         allowNull: false,
         notEmpty: { msg: 'Ссылка на картинку не может быть пустой' },
-    },
-    category:{
-        type: DataTypes.TEXT,
-        allowNull: false
     }
 },{
     timestamps: true,
@@ -58,7 +54,7 @@ const TrainingPlan = sequelize.define('trainingplan', {
 
 const User = sequelize.define('User', {
     idUser: {
-        type: DataTypes.BIGINT,
+        type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true, 
         allowNull: false,    
@@ -124,6 +120,18 @@ const User = sequelize.define('User', {
         allowNull: false,
         defaultValue: 'user'
     },
+    diploma: {
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
+    trAim: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
+    finishedTr: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    }
 }, {
     timestamps: true,
     tableName: 'users',
@@ -182,10 +190,6 @@ const FavTplan = sequelize.define('favtplans', {
             model: User,
             key: 'idUser',
         },
-    },
-    category:{
-        type: DataTypes.TEXT,
-        allowNull: false
     }
 },{
     timestamps: true,
@@ -230,12 +234,79 @@ const Task = sequelize.define('Task', {
 }
 )
 
+const Recipe = sequelize.define('recipe', {
+    idRecipe: {
+        type: DataTypes.BIGINT,
+        primaryKey: true,
+        autoIncrement: true, 
+        allowNull: false,
+    },
+    title: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+        validate: {
+            notEmpty: { msg: 'Название не может быть пустым' },
+            len: {
+                args: [10, 50],
+                msg: 'Название должно содержать от 10 до 50 символов'
+            }
+        }
+    },
+    ingredients: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
+        allowNull: false
+    },
+    instructions: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
+        allowNull: false
+    },
+    img: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+    },
+},{
+    timestamps: true,
+    tableName: 'recipes',
+})
+
+const Review = sequelize.define('review', {
+    idReview: {
+        type: DataTypes.BIGINT,
+        primaryKey: true,
+        autoIncrement: true, 
+        allowNull: false,
+    },
+    idUser:{
+        type: DataTypes.BIGINT,
+        allowNull: false,
+        references: {
+            model: User,
+            key: 'idUser',
+        },
+    },
+    text: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
+        allowNull: false
+    },
+    rating: {
+        type: DataTypes.DOUBLE, 
+        allowNull: false
+    }
+},{
+    timestamps: true,
+    tableName: 'reviews',
+})
+
 //user-favtplans
 User.hasMany(FavTplan, { foreignKey: 'userIdUser', sourceKey: 'idUser' });
 FavTplan.belongsTo(User, { foreignKey: 'userIdUser', targetKey: 'idUser' });
+
+//user-review
+User.hasMany(Review, { foreignKey: 'userIdUser', sourceKey: 'idUser' })
+Review.belongsTo(User, { foreignKey: 'userIdUser', sourceKey: 'idUser' })
 
 //user-tasks
 User.hasMany(Task, { foreignKey: 'userIdUser', sourceKey: 'idUser' });
 Task.belongsTo(User, { foreignKey: 'userIdUser', targetKey: 'idUser' });
 
-module.exports = { User, FavTplan, TrainingPlan};
+module.exports = { User, FavTplan, TrainingPlan, Task, Recipe, Review};

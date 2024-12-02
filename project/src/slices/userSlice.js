@@ -11,18 +11,36 @@ const initialState = {
 // Async thunk для логина пользователя
 export const loginUser = createAsyncThunk('api/users/check', async (credentials) => {
     const response = await axios.post('http://localhost:5000/api/users/check', credentials);
-    return response.data; // Предполагается, что ответ содержит информацию о пользователе
+    return response.data;
 });
 
 // Async thunk для логаута пользователя
-export const logoutUser = createAsyncThunk('users/logoutUser', async () => {
-    await axios.post('/api/auth/logout');
+export const logoutUser = createAsyncThunk('api/users/logoutUser', async () => {
+    const response = await axios.post('http://localhost:5000/api/users/logout'); // Убедитесь, что путь правильный
+    return response.data; // Возвращаем данные, если нужно
 });
 
 // Async thunk для получения пользователей
 export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
-    const response = await axios.get('/api/users');
+    const response = await axios.get('http://localhost:5000/api/users');
     return response.data;
+});
+
+// Async thunk для регистрации пользователя
+export const registerUser = createAsyncThunk('api/users/register', async (userData) => {
+    const response = await axios.post('http://localhost:5000/api/users', userData);
+    return response.data; 
+});
+
+export const registerTrainer = createAsyncThunk('api/users/becomeCoach', async (userData) => {
+    const response = await axios.post('http://localhost:5000/api/users/becomeCoach', userData);
+    return response.data;
+});
+
+
+export const updateTrainingAim = createAsyncThunk(`api/users/:id`, async ({userId, trAim }) => {
+    const response = await axios.put(`http://localhost:5000/api/users/${userId}`, {userId, trAim });
+    return response.data; // Возвращаем обновленные данные пользователя
 });
 
 // Создание слайса
@@ -42,6 +60,9 @@ const userSlice = createSlice({
         deleteUser: (state, action) => {
             state.users = state.users.filter(user => user.idUser !== action.payload);
         },
+        setCurrentUser: (state, action) => {
+            state.currentUser = action.payload;
+        },      
     },
     extraReducers: (builder) => {
         builder
@@ -51,18 +72,40 @@ const userSlice = createSlice({
             })
             .addCase(loginUser.fulfilled, (state, action) => {
                 state.loading = false;
-                state.currentUser = action.payload; // Сохраните данные пользователя после успешного логина
+                state.currentUser = action.payload; 
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message;
             })
-            .addCase(logoutUser.fulfilled, (state) => {
-                state.currentUser = null; // Очистите данные пользователя при логауте
-            });
+            .addCase(registerUser.fulfilled, (state, action) => {
+                state.loading = false;
+                state.currentUser = action.payload; 
+            })
+            .addCase(registerUser.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message;
+            })
+            .addCase(logoutUser.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message; 
+            })
+            .addCase(registerTrainer.fulfilled, (state, action) => {
+                state.currentUser = action.payload;
+            })
+            .addCase(updateTrainingAim.rejected, (state, action) => {
+                state.error = action.error.message;
+            })
+            .addCase(updateTrainingAim.fulfilled, (state, action) => {
+                console.log('Updated user:', action.payload);
+                state.currentUser = action.payload; 
+            })
+            .addCase(updateTrainingAim.pending, (state) => {
+                state.loading = true; 
+            })
     },
 });
 
 // Экспорт редьюсеров
-export const { addUser, updateUser, deleteUser } = userSlice.actions;
+export const { addUser, updateUser, deleteUser, setCurrentUser } = userSlice.actions;
 export default userSlice.reducer;

@@ -7,11 +7,24 @@ import RegistrationPage from './Pages/RegistrationPage';
 import RegAuthPage from './Pages/RegAuthPage'
 import CalendarPage from './Pages/CalendarPage/CalendarPage';
 import AllNutritionPage from './Pages/AllNutritionPage';
-
+import { setCurrentUser } from './slices/userSlice';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import PrivateRouteToBecomeCoach from './Components/PrivateRouteToBecomeCoach/PrivateRouteToBecomeCoach';
+import BecomeCoachPage from './Pages/BecomeCoachPage'
 
 function App() {
 
-  
+  const dispatch = useDispatch();
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem('user'); // Сохраните объект пользователя в localStorage
+        if (storedUser) {
+            dispatch(setCurrentUser(JSON.parse(storedUser))); // Восстанавливаем пользователя
+        }
+    }, [dispatch]);
+    
+
   return (
       <BrowserRouter>
       <Routes>
@@ -22,6 +35,11 @@ function App() {
         <Route path="/registr" element={<RegistrationPage/>} />
         <Route path="/shedule" element={<CalendarPage/>}/>
         <Route path="/allNutrition" element={<AllNutritionPage/>}/>
+        <Route path="/becomecoach" element={
+          <PrivateRouteToBecomeCoach>
+            <BecomeCoachPage />
+          </PrivateRouteToBecomeCoach>
+        }></Route>
       </Routes>
    </BrowserRouter>
    

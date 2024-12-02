@@ -4,10 +4,12 @@ const tplanRouter = require('./tplanRouter')
 const userRouter = require('./userRouter')
 const favtplanRouter = require('./userRouter')
 const taskRouter = require('./taskRouter')
+const recipeRouter = require('./recipeRouter')
 
-router.use('/tplan', tplanRouter)
-router.use('/user', userRouter)
-router.use('/favtplan', favtplanRouter)
-router.use('/task', taskRouter)
+router.use('/tplans', tplanRouter)
+router.use('/users', userRouter)
+router.use('/favtplans', favtplanRouter)
+router.use('/tasks', taskRouter)
+router.use('/recipes', recipeRouter)
 
 module.exports = router

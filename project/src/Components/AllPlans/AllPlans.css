@@ -1,7 +1,6 @@
 .allPlansMain{
     display: flex;
     flex-direction: column;
-    padding-top: 100px;
 }
 .allPlansTitle{
     text-align: center;
