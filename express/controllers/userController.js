@@ -252,6 +252,36 @@ class UserController {
             return res.status(500).json({ message: error.message });
         }
     }
+    // async addTraining(req, res) {
+    //     if (!userId) {
+    //         console.error('User ID is missing');
+    //         return;
+    //     }
+    
+    //     const newFinishedTr = finishedTr + 1;
+    //     setfinishedTr(newFinishedTr);
+    
+    //     console.log('Updating finished trainings for user ID:', userId);
+    
+    //     try {
+    //         const response = await fetch(`http://localhost:5000/api/users/${userId}`, {
+    //             method: 'PATCH',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify({ finishedTr: newFinishedTr }),
+    //         });
+    
+    //         if (!response.ok) {
+    //             throw new Error('Ошибка при обновлении данных о выполненных тренировках');
+    //         }
+    
+    //         const updatedData = await response.json();
+    //         setfinishedTr(updatedData.finishedTr);
+    //     } catch (error) {
+    //         console.error('Ошибка при добавлении выполненной тренировки:', error);
+    //     }
+    // }
 }
 
 module.exports = new UserController();

@@ -39,26 +39,30 @@ export default function CalendarPage() {
     };
 
     return (
-        <div className="calMain ">
+        <>
             <HeaderLog />
-            <div className="calendar PixelFont">
-                <Calendar onChange={onChange} value={value} />
-                <h2>Plans for {value.toDateString()}</h2>
-                {selectedDatePlans.length > 0 ? (
-                    <ul>
-                        {selectedDatePlans.map(plan => (
-                            <li key={plan.id}>
-                                {plan.title} - {plan.description}
-                            </li>
-                        ))}
-                    </ul>
-                ) : (
-                    <p>No plans for this date.</p>
-                )}
-                <button className="PixelFont addDel">ADD</button>
-                <button className="PixelFont addDel">DELETE</button>
+            <div className="calMain ">
+            
+                <div className="calendar PixelFont">
+                    <Calendar onChange={onChange} value={value} />
+                    <h2>Plans for {value.toDateString()}</h2>
+                    {selectedDatePlans.length > 0 ? (
+                        <ul>
+                            {selectedDatePlans.map(plan => (
+                                <li key={plan.id}>
+                                    {plan.title} - {plan.description}
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p>No plans for this date.</p>
+                    )}
+                    <button className="PixelFont addDel">ADD</button>
+                    <button className="PixelFont addDel">DELETE</button>
+                </div>
+                <Footer />
             </div>
-            <Footer />
-        </div>
+        </>
+        
     );
 }

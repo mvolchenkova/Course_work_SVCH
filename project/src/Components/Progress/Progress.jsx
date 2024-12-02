@@ -2,14 +2,16 @@ import '../Progress/Progress.css';
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateTrainingAim } from '../../slices/userSlice'; 
+import * as d3 from "d3";
 
 export default function Progress() {
     const dispatch = useDispatch();
-    const userId = useSelector(state => state.users.currentUser?.userId); // Получаем userId из состояния
+    const userId = useSelector(state => state.users.currentUser?.userId);
     const [showAddAim, setShowAddAim] = useState(true); 
     const [showModal, setShowModal] = useState(false); 
     const [trainingAim, setTrainingAim] = useState(0); 
-    const [error, setError] = useState(null); // Для хранения ошибок
+    const [finishedTr, setfinishedTr] = useState(0);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -19,9 +21,14 @@ export default function Progress() {
                     throw new Error('Network response was not ok');
                 }
                 const data = await response.json();
-                if (data && data.trAim) {
-                    setTrainingAim(data.trAim);
-                    setShowAddAim(false);
+                if (data) {
+                    if (data.trAim) {
+                        setTrainingAim(data.trAim);
+                        setShowAddAim(false);
+                    }
+                    if (data.finishedTr !== undefined) {
+                        setfinishedTr(data.finishedTr);
+                    }
                 }
             } catch (error) {
                 console.error('Ошибка при загрузке данных пользователя:', error);
@@ -33,6 +40,27 @@ export default function Progress() {
             fetchUserData();
         }
     }, [userId]);
+
+    useEffect(() => {
+        const svg = d3.select("#progressChart");
+        svg.selectAll("*").remove(); // Очищаем предыдущий график
+
+        const width = 300, height = 25;
+        const progress = trainingAim > 0 ? finishedTr / trainingAim : 0;
+
+        svg.attr("width", width).attr("height", height);
+
+        // Создание линии прогресса
+        svg.append("rect")
+            .attr("width", width)
+            .attr("height", height)
+            .attr("fill", "#e0e0e0");
+
+        svg.append("rect")
+            .attr("width", width * progress)
+            .attr("height", height)
+            .attr("fill", "rgb(0,200,220)");
+    }, [finishedTr, trainingAim]);
 
     const handleAimSubmit = () => {
         if (!userId) {
@@ -56,9 +84,41 @@ export default function Progress() {
             });
     };
 
+    const handleAddTraining = async () => {
+        if (!userId) {
+            console.error('User ID is missing');
+            return;
+        }
+
+        // Увеличиваем количество выполненных тренировок
+        const newfinishedTr = finishedTr + 1;
+        setfinishedTr(newfinishedTr);
+
+        try {
+            // Отправляем обновленное количество выполненных тренировок на сервер
+            const response = await fetch(`http://localhost:5000/api/users/${userId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ finishedTr: newfinishedTr }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Ошибка при обновлении данных о выполненных тренировках');
+            }
+
+            // Обновляем состояние в соответствии с ответом сервера (если необходимо)
+            const updatedData = await response.json();
+            setfinishedTr(updatedData.finishedTr);
+        } catch (error) {
+            console.error('Ошибка при добавлении выполненной тренировки:', error);
+        }
+    };
+
     return (
         <div className="progressDiv">
-            {error && <p className="error">{error}</p>} {/* Отображаем ошибку, если она есть */}
+            {error && <p className="error">{error}</p>}
             <p className="PixelFont yourProgress">YOUR PROGRESS</p>
 
             {showAddAim && ( 
@@ -68,9 +128,18 @@ export default function Progress() {
             )}
 
             {!showAddAim && (
-                <div>
-                    <p>Your training aim: {trainingAim}</p>
-                    <button>CHANGE AIM</button>
+                <div className="aimAndProgressDiv">
+                    <div className="aimdiv">
+                        <p className='complTr'>Your training aim: {trainingAim}</p>
+                        <button className='PixelFont' onClick={() => setShowModal(true)}>CHANGE AIM</button>
+                    </div>
+                    <div>
+                        <p className='complTr'>Completed trainings: {finishedTr}</p>
+                        <div className='chart'>
+                            <svg id="progressChart"></svg>
+                            <button className="PixelFont addTrButton" onClick={handleAddTraining}>+</button> {/* Кнопка добавления тренировки */}
+                        </div>
+                    </div>
                 </div>
             )}
 
@@ -79,6 +148,7 @@ export default function Progress() {
                     <div className="modal-content">
                         <h2>Select your training aim</h2>
                         <select 
+                            className='selectAim PixelFont'
                             value={trainingAim} 
                             onChange={(e) => setTrainingAim(Number(e.target.value))}
                         >
@@ -87,8 +157,8 @@ export default function Progress() {
                                 <option key={num} value={num}>{num}</option>
                             ))}
                         </select>
-                        <button onClick={handleAimSubmit}>Submit</button>
-                        <button onClick={() => setShowModal(false)}>Cancel</button>
+                        <button className='PixelFont' onClick={handleAimSubmit}>Submit</button>
+                        <button className='PixelFont' onClick={() => setShowModal(false)}>Cancel</button>
                     </div>
                 </div>
             )}

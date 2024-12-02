@@ -10,8 +10,10 @@ import AllNutritionPage from './Pages/AllNutritionPage';
 import { setCurrentUser } from './slices/userSlice';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import PrivateRouteToBecomeCoach from './Components/PrivateRouteToBecomeCoach/PrivateRouteToBecomeCoach';
+import PrivateRouteToBecomeCoach from './Components/privateRoutes/PrivateRouteToBecomeCoach/PrivateRouteToBecomeCoach';
 import BecomeCoachPage from './Pages/BecomeCoachPage'
+import AllUsersPage from './Pages/AllUsersPage/AllUsersPage';
+import PrivateRouteToAllUsers from './Components/privateRoutes/PrivateRouteToAllUsers/PrivateRouteToAllUsers'
 
 function App() {
 
@@ -40,6 +42,14 @@ function App() {
             <BecomeCoachPage />
           </PrivateRouteToBecomeCoach>
         }></Route>
+        <Route 
+          path="allUsers" 
+          element={
+            <PrivateRouteToAllUsers>
+            <AllUsersPage />
+        </PrivateRouteToAllUsers>
+    }
+/>
       </Routes>
    </BrowserRouter>
    

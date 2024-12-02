@@ -27,8 +27,10 @@ export default function HeaderLog() {
                 <img src="data/images/logo.png" alt="Logo" />
             </Link>
             <div className="options">
+            
                 {currentUser ? (
                     <>
+                        <Link to = "/homePage" className="homelink">HOME</Link>
                         {currentUser.sex === 'male' ? (
                             <img src="/data/images/boyProfile.png" alt="Boy Profile" className="profileImage" />
                         ) : (

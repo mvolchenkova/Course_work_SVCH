@@ -17,5 +17,6 @@ router.post('/check', userController.getChecked);
 router.post('/logout', userController.logoutUser);
 router.post('/becomeCoach', upload.single('diploma'), userController.becomeCoach);
 router.put('/:id', userController.updateTrainingAim);
+// router.patch('/:id', userController.addTraining)
 
 module.exports = router

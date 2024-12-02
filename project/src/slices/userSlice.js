@@ -20,10 +20,9 @@ export const logoutUser = createAsyncThunk('api/users/logoutUser', async () => {
     return response.data; // Возвращаем данные, если нужно
 });
 
-// Async thunk для получения пользователей
-export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
-    const response = await axios.get('http://localhost:5000/api/users');
-    return response.data;
+export const fetchUsers = createAsyncThunk('api/users', async ({ page = 1, limit = 10 }) => {
+    const response = await axios.get(`http://localhost:5000/api/users?page=${page}&limit=${limit}`);
+    return response.data; 
 });
 
 // Async thunk для регистрации пользователя
@@ -42,6 +41,8 @@ export const updateTrainingAim = createAsyncThunk(`api/users/:id`, async ({userI
     const response = await axios.put(`http://localhost:5000/api/users/${userId}`, {userId, trAim });
     return response.data; // Возвращаем обновленные данные пользователя
 });
+
+
 
 // Создание слайса
 const userSlice = createSlice({
@@ -102,6 +103,10 @@ const userSlice = createSlice({
             })
             .addCase(updateTrainingAim.pending, (state) => {
                 state.loading = true; 
+            })
+            .addCase(fetchUsers.fulfilled, (state, action) => {
+                state.loading = false;
+                state.users = action.payload.users; // Access the users array
             })
     },
 });

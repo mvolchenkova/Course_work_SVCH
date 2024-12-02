@@ -35,3 +35,6 @@ header {
     height: 70px; 
     display: inline-block;
 }
+.homelink{
+    font-size: 1.4em;
+}
