@@ -69,7 +69,6 @@ export default function AllPlans() {
                     />
                     <button className='Search-button' onClick={sortItemsById}>Search</button>
                 </div>
-                <Categories/>
                 <div className="planDiv">
                     {filteredPlans.map(plan => (
                         <div className="planData PixelFont" key={plan.id}>

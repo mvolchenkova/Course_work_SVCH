@@ -95,18 +95,7 @@ export default function NestedList() {
           </IconButton>
         </ListItemButton>
         <Collapse in={openList2} timeout="auto" unmountOnExit>
-          <Link to="/allNutrition">
-          <List component="div" disablePadding>
-            <ListItemButton sx={{ pl: 4 }}>
-              <ListItemText 
-                primary="All nutrition plans" 
-                style={{ fontFamily: 'Pixelify Sans' }}
-                disableTypography={true}
-              />
-            </ListItemButton>
-          </List>
-          </Link>
-          
+        <Link to="/allNutrition">
           <List component="div" disablePadding>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemText 
@@ -116,6 +105,7 @@ export default function NestedList() {
               />
             </ListItemButton>
           </List>
+          </Link>
           <List component="div" disablePadding>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemText 
@@ -135,24 +125,27 @@ export default function NestedList() {
         component="nav"
         aria-labelledby="nested-list-subheader"
       >
-        <ListItemButton onClick={handleClick3}>
-          <ListItemText 
-            style={{ fontFamily: 'Pixelify Sans', margin: 0 }}
-            disableTypography={true}
-            primary="ACCOUNT" 
-          />
-          <IconButton edge="end" aria-label="expand" size="small">
-            <ExpandMoreIcon 
-              sx={{ 
-                transform: openList3 ? 'rotate(180deg)' : 'rotate(0deg)', 
-                transition: 'transform 0.2s ease',
-                color: '#000000', // Цвет стрелки
-              }} 
+        
+          <ListItemButton onClick={handleClick3}>
+            <ListItemText 
+              style={{ fontFamily: 'Pixelify Sans', margin: 0 }}
+              disableTypography={true}
+              primary="ACCOUNT" 
             />
-          </IconButton>
-        </ListItemButton>
+            <IconButton edge="end" aria-label="expand" size="small">
+              <ExpandMoreIcon 
+                sx={{ 
+                  transform: openList3 ? 'rotate(180deg)' : 'rotate(0deg)', 
+                  transition: 'transform 0.2s ease',
+                  color: '#000000', // Цвет стрелки
+                }} 
+              />
+            </IconButton>
+          </ListItemButton>
+        
         <Collapse in={openList3} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
+          <Link to="/account">
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemText 
                 primary="Account info" 
@@ -160,6 +153,7 @@ export default function NestedList() {
                 disableTypography={true}
               />
             </ListItemButton>
+            </Link>
           </List>
           <Link to="/shedule">
           <List component="div" disablePadding>

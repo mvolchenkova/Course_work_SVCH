@@ -42,8 +42,6 @@ export const updateTrainingAim = createAsyncThunk(`api/users/:id`, async ({userI
     return response.data; // Возвращаем обновленные данные пользователя
 });
 
-
-
 // Создание слайса
 const userSlice = createSlice({
     name: 'users',
@@ -108,6 +106,7 @@ const userSlice = createSlice({
                 state.loading = false;
                 state.users = action.payload.users; // Access the users array
             })
+            
     },
 });
 

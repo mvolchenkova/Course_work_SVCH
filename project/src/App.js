@@ -14,15 +14,16 @@ import PrivateRouteToBecomeCoach from './Components/privateRoutes/PrivateRouteTo
 import BecomeCoachPage from './Pages/BecomeCoachPage'
 import AllUsersPage from './Pages/AllUsersPage/AllUsersPage';
 import PrivateRouteToAllUsers from './Components/privateRoutes/PrivateRouteToAllUsers/PrivateRouteToAllUsers'
+import AccountPage from './Pages/AccountPage'
 
 function App() {
 
   const dispatch = useDispatch();
 
     useEffect(() => {
-        const storedUser = localStorage.getItem('user'); // Сохраните объект пользователя в localStorage
+        const storedUser = localStorage.getItem('user');
         if (storedUser) {
-            dispatch(setCurrentUser(JSON.parse(storedUser))); // Восстанавливаем пользователя
+            dispatch(setCurrentUser(JSON.parse(storedUser))); 
         }
     }, [dispatch]);
     
@@ -47,9 +48,10 @@ function App() {
           element={
             <PrivateRouteToAllUsers>
             <AllUsersPage />
-        </PrivateRouteToAllUsers>
-    }
-/>
+          </PrivateRouteToAllUsers>
+          }
+        />
+        <Route path="/account" element={<AccountPage/>}/>
       </Routes>
    </BrowserRouter>
    

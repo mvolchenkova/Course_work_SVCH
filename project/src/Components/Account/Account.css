@@ -1,0 +1,34 @@
+.accMain{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.accDiv1{
+    display: flex;
+    flex-direction: row;
+    align-items:center;
+    justify-content: center;
+}
+.profileImageAcc{
+    width: 100px;
+}
+.nameSurname{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+.acc{
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+    justify-content: center;
+}
+.otherInfo{
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+}
+.otherInfo>p{
+    margin: 5px;
+    font-size: 1.2em;
+}
