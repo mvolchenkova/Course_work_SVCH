@@ -1,59 +1,60 @@
 import '../AllNutrition/AllNutrition.css';
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import IconButton from '@mui/material/IconButton';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { FavoriteBorder } from '@mui/icons-material';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchRecipes, setCurrentRecipe } from '../../slices/recipeSlice'; 
 
 export default function AllNutrition() {
-    const [planData, setPlanData] = useState([]);
-    const [filteredPlans, setFilteredPlans] = useState([]);
+    const dispatch = useDispatch();
+    const recipes = useSelector(state => state.recipes.recipes);
+    const status = useSelector(state => state.recipes.status);
+    const [filteredRecipes, setFilteredRecipes] = useState([]);
     const [getInput, setInput] = useState('');
-    const [favorites, setFavorites] = useState({}); // Состояние для избранных
+    const [favorites, setFavorites] = useState({});
+
+    const isLoading = status === 'loading';
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetch('data/jsonFiles/plans.json');
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const data = await response.json();
-                setPlanData(data);
-                setFilteredPlans(data);
-            } catch (error) {
-                console.error('Error fetching the episodes:', error);
-            }
-        };
+        if (status === 'idle') {
+            dispatch(fetchRecipes());
+        }
+    }, [status, dispatch]);
 
-        fetchData();
-    }, []);
+    useEffect(() => {
+        setFilteredRecipes(recipes);
+    }, [recipes]);
 
     const handleGetInput = (e) => {
         setInput(e.target.value);
-        if (e.target.value === '') {
-            setFilteredPlans(planData);
+    };
+
+    const handleSearch = () => {
+        if (getInput.trim() === '') {
+            setFilteredRecipes(recipes);
         } else {
-            const searchPlans = planData.filter(item =>
-                item.title.toLowerCase().includes(e.target.value.toLowerCase())
+            const searchRecipes = recipes.filter(item =>
+                item.title.toLowerCase().includes(getInput.toLowerCase())
             );
-            setFilteredPlans(searchPlans);
+            setFilteredRecipes(searchRecipes);
         }
     };
 
-    const sortItemsById = () => {
-        const sorted = [...planData].sort((a, b) => a.id - b.id);
-        setFilteredPlans(sorted);
-    };
-
-    const toggleFavorite = (planId) => {
+    const toggleFavorite = (idRecipe) => {
         setFavorites(prev => ({
             ...prev,
-            [planId]: !prev[planId], // Переключаем состояние для данного плана
+            [idRecipe]: !prev[idRecipe],
         }));
     };
 
+    const handlePlanClick = (recipe) => {
+        dispatch(setCurrentRecipe(recipe)); 
+    };
+
     return (
-        <main className="allPlansMain">
+        <main className="allplansMain">
             <p className="PixelFont allPlansTitle">
                 Lose weight, gain weight or always stay in shape - choose what's right for you!
             </p>
@@ -64,31 +65,39 @@ export default function AllNutrition() {
                         className="inputSearch"
                         type="text"
                         placeholder='Search'
+                        value={getInput}
                         onChange={handleGetInput}
                     />
-                    <button className='Search-button' onClick={sortItemsById}>Filter</button>
+                    <button onClick={handleSearch} className="searchButton">Search</button>
                 </div>
                 <div className="planDiv">
-                    {filteredPlans.map(plan => (
-                        <div className="planData PixelFont" key={plan.id}>
-                            <img src={plan.img} alt="" className="planImg" />
-                            <div className="planText">
-                                <p>{plan.title}</p>
-                                <p>{plan.author}</p>
-                                <p>{plan.amount} trainings</p>
+                    {isLoading ? (
+                        <p>Loading recipes...</p>
+                    ) : filteredRecipes.length > 0 ? (
+                        filteredRecipes.map(recipe => (
+                            <div key={recipe.id} className="planData PixelFont">
+                                <Link to='/recipe' onClick={() => handlePlanClick(recipe)} style={{ textDecoration: 'none' }}>
+                                    <img src={`http://localhost:5000/${recipe.img}`} alt={recipe.title} className="planImg" />
+                                    <div className="planText">
+                                        <b>{recipe.title}</b>
+                                        <p>{recipe.time} minutes</p>
+                                    </div>
+                                </Link>
+                                <IconButton 
+                                    aria-label="add to favorites" 
+                                    onClick={() => toggleFavorite(recipe.id)}
+                                >
+                                    {favorites[recipe.id] ? (
+                                        <FavoriteIcon style={{ color: 'red' }} />
+                                    ) : (
+                                        <FavoriteBorder />
+                                    )}
+                                </IconButton>
                             </div>
-                            <IconButton 
-                                aria-label="add to favorites" 
-                                onClick={() => toggleFavorite(plan.id)}
-                            >
-                                {favorites[plan.id] ? (
-                                    <FavoriteIcon style={{ color: 'red' }} />
-                                ) : (
-                                    <FavoriteBorder />
-                                )}
-                            </IconButton>
-                        </div>
-                    ))}
+                        ))
+                    ) : (
+                        <p>No recipes found.</p>
+                    )}
                 </div>
             </div>
         </main>

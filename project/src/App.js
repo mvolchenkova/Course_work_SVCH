@@ -15,6 +15,9 @@ import BecomeCoachPage from './Pages/BecomeCoachPage'
 import AllUsersPage from './Pages/AllUsersPage/AllUsersPage';
 import PrivateRouteToAllUsers from './Components/privateRoutes/PrivateRouteToAllUsers/PrivateRouteToAllUsers'
 import AccountPage from './Pages/AccountPage'
+import ArticlesPage from './Pages/ArticlesPage';
+import PlanPage from './Pages/PlanPage/PlanPage'
+import RecipePage from './Pages/RecipePage/RecipePage'
 
 function App() {
 
@@ -52,6 +55,9 @@ function App() {
           }
         />
         <Route path="/account" element={<AccountPage/>}/>
+        <Route path="/articles" element={<ArticlesPage/>}/>
+        <Route path="/plan" element={<PlanPage />} />
+        <Route path="/recipe" element={<RecipePage/>}/>
       </Routes>
    </BrowserRouter>
    

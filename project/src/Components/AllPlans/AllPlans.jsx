@@ -1,56 +1,57 @@
 import '../AllPlans/AllPlans.css';
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import IconButton from '@mui/material/IconButton';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { FavoriteBorder } from '@mui/icons-material';
-import Categories from '../Categories/Categories'
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchTrainingPlans, setCurrentPlan } from '../../slices/tplanSlice'; 
 
 export default function AllPlans() {
-    const [planData, setPlanData] = useState([]);
+    const dispatch = useDispatch();
+    const plans = useSelector(state => state.trainingPlans.plans);
+    const status = useSelector(state => state.trainingPlans.status);
     const [filteredPlans, setFilteredPlans] = useState([]);
     const [getInput, setInput] = useState('');
-    const [favorites, setFavorites] = useState({}); // Состояние для избранных
+    const [favorites, setFavorites] = useState({});
+
+    const isLoading = status === 'loading';
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetch('data/jsonFiles/plans.json');
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const data = await response.json();
-                setPlanData(data);
-                setFilteredPlans(data);
-            } catch (error) {
-                console.error('Error fetching the episodes:', error);
-            }
-        };
+        if (status === 'idle') {
+            dispatch(fetchTrainingPlans());
+        }
+    }, [status, dispatch]);
 
-        fetchData();
-    }, []);
+    useEffect(() => {
+        setFilteredPlans(plans);
+    }, [plans]);
 
     const handleGetInput = (e) => {
         setInput(e.target.value);
-        if (e.target.value === '') {
-            setFilteredPlans(planData);
+    };
+
+    const handleSearch = () => {
+        if (getInput.trim() === '') {
+            setFilteredPlans(plans);
         } else {
-            const searchPlans = planData.filter(item =>
-                item.title.toLowerCase().includes(e.target.value.toLowerCase())
+            const searchPlans = plans.filter(item =>
+                item.title.toLowerCase().includes(getInput.toLowerCase()) ||
+                item.author.toLowerCase().includes(getInput.toLowerCase())
             );
             setFilteredPlans(searchPlans);
         }
     };
 
-    const sortItemsById = () => {
-        const sorted = [...planData].sort((a, b) => a.id - b.id);
-        setFilteredPlans(sorted);
-    };
-
     const toggleFavorite = (planId) => {
         setFavorites(prev => ({
             ...prev,
-            [planId]: !prev[planId], // Переключаем состояние для данного плана
+            [planId]: !prev[planId],
         }));
+    };
+
+    const handlePlanClick = (plan) => {
+        dispatch(setCurrentPlan(plan)); // Устанавливаем текущий план
     };
 
     return (
@@ -65,31 +66,40 @@ export default function AllPlans() {
                         className="inputSearch"
                         type="text"
                         placeholder='Search'
+                        value={getInput}
                         onChange={handleGetInput}
                     />
-                    <button className='Search-button' onClick={sortItemsById}>Search</button>
+                    <button onClick={handleSearch} className="searchButton">Search</button>
                 </div>
                 <div className="planDiv">
-                    {filteredPlans.map(plan => (
-                        <div className="planData PixelFont" key={plan.id}>
-                            <img src={plan.img} alt="" className="planImg" />
-                            <div className="planText">
-                                <p>{plan.title}</p>
-                                <p>{plan.author}</p>
-                                <p>{plan.amount} trainings</p>
+                    {isLoading ? (
+                        <p>Loading plans...</p>
+                    ) : filteredPlans.length > 0 ? (
+                        filteredPlans.map(plan => (
+                            <div key={plan.id} className="planData PixelFont">
+                                <Link to='/plan' onClick={() => handlePlanClick(plan)} style={{ textDecoration: 'none' }}>
+                                    <img src={`http://localhost:5000/${plan.img}`} alt={plan.title} className="planImg" />
+                                    <div className="planText">
+                                        <b>{plan.title}</b>
+                                        <p>{plan.author}</p>
+                                        <p>{plan.amount} trainings</p>
+                                    </div>
+                                </Link>
+                                <IconButton 
+                                    aria-label="add to favorites" 
+                                    onClick={() => toggleFavorite(plan.id)}
+                                >
+                                    {favorites[plan.id] ? (
+                                        <FavoriteIcon style={{ color: 'red' }} />
+                                    ) : (
+                                        <FavoriteBorder />
+                                    )}
+                                </IconButton>
                             </div>
-                            <IconButton 
-                                aria-label="add to favorites" 
-                                onClick={() => toggleFavorite(plan.id)}
-                            >
-                                {favorites[plan.id] ? (
-                                    <FavoriteIcon style={{ color: 'red' }} />
-                                ) : (
-                                    <FavoriteBorder />
-                                )}
-                            </IconButton>
-                        </div>
-                    ))}
+                        ))
+                    ) : (
+                        <p>No plans found.</p>
+                    )}
                 </div>
             </div>
         </main>

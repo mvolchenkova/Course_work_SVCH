@@ -1,15 +1,23 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { registerTrainer } from '../../slices/userSlice';
+import { updateUserThunk } from '../../slices/userSlice';
 import '../BecomeCoach/BecomeCoach.css';
-import { useState } from 'react';
+import axios from 'axios';
 
 export default function BecomeCoach() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [formData, setFormData] = useState([]);
+    const [formData, setFormData] = useState({ diploma: null });
     const currentUser = useSelector((state) => state.users.currentUser);
+    const [isLoading, setIsLoading] = useState(false); // Loading state
+
+    useEffect(() => {
+        if (!currentUser) {
+            // Redirect or handle the case where the user is not logged in
+            navigate('/login'); // Or display an appropriate message
+        }
+    }, [currentUser, navigate]);
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -20,30 +28,53 @@ export default function BecomeCoach() {
         }
     };
 
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
+        
         if (!formData.diploma) {
-            alert("Пожалуйста, загрузите диплом.");
+            alert("Please upload your diploma.");
             return;
         }
-    
-        const userData = new FormData();
-        userData.append('role', 'trainer'); 
-        userData.append('diploma', formData.diploma); // Убедитесь, что здесь файл
-        userData.append('userId', currentUser.id); // Добавляем userId
-    
+
+        // if (!currentUser || !currentUser.userId) {
+        //     alert("You must be logged in to become a coach.");
+        //     return; // Prevent further execution
+        // }
+
+        setIsLoading(true); // Set loading state
+
         try {
-            await dispatch(registerTrainer(userData)).unwrap();
+            
+            const userData = new FormData();
+            userData.append('role', 'trainer');
+            userData.append('diploma', formData.diploma);
+            const response = await axios.put(`http://localhost:5000/api/users/${currentUser.userId}`, currentUser.userId, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+
+            // Update Redux store after successful API call
+            await dispatch(updateUserThunk(response.data)).unwrap();
+
             navigate('/homePage');
         } catch (error) {
-            console.error('Ошибка при регистрации:', error);
-            alert('Ошибка при регистрации. Попробуйте еще раз.');
+            console.error('Error registering:', error);
+            alert('Registration failed. Please try again.');
+        } finally {
+            setIsLoading(false); // Reset loading state
         }
     };
+
+    // Conditionally render the form
+    if (!currentUser) {
+        return <div>Loading...</div>; // Or a more informative message
+    }
+
     return (
         <div className="becomeDiv">
-            <form className="becomeForm" onSubmit={handleSubmit}>
+            <form className="becomeForm" onSubmit={handleSubmit} encType="multipart/form-data">
                 <h2>Welcome to our team!</h2>
                 <div className="formGroup1">
                     <label htmlFor="diploma">Diploma (PDF)</label>
@@ -55,7 +86,9 @@ export default function BecomeCoach() {
                         required 
                     />
                 </div>
-                <button type="submit" className="btnBecCoach">Become a coach</button>
+                <button type="submit" className="btnBecCoach" disabled={isLoading}>
+                    {isLoading ? "Becoming a Coach..." : "Become a Coach"}
+                </button>
             </form>
         </div>
     );

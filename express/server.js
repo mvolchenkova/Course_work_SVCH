@@ -13,7 +13,8 @@ const tplanRouter = require('./routes/tplanRouter');
 const favtplanRouter = require('./routes/favtplanRouter');
 const userRouter = require('./routes/userRouter');
 const taskRouter = require('./routes/taskRouter');
-const recipeRouter = require('./routes/recipeRouter')
+const recipeRouter = require('./routes/recipeRouter');
+const articleRouter = require('./routes/acrticleRouter');
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -24,6 +25,7 @@ app.use('/api/users', userRouter);
 app.use('/api/favtplans', favtplanRouter); 
 app.use('/api/tasks', taskRouter)
 app.use('/api/recipes', recipeRouter)
+app.use('/api/articles', articleRouter)
 app.use('/api', router);
 
 

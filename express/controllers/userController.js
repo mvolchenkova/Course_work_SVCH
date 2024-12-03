@@ -1,23 +1,23 @@
 const { User } = require('../models/models');
 const { Op } = require('sequelize');
-const bcrypt = require('bcrypt');
 const fs = require('fs');
+const { v4: uuidv4 } = require('uuid');
 
 const multer = require('multer');
 const path = require('path');
 
-// Настройка хранилища для multer
+
+// Настройка multer для загрузки файлов
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, path.join(__dirname, '../project/public/data/diplomas'));
+        cb(null, path.join(__dirname, '..', 'static', 'diplomas'));
     },
     filename: (req, file, cb) => {
-        const fileName = `${Date.now()}-${file.originalname}`;
-        cb(null, fileName);
-    },
+        cb(null, uuidv4() + path.extname(file.originalname)); // Генерация уникального имени файла
+    }
 });
 
-const upload = multer({ storage }); 
+const upload = multer({ storage:storage }); 
 
 class UserController {
     // Создание новой записи
@@ -115,22 +115,38 @@ class UserController {
 
     // Обновление записи
     async update(req, res) {
-        try {
-            const { id } = req.params;
-            const [updated] = await User.update(req.body, {
-                where: { idUser: id },
-            });
-            if (!updated) {
-                return res.status(404).json({ message: 'Пользователь не найден' });
-            }
-            const updatedUser = await User.findByPk(id);
-            return res.json(updatedUser);
-        } catch (error) {
-            console.error('Ошибка при обновлении пользователя:', error);
-            return res.status(500).json({ message: 'Ошибка при обновлении пользователя' });
-        }
-    }
 
+        const userId = req.params.id;
+        const updatedUserData = req.body; // Or req.body.currentUser if you're sending the whole object
+    
+        try {
+            const updatedUser = await User.findByIdAndUpdate(userId, updatedUserData, { new: true }); // Assuming you're using Mongoose or similar
+    
+            if (!updatedUser) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+    
+            res.json(updatedUser);
+        } catch (error) {
+            console.error("Error updating user:", error);
+            res.status(500).json({ message: 'Error updating user' });
+        }
+
+        // try {
+        //     const { id } = req.params;
+        //     const [updated] = await User.update(req.body, {
+        //         where: { idUser: id },
+        //     });
+        //     if (!updated) {
+        //         return res.status(404).json({ message: 'Пользователь не найден' });
+        //     }
+        //     const updatedUser = await User.findByPk(id);
+        //     return res.json(updatedUser);
+        // } catch (error) {
+        //     console.error('Ошибка при обновлении пользователя:', error);
+        //     return res.status(500).json({ message: 'Ошибка при обновлении пользователя' });
+        // }
+    }
     // Удаление записи
     async delete(req, res) {
         try {
@@ -209,17 +225,23 @@ class UserController {
                 return res.status(400).json({ message: 'Файл диплома не загружен.' });
             }
     
-            const fileName = diplomaFile.filename; // Имя файла уже установлено multer
+            // Генерируем уникальное имя файла
+            const fileName = uuidv4() + path.extname(diplomaFile.originalname); // Получаем расширение файла
+            const filePath = path.resolve(__dirname, '..', 'static', 'diplomas', fileName); // Путь к файлу
+    
+            // Перемещаем файл в указанную папку
+            await fs.rename(diplomaFile.path, filePath);
+    
             const userId = req.body.userId; // Получаем userId
             const user = await User.findByPk(userId);
     
             if (!user) {
                 return res.status(404).json({ message: 'Пользователь не найден.' });
             }
-    
+            console.log('Загруженный файл:', diplomaFile);
             // Обновляем пользователя
             user.role = 'trainer';
-            user.diploma = fileName;
+            user.diploma = fileName; // Сохраняем только имя файла
     
             await user.save();
             return res.status(200).json(user);
@@ -252,36 +274,37 @@ class UserController {
             return res.status(500).json({ message: error.message });
         }
     }
-    // async addTraining(req, res) {
-    //     if (!userId) {
-    //         console.error('User ID is missing');
-    //         return;
-    //     }
+    async addTraining(req, res) {
+        const userId = req.body
+        if (!userId) {
+            console.error('User ID is missing');
+            return;
+        }
     
-    //     const newFinishedTr = finishedTr + 1;
-    //     setfinishedTr(newFinishedTr);
+        const newFinishedTr = finishedTr + 1;
+        setfinishedTr(newFinishedTr);
     
-    //     console.log('Updating finished trainings for user ID:', userId);
+        console.log('Updating finished trainings for user ID:', userId);
     
-    //     try {
-    //         const response = await fetch(`http://localhost:5000/api/users/${userId}`, {
-    //             method: 'PATCH',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //             },
-    //             body: JSON.stringify({ finishedTr: newFinishedTr }),
-    //         });
+        try {
+            const response = await fetch(`http://localhost:5000/api/users/${userId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ finishedTr: newFinishedTr }),
+            });
     
-    //         if (!response.ok) {
-    //             throw new Error('Ошибка при обновлении данных о выполненных тренировках');
-    //         }
+            if (!response.ok) {
+                throw new Error('Ошибка при обновлении данных о выполненных тренировках');
+            }
     
-    //         const updatedData = await response.json();
-    //         setfinishedTr(updatedData.finishedTr);
-    //     } catch (error) {
-    //         console.error('Ошибка при добавлении выполненной тренировки:', error);
-    //     }
-    // }
+            const updatedData = await response.json();
+            setfinishedTr(updatedData.finishedTr);
+        } catch (error) {
+            console.error('Ошибка при добавлении выполненной тренировки:', error);
+        }
+    }
 }
 
 module.exports = new UserController();

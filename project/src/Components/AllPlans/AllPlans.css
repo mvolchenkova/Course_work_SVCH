@@ -27,7 +27,7 @@
     gap: 30px;
 }
 .planImg{
-    height: 200px;
+    height: 100px;
     
 }
 .planDiv{
@@ -57,4 +57,7 @@
 .planText{
     font-weight:600;
     font-size: 1.2em;
+}
+a{
+    text-align: center;
 }

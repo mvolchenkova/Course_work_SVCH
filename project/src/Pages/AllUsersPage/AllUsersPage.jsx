@@ -1,16 +1,17 @@
-import '../AllUsersPage/AllUsersPage.css'
+import '../AllUsersPage/AllUsersPage.css';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchUsers } from '../../slices/userSlice'; 
+import { fetchUsers } from '../../slices/userSlice';
 import HeaderLog from '../../Components/HeaderLog/HeaderLog';
 import Footer from '../../Components/Footer/Footer';
-
+import AddUserModal from '../../Components/AddUserModal/AddUserModal'; // Import the modal component
 
 export default function AllUsersPage() {
     const dispatch = useDispatch();
     const { users, loading, error } = useSelector(state => state.users);
     const [page, setPage] = useState(1);
-    const [limit] = useState(10); 
+    const [limit] = useState(10);
+    const [isModalOpen, setModalOpen] = useState(false); // State for modal visibility
 
     useEffect(() => {
         dispatch(fetchUsers({ page, limit }));
@@ -22,6 +23,14 @@ export default function AllUsersPage() {
 
     const handlePrevPage = () => {
         setPage(prevPage => Math.max(prevPage - 1, 1));
+    };
+
+    const handleAddUser = () => {
+        setModalOpen(true); // Open the modal
+    };
+
+    const closeModal = () => {
+        setModalOpen(false); // Close the modal
     };
 
     return (
@@ -62,9 +71,11 @@ export default function AllUsersPage() {
             <div className='buttons'>
                 <button onClick={handlePrevPage} disabled={page === 1}>Previous</button>
                 <button onClick={handleNextPage}>Next</button>
+                <button onClick={handleAddUser} className='addButton'>ADD USER</button>
             </div>
-                    
+            
             <Footer />
+            <AddUserModal isOpen={isModalOpen} onClose={closeModal} /> 
         </>
     );
 }

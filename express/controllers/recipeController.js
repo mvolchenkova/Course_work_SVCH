@@ -6,16 +6,17 @@ const fs = require('fs');
 class RecipeController {
     async create(req, res) {
         try {
-            const { title, ingredients, instructions } = req.body;
+            const { title, time, ingredients, instructions } = req.body;
     
             let fileName = null;
-            if (req.files && req.files.img) { 
                 const { img } = req.files;
                 fileName = uuid.v4() + ".jpg";
                 img.mv(path.resolve(__dirname, '..', 'static', fileName));
-            }
-    
-            const rec = await Recipe.create({ title, ingredients, instructions, img: fileName });
+            
+            
+            
+
+            const rec = await Recipe.create({ title,time, ingredients, instructions, img: fileName,  });
             return res.status(201).json(rec);
     
         } catch (error) {
@@ -100,6 +101,29 @@ class RecipeController {
         } catch (error) {
             console.error('Error deleting recipe:', error);
             return res.status(500).json({ message: 'Error deleting recipe' });
+        }
+
+    }
+
+    // Получение списка записей с поддержкой поиска
+    async search(req, res) {
+        try {
+            const { query } = req.query;
+    
+            if (!query) {
+                const recipes = await Recipe.findAll();
+                return res.json(recipes);
+            }
+    
+            const recipes = await Recipe.findAll({
+                where: {
+                    title: { [Op.like]: `%${query}%` }, 
+                },
+            });
+            return res.json(recipes);
+        } catch (error) {
+            console.error('Ошибка при поиске рецептов:', error);
+            return res.status(500).json({ message: 'Ошибка при поиске рецептов' });
         }
     }
 }

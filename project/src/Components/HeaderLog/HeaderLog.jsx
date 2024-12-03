@@ -38,7 +38,10 @@ export default function HeaderLog() {
                                 <img src="data/images/girlProfile.png" alt="Girl Profile" className="profileImage" />
                             )
                         )}
-                        <span className="userName PixelFont">{currentUser.name}</span>
+                        <Link to='/account'>
+                            <span className="userName PixelFont">{currentUser.name}</span>
+                        </Link>
+                        
                         <button className="logoutButton PixelFont" onClick={handleLogout}>
                             LOG OUT
                         </button>

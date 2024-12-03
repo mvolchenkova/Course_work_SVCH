@@ -1,7 +1,7 @@
 import '../Progress/Progress.css';
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateTrainingAim } from '../../slices/userSlice'; 
+import { updateUserThunk } from '../../slices/userSlice'; 
 import * as d3 from "d3";
 
 export default function Progress() {
@@ -26,7 +26,7 @@ export default function Progress() {
                         setTrainingAim(data.trAim);
                         setShowAddAim(false);
                     }
-                    if (data.finishedTr !== undefined) {
+                    if (data.finishedTr) {
                         setfinishedTr(data.finishedTr);
                     }
                 }
@@ -72,8 +72,9 @@ export default function Progress() {
             console.error('Invalid training aim:', trainingAim);
             return;
         }
-
-        dispatch(updateTrainingAim({ userId, trAim: trainingAim }))
+    
+        // Dispatch the updateUser thunk with both aim and trainings
+        dispatch(updateUserThunk({ userId, trAim: trainingAim, finishedTr }))
             .unwrap()
             .then(() => {
                 setShowAddAim(false);
@@ -85,36 +86,22 @@ export default function Progress() {
     };
 
     const handleAddTraining = async () => {
-        if (!userId) {
-            console.error('User ID is missing');
-            return;
-        }
+    if (!userId) {
+        console.error('User ID is missing');
+        return;
+    }
 
-        // Увеличиваем количество выполненных тренировок
-        const newfinishedTr = finishedTr + 1;
-        setfinishedTr(newfinishedTr);
+    // Increase the number of completed trainings
+    const newFinishedTr = finishedTr + 1;
+    setfinishedTr(newFinishedTr);
 
-        try {
-            // Отправляем обновленное количество выполненных тренировок на сервер
-            const response = await fetch(`http://localhost:5000/api/users/${userId}`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ finishedTr: newfinishedTr }),
-            });
-
-            if (!response.ok) {
-                throw new Error('Ошибка при обновлении данных о выполненных тренировках');
-            }
-
-            // Обновляем состояние в соответствии с ответом сервера (если необходимо)
-            const updatedData = await response.json();
-            setfinishedTr(updatedData.finishedTr);
-        } catch (error) {
+    // Dispatch the updateUser thunk with the new finished trainings count
+    dispatch(updateUserThunk({ userId, trAim: trainingAim, finishedTr: newFinishedTr }))
+        .unwrap()
+        .catch(error => {
             console.error('Ошибка при добавлении выполненной тренировки:', error);
-        }
-    };
+        });
+};
 
     return (
         <div className="progressDiv">

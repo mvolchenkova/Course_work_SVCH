@@ -45,6 +45,12 @@ const TrainingPlan = sequelize.define('trainingplan', {
         type: DataTypes.TEXT,
         allowNull: false,
         notEmpty: { msg: 'Ссылка на картинку не может быть пустой' },
+    },
+    description: {
+        type: DataTypes.TEXT
+    },
+    lessons: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
     }
 },{
     timestamps: true,
@@ -131,7 +137,8 @@ const User = sequelize.define('User', {
     finishedTr: {
         type: DataTypes.INTEGER,
         allowNull: true
-    }
+    },
+    lastTrainingDate:{ type: DataTypes.DATE}
 }, {
     timestamps: true,
     tableName: 'users',
@@ -236,7 +243,7 @@ const Task = sequelize.define('Task', {
 
 const Recipe = sequelize.define('recipe', {
     idRecipe: {
-        type: DataTypes.BIGINT,
+        type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true, 
         allowNull: false,
@@ -264,6 +271,9 @@ const Recipe = sequelize.define('recipe', {
         type: DataTypes.TEXT,
         allowNull: true,
     },
+    time: {
+        type: DataTypes.INTEGER
+    }
 },{
     timestamps: true,
     tableName: 'recipes',
@@ -297,6 +307,30 @@ const Review = sequelize.define('review', {
     tableName: 'reviews',
 })
 
+const Article = sequelize.define('article', {
+    idArticle: {
+        type: DataTypes.BIGINT,
+        primaryKey: true,
+        autoIncrement: true, 
+        allowNull: false,
+    },
+    title: {
+        type: DataTypes.TEXT,
+        allowNull: false
+    },
+    content: {
+        type: DataTypes.TEXT,
+        allowNull: false
+    },
+    author: {
+        type: DataTypes.TEXT,
+        allowNull:false
+    }
+},{
+    timestamps: true,
+    tableName: 'articles',
+})
+
 //user-favtplans
 User.hasMany(FavTplan, { foreignKey: 'userIdUser', sourceKey: 'idUser' });
 FavTplan.belongsTo(User, { foreignKey: 'userIdUser', targetKey: 'idUser' });
@@ -309,4 +343,4 @@ Review.belongsTo(User, { foreignKey: 'userIdUser', sourceKey: 'idUser' })
 User.hasMany(Task, { foreignKey: 'userIdUser', sourceKey: 'idUser' });
 Task.belongsTo(User, { foreignKey: 'userIdUser', targetKey: 'idUser' });
 
-module.exports = { User, FavTplan, TrainingPlan, Task, Recipe, Review};
+module.exports = { User, FavTplan, TrainingPlan, Task, Recipe, Review, Article};

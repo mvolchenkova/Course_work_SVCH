@@ -194,13 +194,16 @@ export default function NestedList() {
         </ListItemButton>
         <Collapse in={openList4} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            <ListItemButton sx={{ pl: 4 }}>
-              <ListItemText 
-                primary="Articles" 
-                style={{ fontFamily: 'Pixelify Sans' }}
-                disableTypography={true}
-              />
-            </ListItemButton>
+            <Link to="/articles">
+              <ListItemButton sx={{ pl: 4 }}>
+                <ListItemText 
+                  primary="Articles" 
+                  style={{ fontFamily: 'Pixelify Sans' }}
+                  disableTypography={true}
+                />
+              </ListItemButton>
+            </Link>
+            
           </List>
           <List component="div" disablePadding>
             <ListItemButton sx={{ pl: 4 }}>

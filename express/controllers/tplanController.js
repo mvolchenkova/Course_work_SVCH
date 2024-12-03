@@ -8,14 +8,23 @@ class tplanController {
     // Создание новой записи
     async create(req, res) {
         try {
-            const { author, title, amount } = req.body;
+            const { author, title, amount, description } = req.body;
 
             let fileName = null;
                 const { img } = req.files;
                 fileName = uuid.v4() + ".jpg";
                 img.mv(path.resolve(__dirname, '..', 'static', fileName));
+                const lessons = [];
+                const videoFiles = req.files.lesson;
+                for (let i = 0; i < videoFiles.length; i++) {
+                    const videoFile = videoFiles[i];
+                    let vidFileName = uuid.v4() + ".mp4";
+                    videoFile.mv(path.resolve(__dirname, '..', 'static', vidFileName));
 
-            const tplan = await TrainingPlan.create({ author, title, amount, img: fileName }); 
+                    lessons.push(vidFileName);
+                }
+
+            const tplan = await TrainingPlan.create({ author, title, amount, img: fileName, description, lessons }); 
             return res.status(201).json(tplan);
 
         } catch (error) {
@@ -74,6 +83,13 @@ class tplanController {
     async search(req, res) {
         try {
             const { query } = req.query;
+    
+            // Если query пустой, возвращаем все тренировочные планы
+            if (!query) {
+                const trainingplans = await TrainingPlan.findAll();
+                return res.json(trainingplans);
+            }
+    
             const trainingplans = await TrainingPlan.findAll({
                 where: {
                     [Op.or]: [
