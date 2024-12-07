@@ -1,0 +1,8 @@
+.inputAndButton{
+    display: flex;
+    flex-direction: row;
+    
+}
+.inputAndButton>button{
+    height: 33px;
+}

@@ -1,15 +1,40 @@
+import React, { useEffect, useState } from 'react';
 import HeaderLog from '../../Components/HeaderLog/HeaderLog';
 import Footer from '../../Components/Footer/Footer';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { deleteTrainingPlan, updateTrainingPlan } from '../../slices/tplanSlice';
+import UpdatePlanModal from '../../Components/UpdatePlanModal/UpdatePlanModal'; 
 import '../PlanPage/PlanPage.css';
+import { useNavigate } from 'react-router-dom'; 
 
 export default function PlanPage() {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const currentPlan = useSelector((state) => state.trainingPlans.currentPlan);
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleDeletePlan = async () => {
+        if (currentPlan && window.confirm('Are you sure you want to delete this plan?')) {
+            await dispatch(deleteTrainingPlan(currentPlan.idTplan));
+            navigate('/allPlans'); 
+        }
+    };
+
+    useEffect(() => {
+        if (!currentPlan) {
+            navigate('/allPlans'); 
+        }
+    }, [currentPlan, navigate]);
+
+    if (!currentPlan) {
+        return <p>Loading...</p>; 
+    }
 
     return (
         <>
             <HeaderLog />
-            <main>
+            <main className='planMain'>
                 <div className='imgDescrPlan'>
                     <img src={`http://localhost:5000/${currentPlan.img}`} alt="" />
                     <div>
@@ -33,7 +58,14 @@ export default function PlanPage() {
                     )}
                 </div>
             </main>
+            <button onClick={handleDeletePlan}>DELETE PLAN</button>
+            <button onClick={() => setIsModalOpen(true)}>UPDATE PLAN</button>
             <Footer />
+            <UpdatePlanModal 
+                isOpen={isModalOpen} 
+                onClose={() => setIsModalOpen(false)} 
+                currentPlan={currentPlan}
+            />
         </>
     );
 }

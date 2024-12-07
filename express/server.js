@@ -6,6 +6,7 @@ const models = require('./models/models');
 const router = require('./routes/index');
 const fileUpload = require('express-fileupload');
 const path = require('path')
+const fs = require('fs');
 
 const PORT = process.env.PORT;
 
@@ -41,5 +42,34 @@ const start = async () => {
       console.error('Ошибка при подключении к базе данных:', e);
   }
 };
+app.get('/api/images', (req, res) => {
+    const imageDir = path.join(__dirname, '..', 'project', 'public', 'data', 'images'); // Adjust this path as necessary
+
+    fs.readdir(imageDir, (err, files) => {
+        if (err) {
+            console.error("Error reading image directory:", err);
+            return res.status(500).json({ message: 'Error reading images' });
+        }
+
+        const trImages = files.filter(file => file.startsWith('tr')); // Filter images starting with "tr"
+        const imageUrls = trImages.map(file => `/data/images/${file}`); // Create URLs for images
+        res.json(imageUrls); // Return the URLs as a JSON response
+    });
+});
+
+app.get('/api/recipeImages', (req, res) => {
+    const imageDir = path.join(__dirname, '..', 'project', 'public', 'data', 'images', 'recipes'); // Adjust this path as necessary
+
+    fs.readdir(imageDir, (err, files) => {
+        if (err) {
+            console.error("Error reading image directory:", err);
+            return res.status(500).json({ message: 'Error reading images' });
+        }
+
+        // Remove filtering condition to return all image files
+        const imageUrls = files.map(file => `/data/images/${file}`); // Create URLs for images
+        res.json(imageUrls); // Return the URLs as a JSON response
+    });
+});
 
 start();

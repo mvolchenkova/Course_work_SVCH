@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { adminAddUser } from '../../slices/userSlice';
-import '../AddUserModal/AddUserModal.css'
+import './AddUserModal.css'
 
 const AddUserModal = ({ isOpen, onClose }) => {
     const dispatch = useDispatch();

@@ -260,11 +260,11 @@ const Recipe = sequelize.define('recipe', {
         }
     },
     ingredients: {
-        type: DataTypes.ARRAY(DataTypes.STRING),
+        type: DataTypes.ARRAY(DataTypes.TEXT),
         allowNull: false
     },
     instructions: {
-        type: DataTypes.ARRAY(DataTypes.STRING),
+        type: DataTypes.ARRAY(DataTypes.TEXT),
         allowNull: false
     },
     img: {

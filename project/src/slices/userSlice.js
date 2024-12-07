@@ -43,6 +43,11 @@ export const updateUserThunk = createAsyncThunk('api/users/:id', async ({ curren
     return response.data; 
 });
 
+export const becomeCoachThunk = createAsyncThunk('api/users/becomecoach/:id', async ({ currentUser }) => {
+    const response = await axios.put(`http://localhost:5000/api/users/becomecoach/${currentUser.userId}`, { currentUser });
+    return response.data; 
+});
+
 // Создание слайса
 const userSlice = createSlice({
     name: 'users',

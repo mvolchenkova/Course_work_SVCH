@@ -2,10 +2,8 @@ const { User } = require('../models/models');
 const { Op } = require('sequelize');
 const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
-
 const multer = require('multer');
 const path = require('path');
-
 
 // Настройка multer для загрузки файлов
 const storage = multer.diskStorage({
@@ -17,7 +15,7 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({ storage:storage }); 
+const upload = multer({ storage: storage });
 
 class UserController {
     // Создание новой записи
@@ -116,36 +114,41 @@ class UserController {
     // Обновление записи
     async update(req, res) {
 
-        const userId = req.params.id;
-        const updatedUserData = req.body; // Or req.body.currentUser if you're sending the whole object
+        // const userId = req.params.id;
+        // const updatedUserData = req.body; // Or req.body.currentUser if you're sending the whole object
     
-        try {
-            const updatedUser = await User.findByIdAndUpdate(userId, updatedUserData, { new: true }); // Assuming you're using Mongoose or similar
-    
-            if (!updatedUser) {
-                return res.status(404).json({ message: 'User not found' });
-            }
-    
-            res.json(updatedUser);
-        } catch (error) {
-            console.error("Error updating user:", error);
-            res.status(500).json({ message: 'Error updating user' });
-        }
-
         // try {
-        //     const { id } = req.params;
-        //     const [updated] = await User.update(req.body, {
-        //         where: { idUser: id },
-        //     });
-        //     if (!updated) {
-        //         return res.status(404).json({ message: 'Пользователь не найден' });
+        //     const updatedUser = await User.findByIdAndUpdate(userId, updatedUserData, { new: true }); // Assuming you're using Mongoose or similar
+    
+        //     if (!updatedUser) {
+        //         return res.status(404).json({ message: 'User not found' });
         //     }
-        //     const updatedUser = await User.findByPk(id);
-        //     return res.json(updatedUser);
+    
+        //     res.json(updatedUser);
         // } catch (error) {
-        //     console.error('Ошибка при обновлении пользователя:', error);
-        //     return res.status(500).json({ message: 'Ошибка при обновлении пользователя' });
+        //     console.error("Error updating user:", error);
+        //     res.status(500).json({ message: 'Error updating user' });
         // }
+
+        try {
+            const id = req.body.idUser;
+            console.log(id);
+            
+            const user = await User.findByPk(id);
+            console.log(user);
+
+            const [updated] = await user.update(req.body);
+            console.log(updated);
+
+            if (!updated) {
+                return res.status(404).json({ message: 'Пользователь не найден' });
+            }
+            const updatedUser = await User.findByPk(id);
+            return res.json(updatedUser);
+        } catch (error) {
+            console.error('Ошибка при обновлении пользователя:', error);
+            return res.status(500).json({ message: 'Ошибка при обновлении пользователя' });
+        }
     }
     // Удаление записи
     async delete(req, res) {
@@ -216,33 +219,30 @@ class UserController {
     }
 
     // Метод для изменения роли пользователя и загрузки диплома
-    async becomeCoach(req, res) {
+    async  becomeCoach(req, res) {
         try {
             const diplomaFile = req.file; // Получаем загруженный файл
-    
-            // Проверяем, загружен ли файл
+            console.log('Полученный файл:', diplomaFile);
+            console.log('Полученный userId:', req.body.userId);
+
             if (!diplomaFile) {
                 return res.status(400).json({ message: 'Файл диплома не загружен.' });
             }
-    
-            // Генерируем уникальное имя файла
-            const fileName = uuidv4() + path.extname(diplomaFile.originalname); // Получаем расширение файла
-            const filePath = path.resolve(__dirname, '..', 'static', 'diplomas', fileName); // Путь к файлу
-    
-            // Перемещаем файл в указанную папку
-            await fs.rename(diplomaFile.path, filePath);
-    
-            const userId = req.body.userId; // Получаем userId
+
+            // Убедимся, что файл уже перемещен multer
+            const fileName = diplomaFile.filename; // Используем имя файла, сгенерированное multer
+
+            const userId = req.body.userId;
             const user = await User.findByPk(userId);
-    
+
             if (!user) {
                 return res.status(404).json({ message: 'Пользователь не найден.' });
             }
-            console.log('Загруженный файл:', diplomaFile);
+
             // Обновляем пользователя
             user.role = 'trainer';
-            user.diploma = fileName; // Сохраняем только имя файла
-    
+            user.diploma = fileName; // Сохраняем имя файла
+
             await user.save();
             return res.status(200).json(user);
         } catch (error) {
@@ -274,6 +274,7 @@ class UserController {
             return res.status(500).json({ message: error.message });
         }
     }
+
     async addTraining(req, res) {
         const userId = req.body
         if (!userId) {

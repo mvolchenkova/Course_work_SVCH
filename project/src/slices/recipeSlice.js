@@ -1,9 +1,14 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-export const fetchRecipes = createAsyncThunk('api/recipes', async () => {
+export const fetchRecipes = createAsyncThunk('api/recipes/fetch', async () => {
     const response = await axios.get('http://localhost:5000/api/recipes');
     return response.data;
+});
+
+export const adminAddRecipe = createAsyncThunk('api/recipes', async (recipeData) => {
+    const response = await axios.post('http://localhost:5000/api/recipes', recipeData);
+    return response.data; 
 });
 
 const recipesSlice = createSlice({
@@ -32,7 +37,17 @@ const recipesSlice = createSlice({
                 state.status = 'failed';
                 state.error = action.error.message;
             })
-            
+            .addCase(adminAddRecipe.pending, (state) => {
+                state.status = 'loading'; // You might want to track loading for adding as well
+            })
+            .addCase(adminAddRecipe.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.recipes.push(action.payload); // Push to recipes array
+            })
+            .addCase(adminAddRecipe.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
+            });
     },
 });
 

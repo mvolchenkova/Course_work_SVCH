@@ -5,6 +5,20 @@ export const fetchTrainingPlans = createAsyncThunk('api/tplans/search', async ()
     const response = await axios.get('http://localhost:5000/api/tplans/search');
     return response.data;
 });
+export const adminAddPlan = createAsyncThunk('api/tplans', async (planData) => {
+    const response = await axios.post('http://localhost:5000/api/tplans', planData);
+    return response.data; 
+});
+
+export const deleteTrainingPlan = createAsyncThunk('api/tplans/delete', async (id) => {
+    await axios.delete(`http://localhost:5000/api/tplans/${id}`);
+    return id; 
+});
+
+export const updateTrainingPlan = createAsyncThunk('api/tplans/update', async ({ id, ...planData }) => {
+    const response = await axios.put(`http://localhost:5000/api/tplans/${id}`, planData);
+    return response.data; 
+});
 
 const trainingPlansSlice = createSlice({
     name: 'tplans',
@@ -17,6 +31,12 @@ const trainingPlansSlice = createSlice({
     reducers: {
         setCurrentPlan: (state, action) => {
             state.currentPlan = action.payload;
+        },
+        removePlan: (state, action) => {
+            state.plans = state.plans.filter(plan => plan.idTplan !== action.payload);
+            if (state.currentPlan && state.currentPlan.idTplan === action.payload) {
+                state.currentPlan = null; // Clear current plan if deleted
+            }
         }
     },
     extraReducers: (builder) => {
@@ -32,9 +52,41 @@ const trainingPlansSlice = createSlice({
                 state.status = 'failed';
                 state.error = action.error.message;
             })
-            
+            .addCase(adminAddPlan.fulfilled, (state, action) => {
+                state.loading = false;
+                state.plans.push(action.payload); 
+            })
+            .addCase(adminAddPlan.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message;
+            })
+            .addCase(deleteTrainingPlan.fulfilled, (state, action) => {
+                state.loading = false;
+                state.plans = state.plans.filter(plan => plan.idTplan !== action.payload);
+                if (state.currentPlan && state.currentPlan.idTplan === action.payload) {
+                    state.currentPlan = null; 
+                }
+            })
+            .addCase(deleteTrainingPlan.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message;
+            })
+            .addCase(updateTrainingPlan.fulfilled, (state, action) => {
+                state.loading = false;
+                const index = state.plans.findIndex(plan => plan.idTplan === action.payload.idTplan);
+                if (index !== -1) {
+                    state.plans[index] = action.payload; // Update the plan in the state
+                }
+                if (state.currentPlan && state.currentPlan.idTplan === action.payload.idTplan) {
+                    state.currentPlan = action.payload; // Update currentPlan if it's the same
+                }
+            })
+            .addCase(updateTrainingPlan.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message;
+            })
     },
 });
 
-export const { setCurrentPlan } = trainingPlansSlice.actions; 
+export const { setCurrentPlan, removePlan  } = trainingPlansSlice.actions; 
 export default trainingPlansSlice.reducer;

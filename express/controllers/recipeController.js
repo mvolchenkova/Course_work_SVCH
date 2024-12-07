@@ -7,16 +7,18 @@ class RecipeController {
     async create(req, res) {
         try {
             const { title, time, ingredients, instructions } = req.body;
-    
             let fileName = null;
                 const { img } = req.files;
                 fileName = uuid.v4() + ".jpg";
                 img.mv(path.resolve(__dirname, '..', 'static', fileName));
-            
-            
-            
 
-            const rec = await Recipe.create({ title,time, ingredients, instructions, img: fileName,  });
+                const rec = await Recipe.create({
+                    title,
+                    time,
+                    ingredients: JSON.stringify(ingredients), // Stringify!
+                    instructions: JSON.stringify(instructions), // Stringify!
+                    img: fileName
+                });
             return res.status(201).json(rec);
     
         } catch (error) {

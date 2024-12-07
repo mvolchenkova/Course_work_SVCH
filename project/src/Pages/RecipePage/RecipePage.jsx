@@ -9,7 +9,7 @@ export default function RecipePage() {
     return (
         <>
             <HeaderLog />
-            <main clasName='recMain'>
+            <main className='recMain'>
                 <div className='imgDescrRecipe'>
                     <img src={`http://localhost:5000/${currentRecipe.img}`} alt="" />
                     <div>

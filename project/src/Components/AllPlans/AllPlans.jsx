@@ -1,4 +1,5 @@
 import '../AllPlans/AllPlans.css';
+import AddPlanModal from '../AddPlanModal/AddPlanModal';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import IconButton from '@mui/material/IconButton';
@@ -14,6 +15,7 @@ export default function AllPlans() {
     const [filteredPlans, setFilteredPlans] = useState([]);
     const [getInput, setInput] = useState('');
     const [favorites, setFavorites] = useState({});
+    const [isModalOpen, setModalOpen] = useState(false);
 
     const isLoading = status === 'loading';
 
@@ -52,6 +54,13 @@ export default function AllPlans() {
 
     const handlePlanClick = (plan) => {
         dispatch(setCurrentPlan(plan)); // Устанавливаем текущий план
+    };
+
+    const handleAddPlan = () => {
+        setModalOpen(true); // Open the modal
+    };
+    const closeModal = () => {
+        setModalOpen(false); // Close the modal
     };
 
     return (
@@ -102,6 +111,10 @@ export default function AllPlans() {
                     )}
                 </div>
             </div>
+            <div className=''>
+                <button onClick={handleAddPlan}>ADD PLAN</button>
+            </div>
+            <AddPlanModal isOpen={isModalOpen} onClose={closeModal} /> 
         </main>
     );
 }

@@ -2,31 +2,49 @@ const { TrainingPlan } = require('../models/models')
 const { Op } = require('sequelize');
 const uuid =require("uuid")
 const path=require("path")
-
 class tplanController {
    
     // Создание новой записи
     async create(req, res) {
         try {
             const { author, title, amount, description } = req.body;
-
-            let fileName = null;
-                const { img } = req.files;
-                fileName = uuid.v4() + ".jpg";
-                img.mv(path.resolve(__dirname, '..', 'static', fileName));
-                const lessons = [];
-                const videoFiles = req.files.lesson;
-                for (let i = 0; i < videoFiles.length; i++) {
-                    const videoFile = videoFiles[i];
-                    let vidFileName = uuid.v4() + ".mp4";
-                    videoFile.mv(path.resolve(__dirname, '..', 'static', vidFileName));
-
-                    lessons.push(vidFileName);
-                }
-
-            const tplan = await TrainingPlan.create({ author, title, amount, img: fileName, description, lessons }); 
+    
+            console.log(req.files);
+    
+            const { img, lesson } = req.files; 
+            
+            if (!img || !lesson) {
+                return res.status(400).json({ message: 'Image or lesson files not provided' });
+            }
+    
+            // Handle the image upload
+            const imgFileName = uuid.v4() + ".jpg"; // Generate unique filename for image
+            await img.mv(path.resolve(__dirname, '..', 'static', imgFileName)); // Move the image to the static folder
+    
+            // Initialize lessons array
+            const lessons = [];
+            const videoFiles = Array.isArray(lesson) ? lesson : [lesson]; // Ensure it's an array
+    
+            // Process each video file
+            for (let i = 0; i < videoFiles.length; i++) {
+                const videoFile = videoFiles[i];
+                const vidFileName = uuid.v4() + ".mp4"; 
+                await videoFile.mv(path.resolve(__dirname, '..', 'static', vidFileName));
+    
+                lessons.push(vidFileName); 
+            }
+    
+            const tplan = await TrainingPlan.create({
+                author,
+                title,
+                amount,
+                img: imgFileName,
+                description,
+                lessons
+            });
+            
             return res.status(201).json(tplan);
-
+    
         } catch (error) {
             console.error('Error creating training plan:', error);
             return res.status(500).json({ message: 'Error creating training plan' });

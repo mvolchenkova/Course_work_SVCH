@@ -6,6 +6,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { FavoriteBorder } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchRecipes, setCurrentRecipe } from '../../slices/recipeSlice'; 
+import AddRecipeModal from '../AddRecipeModal/AddRecipeModal';
 
 export default function AllNutrition() {
     const dispatch = useDispatch();
@@ -14,6 +15,7 @@ export default function AllNutrition() {
     const [filteredRecipes, setFilteredRecipes] = useState([]);
     const [getInput, setInput] = useState('');
     const [favorites, setFavorites] = useState({});
+    const [isModalOpen, setModalOpen] = useState(false);
 
     const isLoading = status === 'loading';
 
@@ -22,6 +24,13 @@ export default function AllNutrition() {
             dispatch(fetchRecipes());
         }
     }, [status, dispatch]);
+    
+    const handleAddRecipe = () => {
+        setModalOpen(true); // Open the modal
+    };
+    const closeModal = () => {
+        setModalOpen(false); // Close the modal
+    };
 
     useEffect(() => {
         setFilteredRecipes(recipes);
@@ -100,6 +109,10 @@ export default function AllNutrition() {
                     )}
                 </div>
             </div>
+            <div className=''>
+                <button onClick={handleAddRecipe}>ADD RECIPE</button>
+            </div>
+            <AddRecipeModal isOpen={isModalOpen} onClose={closeModal} />
         </main>
     );
 }
