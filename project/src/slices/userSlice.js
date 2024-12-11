@@ -109,21 +109,10 @@ const userSlice = createSlice({
                 state.loading = false;
                 state.error = action.error.message; 
             })
-            // .addCase(registerTrainer.pending, (state) => {
-            //     state.loading = true;
-            //     state.error = null; // Сбрасываем ошибку перед началом загрузки
-            // })
-            // .addCase(registerTrainer.fulfilled, (state, action) => {
-            //     state.loading = false;
-            //     state.currentUser = action.payload; // Обновляем текущего пользователя
-            // })
-            // .addCase(registerTrainer.rejected, (state, action) => {
-            //     state.loading = false;
-            //     state.error = action.error.message; // Сохраняем сообщение об ошибке
-            // })
+            
             .addCase(fetchUsers.fulfilled, (state, action) => {
                 state.loading = false;
-                state.users = action.payload.users; // Доступ к массиву пользователей
+                state.users = action.payload.users; // This should just be the users array
             })
             .addCase(updateUserThunk.fulfilled, (state, action) => {
                 state.currentUser = action.payload; // Обновляем данные текущего пользователя
@@ -140,6 +129,7 @@ const userSlice = createSlice({
                 state.loading = false;
                 state.error = action.error.message;
             })
+            
             
             
     },

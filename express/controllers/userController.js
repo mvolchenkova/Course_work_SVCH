@@ -130,8 +130,8 @@ class UserController {
                 return res.status(404).json({ message: 'Пользователь не найден' });
             }
     
-            const { trAim, finishedTr } = req.body;
-            const updated = await user.update({ trAim, finishedTr });
+            const { trAim, finishedTr, password } = req.body;
+            const updated = await user.update({ trAim, finishedTr, password });
             console.log('Обновленный пользователь:', updated);
     
             return res.json(updated); // Возвращаем обновленного пользователя

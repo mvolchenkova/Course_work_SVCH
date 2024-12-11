@@ -1,6 +1,7 @@
 .reviewsTitle{
     text-align: center;
     font-size: 4em;
+    font-weight: bold;
 }
 .reviewsDiv{
     display: flex;
@@ -14,4 +15,37 @@
     align-items:center;
     padding-bottom: 100px;
     padding-top: 100px;
+}
+.writeReviewButton{
+    border: 1px solid black;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 1.5em;
+    margin-top: 50px;
+}
+.reviewsDiv>div>img{
+    width: 70px;
+}
+.fetchReviews{
+    display: flex;
+    flex-direction: row;
+    align-items:center;
+    gap:20px;
+    overflow: hidden;
+    width: 100%;
+}
+.review{
+    height: 100px;
+    width: 250px;
+    background-color: rgba(130,130,130,0.3);
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.review>p{
+    margin: 0;
+    font-size: 1.25em;
 }

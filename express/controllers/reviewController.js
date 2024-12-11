@@ -6,16 +6,26 @@ const path = require('path');
 class ReviewController {
     async create(req, res) {
         try {
-            const { userId, text, rating } = req.body;
-            const question = await Review.create({ userId, text });
-            return res.status(201).json(question);
+            console.log(req.body)
+            const { idUser, text, rating } = req.body;
+            
+            const review = await Review.create({ idUser, text, rating });
+            return res.status(201).json(review);
         } catch (error) {
-            console.error('Ошибка при создании вопроса:', error);
-            return res.status(500).json({ message: 'Ошибка при создании вопроса' });
+            console.error('Ошибка при создании отзыва:', error);
+            return res.status(500).json({ message: 'Ошибка при создании отзыва' });
         }
     }
-
     async getAll(req, res) {
+        try {
+            const reviews = await Review.findAll(); // Получаем все отзывы
+            return res.json(reviews);
+        } catch (error) {
+            console.error('Ошибка при получении отзывов:', error);
+            return res.status(500).json({ message: 'Ошибка при получении отзывов' });
+        }
+    }
+    async getAllpages(req, res) {
         try {
             const { page = 1, limit = 10 } = req.query;
             const offset = (page - 1) * limit;
@@ -23,7 +33,7 @@ class ReviewController {
                 limit,
                 offset,
             });
-            return res.json({ total: count, page, questions: rows });
+            return res.json({ total: count, page, reviews: rows });
         } catch (error) {
             console.error('Ошибка при получении вопросов:', error);
             return res.status(500).json({ message: 'Ошибка при получении вопросов' });
@@ -32,18 +42,18 @@ class ReviewController {
     async delete(req, res) {
         try {
             const { id } = req.params; // Получаем id из параметров
-            const deletedQuestion = await Review.destroy({
-                where: { questionId: id }
+            const deletedReview = await Review.destroy({
+                where: { idReview: id }
             });
 
-            if (!deletedQuestion) {
-                return res.status(404).json({ message: 'Вопрос не найден' });
+            if (!deletedReview) {
+                return res.status(404).json({ message: 'Отзыв не найден' });
             }
 
             return res.status(204).send(); // Успешное удаление, без содержимого
         } catch (error) {
-            console.error('Ошибка при удалении вопроса:', error);
-            return res.status(500).json({ message: 'Ошибка при удалении вопроса' });
+            console.error('Ошибка при удалении отзыва:', error);
+            return res.status(500).json({ message: 'Ошибка при удалении отзыва' });
         }
     }
 }

@@ -28,3 +28,8 @@ tr:hover {
 .addButton{
     align-self: center;
 }
+.title{
+    font-size: 2em;
+    font-weight: bold;
+    text-align:center;
+}

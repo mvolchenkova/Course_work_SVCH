@@ -1,50 +1,72 @@
-import '../ReviewsFromUsers/ReviewsFromUsers.css'
-import Button from '../Button/Button.jsx'
+import '../ReviewsFromUsers/ReviewsFromUsers.css';
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchReviews } from '../../slices/reviewSlice';
+import { fetchUsers } from '../../slices/userSlice';
+import { Link } from 'react-router-dom';
 
-export default function ReviewsFromUsers(){
+export default function ReviewsFromUsers() {
+    // const dispatch = useDispatch();
+    // const reviewData = useSelector((state) => state.reviews.reviews);
+    // const { users } = useSelector((state) => state.users);
+    // const errorReviews = useSelector((state) => state.reviews.error);
+    // const errorUsers = useSelector((state) => state.users.error); 
+    // const [isLoading, setIsLoading] = useState(true); 
 
-    const [reviewData, setreviewData] = useState([]);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetch('/jsonFiles/reviews.json');
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const data = await response.json();
-                setreviewData(data);
-            } catch (error) {
-                console.error('Error fetching the reviews:', error);
-            }
-        };
+    // useEffect(() => {
+    //     const fetchAllData = async () => {
+    //       try {
+    //         await Promise.all([dispatch(fetchReviews()), dispatch(fetchUsers())]);
+    //         console.log(users)
+    //       } catch (error) {
+    //         console.error("Error fetching data:", error);
+    //       } finally {
+    //         setIsLoading(false);
+    //       }
+    //     };
+    
+    //     fetchAllData();
+    //   }, [dispatch]);
 
-        fetchData();
-    }, []);
 
-    return(
-        <>
-            <div className="ReviewsFromUsers">
-                <p className="reviewsTitle ArchivoBlackFont">REVIEWS FROM OUR USERS</p>
-                <div className="reviewsDiv">
-                    <div>
-                        <img src="/data/images/leftArrow.svg" alt="" />
-                    </div>
-                    <div>
-                        {reviewData.map((review) => (
-                        <div>
-                            <p>{review.name}</p>
-                            <p>{review.review}</p>
-                        </div>
-                    ))} 
-                    </div>
-                    <div>
-                        <img src="/data/images/rightArrow.svg" alt="" />
-                    </div>
+    // if (errorReviews) {
+    //     return <p>Error fetching reviews: {errorReviews}</p>;
+    // }
+
+    // if (errorUsers) {
+    //     return <p>Error fetching users: {errorUsers}</p>;
+    // }
+
+    // if (isLoading) {
+    //     return <p>Loading reviews and users...</p>; 
+    // }
+
+    // const findUser = (idUser) => {
+    //     const user = users.find(user => user.userId === idUser);
+    //     return user ? user.name : "Unknown User"; 
+    // };
+
+    return (
+        <div className="ReviewsFromUsers">
+            <p className="reviewsTitle PixelFont">REVIEWS FROM OUR USERS</p>
+            <div className="reviewsDiv">
+                <div>
+                    <img src="/data/images/leftArrow.png" alt="" />
                 </div>
-                <Button text="WRITE A REVIEW" />
+                <div className='fetchReviews'>
+                    {/* {reviewData.map((review) => (
+                        <div key={review.idReview} className='review'>
+                            <p>{findUser(review.idUser)}</p> 
+                            <p>{review.text}</p>
+                        </div>
+                    ))} */}
+                </div>
+                <div>
+                    <img src="/data/images/rightArrow.png" alt="" />
+                </div>
             </div>
-        </>
-    )
+            <Link to="/review" className='writeReviewButton'>WRITE A REVIEW</Link>
+        </div>
+    );
 }

@@ -295,11 +295,11 @@ const Review = sequelize.define('review', {
         },
     },
     text: {
-        type: DataTypes.ARRAY(DataTypes.STRING),
+        type: DataTypes.STRING,
         allowNull: false
     },
     rating: {
-        type: DataTypes.DOUBLE, 
+        type: DataTypes.INTEGER, 
         allowNull: false
     },
     email: {
