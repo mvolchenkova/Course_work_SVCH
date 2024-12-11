@@ -131,42 +131,50 @@ class UserController {
         // }
 
         try {
-            const id = req.body.idUser;
-            console.log(id);
+            const id = req.params.id;
             
+            // Проверка, что ID пользователя передан
+            if (!id) {
+                return res.status(400).json({ message: 'ID пользователя не указан' });
+            }
+    
+            console.log('ID пользователя:', id);
+            console.log('Данные для обновления:', req.body);
+    
             const user = await User.findByPk(id);
-            console.log(user);
-
-            const [updated] = await user.update(req.body);
-            console.log(updated);
-
-            if (!updated) {
+            console.log('Найденный пользователь:', user);
+    
+            // Проверка, найден ли пользователь
+            if (!user) {
                 return res.status(404).json({ message: 'Пользователь не найден' });
             }
-            const updatedUser = await User.findByPk(id);
-            return res.json(updatedUser);
+    
+            const updated = await user.update(req.body);
+            console.log('Обновленный пользователь:', updated);
+    
+            return res.json(user); // Возвращаем обновленного пользователя
         } catch (error) {
             console.error('Ошибка при обновлении пользователя:', error);
             return res.status(500).json({ message: 'Ошибка при обновлении пользователя' });
         }
-    }
+}
+    
     // Удаление записи
     async delete(req, res) {
         try {
-            const { id } = req.params;
-            const deleted = await User.destroy({
-                where: { idUser: id },
-            });
+            const { userId } = req.params;
+            const deleted = await User.destroy({ where: { idUser: userId } });
+    
             if (!deleted) {
-                return res.status(404).json({ message: 'Пользователь не найден' });
+                return res.status(404).json({ message: 'User not found' });
             }
-            return res.status(204).send();
+    
+            return res.status(204).send(); // Successfully deleted
         } catch (error) {
-            console.error('Ошибка при удалении пользователя:', error);
-            return res.status(500).json({ message: 'Ошибка при удалении пользователя' });
+            console.error('Error deleting user:', error);
+            return res.status(500).json({ message: 'Server error' });
         }
     }
-
     // Проверка существования записи
     async exists(req, res) {
         try {

@@ -47,7 +47,7 @@ function App() {
           </PrivateRouteToBecomeCoach>
         }></Route>
         <Route 
-          path="allUsers" 
+          path="adminpanel" 
           element={
             <PrivateRouteToAllUsers>
             <AllUsersPage />

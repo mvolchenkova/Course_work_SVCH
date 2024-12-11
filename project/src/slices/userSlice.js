@@ -48,6 +48,20 @@ export const becomeCoachThunk = createAsyncThunk('api/users/becomecoach/:id', as
     return response.data; 
 });
 
+export const deleteUserThunk = createAsyncThunk(
+    'user/deleteUser',
+    async (userId) => {
+        const response = await fetch(`http://localhost:5000/api/users/${userId}`, {
+            method: 'DELETE',
+        });
+        if (!response.ok) {
+            throw new Error('Failed to delete the user');
+        }
+        return userId; // Return the user ID for further processing
+    }
+);
+
+
 // Создание слайса
 const userSlice = createSlice({
     name: 'users',
@@ -62,9 +76,9 @@ const userSlice = createSlice({
                 state.users[index] = action.payload;
             }
         },
-        deleteUser: (state, action) => {
-            state.users = state.users.filter(user => user.idUser !== action.payload);
-        },
+        // deleteUser: (state, action) => {
+        //     state.users = state.users.filter(user => user.idUser !== action.payload.userId);
+        // },
         setCurrentUser: (state, action) => {
             state.currentUser = action.payload;
         },      
@@ -126,9 +140,11 @@ const userSlice = createSlice({
                 state.loading = false;
                 state.error = action.error.message;
             })
+            
+            
     },
 });
 
 // Экспорт редьюсеров
-export const { addUser, updateUser, deleteUser, setCurrentUser } = userSlice.actions;
+export const { addUser, updateUser, setCurrentUser } = userSlice.actions;
 export default userSlice.reducer;

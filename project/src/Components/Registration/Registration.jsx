@@ -43,7 +43,16 @@ export default function Registration() {
                 sex: formData.sex,
                 role: 'user',
             };
+            
+            localStorage.setItem('surname', userData.surname)
+            localStorage.setItem('name', userData.name)
+            localStorage.setItem('phone', userData.phone)
+            localStorage.setItem('password', userData.password)
+            localStorage.setItem('birthdate', userData.birthdate)
+            localStorage.setItem('sex', userData.sex)
+            localStorage.setItem('role', userData.role)
             const result = await dispatch(registerUser(userData)).unwrap();
+            localStorage.setItem('userId', result.idUser);
             navigate('/homePage')
         } catch (error) {
             console.error('Ошибка при регистрации:', error);

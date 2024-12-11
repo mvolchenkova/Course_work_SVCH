@@ -10,8 +10,11 @@ router.get('/sorted', userController.getAllSorted);
 router.get('/filtered', userController.getAllFiltered);
 router.get('/search', userController.search);
 router.get('/:id', userController.getById);
-// router.put('/:id', userController.update);
-router.delete('/:id', userController.delete);
+router.put('/:id', userController.update);
+router.delete('/:userId', (req, res, next) => {
+    console.log(`Received DELETE request for userId: ${req.params.userId}`);
+    next();
+}, userController.delete);
 router.get('/exists/:id', userController.exists);
 router.post('/check', userController.getChecked);
 router.post('/logout', userController.logoutUser);
