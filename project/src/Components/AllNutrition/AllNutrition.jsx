@@ -26,10 +26,10 @@ export default function AllNutrition() {
     }, [status, dispatch]);
     
     const handleAddRecipe = () => {
-        setModalOpen(true); // Open the modal
+        setModalOpen(true); 
     };
     const closeModal = () => {
-        setModalOpen(false); // Close the modal
+        setModalOpen(false); 
     };
 
     useEffect(() => {

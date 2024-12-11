@@ -16,6 +16,9 @@ const userRouter = require('./routes/userRouter');
 const taskRouter = require('./routes/taskRouter');
 const recipeRouter = require('./routes/recipeRouter');
 const articleRouter = require('./routes/acrticleRouter');
+const questionRouter = require('./routes/questionRouter')
+const reviewRouter = require('./routes/reviewRouter')
+
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -27,6 +30,8 @@ app.use('/api/favtplans', favtplanRouter);
 app.use('/api/tasks', taskRouter)
 app.use('/api/recipes', recipeRouter)
 app.use('/api/articles', articleRouter)
+app.use('/api/questions', questionRouter)
+app.use('/api/reviews', reviewRouter)
 app.use('/api', router);
 
 
@@ -66,8 +71,7 @@ app.get('/api/recipeImages', (req, res) => {
             return res.status(500).json({ message: 'Error reading images' });
         }
 
-        // Remove filtering condition to return all image files
-        const imageUrls = files.map(file => `/data/images/${file}`); // Create URLs for images
+        const imageUrls = files.map(file => `/data/images/recipes/${file}`); // Create URLs for images
         res.json(imageUrls); // Return the URLs as a JSON response
     });
 });

@@ -113,27 +113,9 @@ class UserController {
 
     // Обновление записи
     async update(req, res) {
-
-        // const userId = req.params.id;
-        // const updatedUserData = req.body; // Or req.body.currentUser if you're sending the whole object
-    
-        // try {
-        //     const updatedUser = await User.findByIdAndUpdate(userId, updatedUserData, { new: true }); // Assuming you're using Mongoose or similar
-    
-        //     if (!updatedUser) {
-        //         return res.status(404).json({ message: 'User not found' });
-        //     }
-    
-        //     res.json(updatedUser);
-        // } catch (error) {
-        //     console.error("Error updating user:", error);
-        //     res.status(500).json({ message: 'Error updating user' });
-        // }
-
         try {
             const id = req.params.id;
             
-            // Проверка, что ID пользователя передан
             if (!id) {
                 return res.status(400).json({ message: 'ID пользователя не указан' });
             }
@@ -144,20 +126,20 @@ class UserController {
             const user = await User.findByPk(id);
             console.log('Найденный пользователь:', user);
     
-            // Проверка, найден ли пользователь
             if (!user) {
                 return res.status(404).json({ message: 'Пользователь не найден' });
             }
     
-            const updated = await user.update(req.body);
+            const { trAim, finishedTr } = req.body;
+            const updated = await user.update({ trAim, finishedTr });
             console.log('Обновленный пользователь:', updated);
     
-            return res.json(user); // Возвращаем обновленного пользователя
+            return res.json(updated); // Возвращаем обновленного пользователя
         } catch (error) {
             console.error('Ошибка при обновлении пользователя:', error);
             return res.status(500).json({ message: 'Ошибка при обновлении пользователя' });
         }
-}
+    }
     
     // Удаление записи
     async delete(req, res) {
@@ -314,6 +296,7 @@ class UserController {
             console.error('Ошибка при добавлении выполненной тренировки:', error);
         }
     }
+    
 }
 
 module.exports = new UserController();

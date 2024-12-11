@@ -6,27 +6,37 @@ const fs = require('fs');
 class RecipeController {
     async create(req, res) {
         try {
-            const { title, time, ingredients, instructions } = req.body;
-            let fileName = null;
-                const { img } = req.files;
-                fileName = uuid.v4() + ".jpg";
-                img.mv(path.resolve(__dirname, '..', 'static', fileName));
+            console.log("req.files:", req.files);
+            console.log("req.body:", req.body);
+            const { title, time, ingredients, instructions, img } = req.body;
 
-                const rec = await Recipe.create({
+            const fileName = uuid.v4() + ".jpg";
+    
+            imageFile.mv(path.resolve(__dirname, '..', 'static', fileName), (err) => {
+                if (err) {
+                    console.error("Error moving file:", err);
+                    return res.status(500).json({ message: 'Error uploading image' });
+                }
+    
+    
+                Recipe.create({
                     title,
                     time,
-                    ingredients: JSON.stringify(ingredients), // Stringify!
-                    instructions: JSON.stringify(instructions), // Stringify!
-                    img: fileName
+                    ingredients: JSON.stringify(ingredients),
+                    instructions: JSON.stringify(instructions),
+                    img: fileName // Save the generated filename
+                }).then(rec => {
+                    res.status(201).json(rec);
+                }).catch(error => {
+                    console.error('Error creating recipe (database):', error);
+                    return res.status(500).json({ message: 'Error creating recipe' });
                 });
-            return res.status(201).json(rec);
-    
+            });
         } catch (error) {
-            console.error('Error creating recipe:', error);
+            console.error('Error creating recipe (general):', error);
             return res.status(500).json({ message: 'Error creating recipe' });
         }
     }
-
     async getAll(req, res) {
         try {
             const recipes = await Recipe.findAll();

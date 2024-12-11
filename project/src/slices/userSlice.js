@@ -38,8 +38,8 @@ export const adminAddUser = createAsyncThunk('api/users/register/admin', async (
 });
 
 // Async thunk для обновления данных пользователя
-export const updateUserThunk = createAsyncThunk('api/users/:id', async ({ currentUser }) => {
-    const response = await axios.put(`http://localhost:5000/api/users/${currentUser.userId}`, { currentUser });
+export const updateUserThunk = createAsyncThunk('api/users/:id', async ( currentUser ) => {
+    const response = await axios.put(`http://localhost:5000/api/users/${currentUser.userId}`, currentUser );
     return response.data; 
 });
 

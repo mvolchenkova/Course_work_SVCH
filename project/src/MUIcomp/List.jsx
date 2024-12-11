@@ -155,17 +155,7 @@ export default function NestedList() {
             </ListItemButton>
             </Link>
           </List>
-          <Link to="/shedule">
-          <List component="div" disablePadding>
-            <ListItemButton sx={{ pl: 4 }}>
-              <ListItemText 
-                primary="Schedule" 
-                style={{ fontFamily: 'Pixelify Sans' }}
-                disableTypography={true}
-              />
-            </ListItemButton>
-          </List>
-          </Link>      
+          
         </Collapse>
       </List>
 

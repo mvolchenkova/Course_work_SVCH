@@ -6,11 +6,26 @@ export const fetchRecipes = createAsyncThunk('api/recipes/fetch', async () => {
     return response.data;
 });
 
-export const adminAddRecipe = createAsyncThunk('api/recipes', async (recipeData) => {
-    const response = await axios.post('http://localhost:5000/api/recipes', recipeData);
-    return response.data; 
-});
-
+// export const adminAddRecipe = createAsyncThunk('api/recipes', async ({recipeData}) => {
+//     console.log(recipeData)
+//     const response = await axios.post('http://localhost:5000/api/recipes', {recipeData});
+//     return response.data; 
+export const adminAddRecipe = createAsyncThunk(
+    'recipes/addRecipe',
+    async (formData) => {
+        try {
+            const response = await axios.post('http://localhost:5000/api/recipes', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.error("Error adding recipe:", error);
+            throw error; 
+        }
+    }
+);
 const recipesSlice = createSlice({
     name: 'recipes',
     initialState: {

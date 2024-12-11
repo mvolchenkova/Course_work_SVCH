@@ -1,46 +1,53 @@
 import '../Progress/Progress.css';
 import { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { updateUserThunk } from '../../slices/userSlice'; 
 import * as d3 from "d3";
+import { Bar } from 'react-chartjs-2';
 
 export default function Progress() {
     const dispatch = useDispatch();
-    const userId = useSelector(state => state.users.currentUser?.userId);
-    const [showAddAim, setShowAddAim] = useState(true); 
+    
+    const [trainingAim, setTrainingAim] = useState(0);
+    const [finishedTr, setFinishedTr] = useState(0);
+    const userId = localStorage.getItem('userId');
+    
+    const [showAddAim, setShowAddAim] = useState(trainingAim === 0); 
     const [showModal, setShowModal] = useState(false); 
-    const [trainingAim, setTrainingAim] = useState(0); 
-    const [finishedTr, setfinishedTr] = useState(0);
     const [error, setError] = useState(null);
 
+    // Загрузка данных из localStorage
     useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                const response = await fetch(`http://localhost:5000/api/users/${userId}`);
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const data = await response.json();
-                if (data) {
-                    if (data.trAim) {
-                        setTrainingAim(data.trAim);
-                        setShowAddAim(false);
-                    }
-                    if (data.finishedTr) {
-                        setfinishedTr(data.finishedTr);
-                    }
-                }
-            } catch (error) {
-                console.error('Ошибка при загрузке данных пользователя:', error);
-                setError(error.message);
+        const storedAim = Number(localStorage.getItem('trAim')) || 0;
+        const storedFinishedTr = Number(localStorage.getItem('finishedTr')) || 0;
+        
+        setTrainingAim(storedAim);
+        setFinishedTr(storedFinishedTr);
+        setShowAddAim(storedAim === 0);
+
+        // Проверка на сброс выполненных тренировок
+        resetFinishedTrIfMonday(storedFinishedTr);
+    }, []);
+
+    const resetFinishedTrIfMonday = (storedFinishedTr) => {
+        const lastReset = localStorage.getItem('lastReset') ? new Date(localStorage.getItem('lastReset')) : null;
+        const today = new Date();
+        
+        if (today.getDay() === 1) { //сброс каждый понедельник
+            if (!lastReset || lastReset.getDate() !== today.getDate() || lastReset.getMonth() !== today.getMonth() || lastReset.getFullYear() !== today.getFullYear()) {
+                localStorage.setItem('finishedTr', 0);
+                setFinishedTr(0);
+                localStorage.setItem('lastReset', today.toISOString()); 
             }
-        };
-
-        if (userId) {
-            fetchUserData();
         }
-    }, [userId]);
+    };
+    const [workoutHistory, setWorkoutHistory] = useState([]);
 
+    const addWorkoutToHistory = (date, aim, completed) => {
+        setWorkoutHistory(prev => [...prev, { date, aim, completed }]);
+        localStorage.setItem('workoutHistory', JSON.stringify([...workoutHistory, { date, aim, completed }]));
+    };
+    
     useEffect(() => {
         const svg = d3.select("#progressChart");
         svg.selectAll("*").remove(); // Очищаем предыдущий график
@@ -63,45 +70,56 @@ export default function Progress() {
     }, [finishedTr, trainingAim]);
 
     const handleAimSubmit = () => {
-        if (!userId) {
-            console.error('User ID is missing');
-            return;
-        }
-    
         if (trainingAim < 1 || trainingAim > 7) {
             console.error('Invalid training aim:', trainingAim);
             return;
         }
-    
-        // Dispatch the updateUser thunk with both aim and trainings
-        dispatch(updateUserThunk({ userId, trAim: trainingAim, finishedTr }))
+
+        localStorage.setItem('trAim', trainingAim);
+        setShowAddAim(false);
+
+        // Обновляем пользователя с новой целью
+        const userData = {
+            userId,
+            trAim: trainingAim,
+            finishedTr // Сохраняем текущее количество завершенных тренировок
+        };
+
+        dispatch(updateUserThunk(userData))
             .unwrap()
-            .then(() => {
-                setShowAddAim(false);
-                setShowModal(false);
-            })
-            .catch((error) => {
-                console.error('Ошибка обновления цели:', error);
+            .catch(error => {
+                console.error('Ошибка при обновлении тренировки:', error);
             });
     };
 
     const handleAddTraining = async () => {
-    if (!userId) {
-        console.error('User ID is missing');
-        return;
-    }
+        if (!userId) {
+            console.error('User ID is missing');
+            return;
+        }
 
-    // Increase the number of completed trainings
-    const newFinishedTr = finishedTr + 1;
-    setfinishedTr(newFinishedTr);
+        const newFinishedTr = finishedTr + 1;
+        localStorage.setItem('finishedTr', newFinishedTr);
+        setFinishedTr(newFinishedTr);
 
-    // Dispatch the updateUser thunk with the new finished trainings count
-    dispatch(updateUserThunk({ userId, trAim: trainingAim, finishedTr: newFinishedTr }))
-        .unwrap()
-        .catch(error => {
-            console.error('Ошибка при добавлении выполненной тренировки:', error);
-        });
-};
+        // Обновляем пользователя с новым количеством завершенных тренировок
+        const userData = {
+            userId,
+            trAim: trainingAim,
+            finishedTr: newFinishedTr
+        };
+
+        dispatch(updateUserThunk(userData))
+            .unwrap()
+            .then(() => {
+                localStorage.setItem('trAim', trainingAim);
+                localStorage.setItem('finishedTr', newFinishedTr);
+            })
+            .catch(error => {
+                console.error('Ошибка при добавлении выполненной тренировки:', error);
+            });
+            addWorkoutToHistory(new Date().toLocaleDateString(), trainingAim, newFinishedTr);
+    };
 
     return (
         <div className="progressDiv">
@@ -124,7 +142,7 @@ export default function Progress() {
                         <p className='complTr'>Completed trainings: {finishedTr}</p>
                         <div className='chart'>
                             <svg id="progressChart"></svg>
-                            <button className="PixelFont addTrButton" onClick={handleAddTraining}>+</button> {/* Кнопка добавления тренировки */}
+                            <button className="PixelFont addTrButton" onClick={handleAddTraining}>+</button>
                         </div>
                     </div>
                 </div>

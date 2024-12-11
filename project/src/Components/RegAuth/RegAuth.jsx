@@ -18,7 +18,9 @@ export default function RegAuth() {
             
             // Сохранение данных пользователя в localStorage
             localStorage.setItem('user', JSON.stringify(resultAction)); // Предполагается, что resultAction содержит данные пользователя
-    
+            localStorage.setItem('userId', resultAction.userId)
+            localStorage.setItem('trAim', resultAction.trAim)
+            localStorage.setItem('finishedTr', resultAction.finishedTr)
             // Переход на домашнюю страницу
             navigate('/homePage');
         } catch (error) {

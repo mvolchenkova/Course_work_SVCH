@@ -301,6 +301,10 @@ const Review = sequelize.define('review', {
     rating: {
         type: DataTypes.DOUBLE, 
         allowNull: false
+    },
+    email: {
+        type: DataTypes.TEXT,
+        allowNull: true
     }
 },{
     timestamps: true,
@@ -330,7 +334,43 @@ const Article = sequelize.define('article', {
     timestamps: true,
     tableName: 'articles',
 })
+ const Question = sequelize.define('question', {
+    questionId: {
+        type: DataTypes.BIGINT,
+        primaryKey: true,
+        autoIncrement: true, 
+        allowNull: false,
+    },
+    userId: {
+        type: DataTypes.BIGINT,
+        allowNull: false
+    },
+    text: {
+        type: DataTypes.TEXT,
+        allowNull: false
+    },
+    email: {
+        type: DataTypes.TEXT,
+        allowNull: true
+    }
+ })
 
+ const Advice = sequelize.define('advice', {
+    adviceId: {
+        type: DataTypes.BIGINT,
+        primaryKey: true,
+        autoIncrement: true, 
+        allowNull: false,
+    },
+    title:{
+        type: DataTypes.TEXT,
+        allowNull: false
+    },
+    text: {
+        type: DataTypes.TEXT,
+        allowNull: false
+    }
+ })
 //user-favtplans
 User.hasMany(FavTplan, { foreignKey: 'userIdUser', sourceKey: 'idUser' });
 FavTplan.belongsTo(User, { foreignKey: 'userIdUser', targetKey: 'idUser' });
@@ -343,4 +383,4 @@ Review.belongsTo(User, { foreignKey: 'userIdUser', sourceKey: 'idUser' })
 User.hasMany(Task, { foreignKey: 'userIdUser', sourceKey: 'idUser' });
 Task.belongsTo(User, { foreignKey: 'userIdUser', targetKey: 'idUser' });
 
-module.exports = { User, FavTplan, TrainingPlan, Task, Recipe, Review, Article};
+module.exports = { User, TrainingPlan, Recipe, Review, Article, Question, Advice};

@@ -56,22 +56,19 @@ const AddRecipeModal = ({ isOpen, onClose }) => {
         const formData = new FormData();
         formData.append("title", recipeData.title);
         formData.append("time", recipeData.time);
-
         if (selectedImageFile) {
             formData.append("img", selectedImageFile);
         }
-
-        // Send ingredients and instructions as JSON strings
-        formData.append("ingredients", JSON.stringify(recipeData.ingredients));  
+        formData.append("ingredients", JSON.stringify(recipeData.ingredients));
         formData.append("instructions", JSON.stringify(recipeData.instructions));
 
+        console.log("formadata", formData.ingredients)
+
         try {
-            await dispatch(adminAddRecipe(formData));
+            await dispatch(adminAddRecipe({formData}));
             onClose(); 
-            resetForm(); // Reset the form after successful submission
         } catch (error) {
             console.error("Error creating recipe:", error);
-            // Handle the error appropriately, perhaps by displaying an error message to the user.
             alert("Error creating recipe. Please try again."); // Example alert
         }
     };
@@ -97,6 +94,7 @@ const AddRecipeModal = ({ isOpen, onClose }) => {
 
     const handleImageSelect = async (image) => { 
         setSelectedImage(image);
+        console.log(image)
         try {
             const response = await axios.get(image, { responseType: 'blob' }); 
             const file = new File([response.data], image.split('/').pop(), { type: response.data.type });

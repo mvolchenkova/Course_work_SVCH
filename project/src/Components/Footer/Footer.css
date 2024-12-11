@@ -19,7 +19,6 @@
     display: flex;
     flex-direction: row;
     gap:40px;
-    align-items:flex-start;
 }
 footer{
     background-color: transparent;
@@ -30,4 +29,6 @@ footer{
     display: flex;
     flex-direction: column;
     gap: 17px;
+    align-items:center;
+    justify-content: center;
 }

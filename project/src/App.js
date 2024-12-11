@@ -18,6 +18,8 @@ import AccountPage from './Pages/AccountPage'
 import ArticlesPage from './Pages/ArticlesPage';
 import PlanPage from './Pages/PlanPage/PlanPage'
 import RecipePage from './Pages/RecipePage/RecipePage'
+import Ask from './Pages/Ask/Ask';
+import WriteReviewPage from './Pages/WriteReviewPage/WriteReviewPage';
 
 function App() {
 
@@ -58,6 +60,8 @@ function App() {
         <Route path="/articles" element={<ArticlesPage/>}/>
         <Route path="/plan" element={<PlanPage />} />
         <Route path="/recipe" element={<RecipePage/>}/>
+        <Route path="/ask" element={<Ask/>}/>
+        <Route path="/review" element={<WriteReviewPage/>}/>
       </Routes>
    </BrowserRouter>
    
