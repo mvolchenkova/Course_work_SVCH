@@ -1,7 +1,6 @@
 table {
     width: 90%;
     border-collapse: collapse;
-    margin: 20px 0 0 20px;
     
 }
 
@@ -32,4 +31,9 @@ tr:hover {
     font-size: 2em;
     font-weight: bold;
     text-align:center;
+}
+.feature{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }

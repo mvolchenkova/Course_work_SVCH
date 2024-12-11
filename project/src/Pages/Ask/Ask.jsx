@@ -23,7 +23,7 @@ export default function Ask() {
         }
         
         try {
-            await dispatch(sendQuestion({ userId, text: question })).unwrap();
+            await dispatch(sendQuestion({ userId, text: question, email })).unwrap();
             setSuccessMessage('Ваш вопрос успешно отправлен!');
             setEmail('');
             setQuestion('');

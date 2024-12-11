@@ -8,9 +8,9 @@ const initialState = {
 
 export const sendQuestion = createAsyncThunk(
     'api/questions',
-    async ({ userId, text }, { rejectWithValue }) => {
+    async ({ userId, text, email }, { rejectWithValue }) => {
         try {
-            const response = await axios.post('http://localhost:5000/api/questions', { userId, text });
+            const response = await axios.post('http://localhost:5000/api/questions', { userId, text, email });
             return response.data; 
         } catch (error) {
             return rejectWithValue(error.response.data); 
@@ -18,18 +18,27 @@ export const sendQuestion = createAsyncThunk(
     }
 );
 
+export const fetchQuestions = createAsyncThunk('api/questions', async ({ page = 1, limit = 10 }) => {
+    const response = await axios.get(`http://localhost:5000/api/questions?page=${page}&limit=${limit}`);
+    return response.data; 
+});
+
 const questionSlice = createSlice({
     name: 'questions',
     initialState,
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(sendQuestion.fulfilled, (state, action) => {
-                state.questions.push(action.payload); 
-            })
+            // .addCase(sendQuestion.fulfilled, (state, action) => {
+            //     state.questions.push(action.payload); 
+            // })
             .addCase(sendQuestion.rejected, (state, action) => {
                 state.error = action.payload; 
-            });
+            })
+            .addCase(fetchQuestions.fulfilled, (state, action) => {
+                state.loading = false;
+                state.questions = action.payload.questions; 
+            })
     },
 });
 

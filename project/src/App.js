@@ -20,6 +20,7 @@ import PlanPage from './Pages/PlanPage/PlanPage'
 import RecipePage from './Pages/RecipePage/RecipePage'
 import Ask from './Pages/Ask/Ask';
 import WriteReviewPage from './Pages/WriteReviewPage/WriteReviewPage';
+import Advices from './Pages/Advices/Advices';
 
 function App() {
 
@@ -62,6 +63,7 @@ function App() {
         <Route path="/recipe" element={<RecipePage/>}/>
         <Route path="/ask" element={<Ask/>}/>
         <Route path="/review" element={<WriteReviewPage/>}/>
+        <Route path="/advices" element={<Advices/>}/>
       </Routes>
    </BrowserRouter>
    

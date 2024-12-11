@@ -6,8 +6,8 @@ const path = require('path');
 class QuestionController {
     async create(req, res) {
         try {
-            const { userId, text } = req.body;
-            const question = await Question.create({ userId, text });
+            const { userId, text, email } = req.body;
+            const question = await Question.create({ userId, text, email });
             return res.status(201).json(question);
         } catch (error) {
             console.error('Ошибка при создании вопроса:', error);
@@ -29,6 +29,7 @@ class QuestionController {
             return res.status(500).json({ message: 'Ошибка при получении вопросов' });
         }
     }
+
     async delete(req, res) {
         try {
             const { id } = req.params; // Получаем id из параметров
