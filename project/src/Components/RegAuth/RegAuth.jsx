@@ -17,18 +17,26 @@ export default function RegAuth() {
             const resultAction = await dispatch(loginUser({ phone, password })).unwrap();
             
             // Сохранение данных пользователя в localStorage
-            localStorage.setItem('user', JSON.stringify(resultAction)); // Предполагается, что resultAction содержит данные пользователя
-            localStorage.setItem('userId', resultAction.userId)
-            localStorage.setItem('trAim', resultAction.trAim)
-            localStorage.setItem('finishedTr', resultAction.finishedTr)
-            // Переход на домашнюю страницу
+            localStorage.setItem('user', JSON.stringify(resultAction)); 
+            localStorage.setItem('userId', resultAction.userId);
+            localStorage.setItem('trAim', resultAction.trAim);
+            localStorage.setItem('finishedTr', resultAction.finishedTr);
+            localStorage.setItem('name', resultAction.name);
+    
             navigate('/homePage');
         } catch (error) {
+            if (error.response) {
+                alert(error.response.data.message || 'Неизвестная ошибка');
+            } else if (error.request) {
+                alert('Нет ответа от сервера. Проверьте соединение.');
+            } else {
+                alert('Вы заблокированы. Вход невозможен');
+            }
             console.error('Ошибка входа:', error);
-            alert(error.message || 'Неизвестная ошибка');
         }
     };
 
+    
     return (
         <div className="regAuthDiv PixelFont">
             <img src="data/images/regGirl.png" alt="Registration" className="regImg" />
@@ -61,6 +69,8 @@ export default function RegAuth() {
                     or <Link to="/registr"><span className="yellowText">register</span></Link> if you don't have an account
                 </p>
             </form>
+
+
         </div>
     );
 }

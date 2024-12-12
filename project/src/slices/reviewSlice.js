@@ -6,9 +6,9 @@ const initialState = {
     error: null,
 };
 
-export const sendReview = createAsyncThunk('/api/reviews', async ({ idUser, text, rating }) => {
-    console.log(rating)
-    const response = await axios.post('http://localhost:5000/api/reviews', { idUser, text, rating });
+export const sendReview = createAsyncThunk('/api/reviews', async ({ idUser, text, rating, username }) => {
+    console.log(username)
+    const response = await axios.post('http://localhost:5000/api/reviews', { idUser, text, rating, username });
     return response.data; 
         
     }

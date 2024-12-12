@@ -45,18 +45,9 @@ function App() {
         <Route path="/shedule" element={<CalendarPage/>}/>
         <Route path="/allNutrition" element={<AllNutritionPage/>}/>
         <Route path="/becomecoach" element={
-          <PrivateRouteToBecomeCoach>
             <BecomeCoachPage />
-          </PrivateRouteToBecomeCoach>
         }></Route>
-        <Route 
-          path="adminpanel" 
-          element={
-            <PrivateRouteToAllUsers>
-            <AllUsersPage />
-          </PrivateRouteToAllUsers>
-          }
-        />
+        <Route path="adminpanel" element={<AllUsersPage />}/>
         <Route path="/account" element={<AccountPage/>}/>
         <Route path="/articles" element={<ArticlesPage/>}/>
         <Route path="/plan" element={<PlanPage />} />

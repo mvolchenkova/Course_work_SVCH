@@ -12,11 +12,11 @@
 .formGroup1 {
     margin-bottom: 15px;
 }
-
-.btnBecCoach {
-    background-color: transparent;
-
-    padding: 10px 15px;
+button{
+    background-color: rgb(0, 200, 220);
+    font-family: 'Pixelify Sans';
+    padding: 10px;
+    font-weight: bold;
+    border-radius: 10px;
     border: none;
-    cursor: pointer;
 }

@@ -4,10 +4,11 @@ import axios from 'axios';
 const initialState = {
     advices: [],
     error: null,
+    loading: false,
 };
 
 export const createAdvice = createAsyncThunk(
-    'api/advices',
+    'api/advices/create',
     async ({ title, text }) => {
         const response = await axios.post('http://localhost:5000/api/advices', { title, text });
         return response.data;
@@ -19,25 +20,29 @@ export const fetchAdvices = createAsyncThunk('api/advices', async () => {
     return response.data; 
 });
 
-
 const adviceSlice = createSlice({
     name: 'advices',
     initialState,
     reducers: {},
     extraReducers: (builder) => {
         builder
-            // .addCase(createAdvice.fulfilled, (state, action) => {
-            //     state.advices.push(action.payload); 
-            // })
-            .addCase(createAdvice.rejected, (state, action) => {
-                state.error = action.error.message; 
+            .addCase(fetchAdvices.pending, (state) => {
+                state.loading = true;
+                state.error = null;
             })
             .addCase(fetchAdvices.fulfilled, (state, action) => {
                 state.loading = false;
-                state.questions = action.payload.questions; 
+                state.advices = action.payload; 
             })
+            .addCase(fetchAdvices.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message; 
+            })
+            .addCase(createAdvice.rejected, (state, action) => {
+                state.error = action.error.message; 
+            });
     },
 });
 
-// Экспорт редьюсера
+// Export reducer
 export default adviceSlice.reducer;

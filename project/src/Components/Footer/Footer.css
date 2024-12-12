@@ -32,3 +32,12 @@ footer{
     align-items:center;
     justify-content: center;
 }
+.contact{
+    display: flex;
+    flex-direction: column;
+}
+.contactLink{
+    display: flex;
+    flex-direction: row;
+    gap: 20px
+}

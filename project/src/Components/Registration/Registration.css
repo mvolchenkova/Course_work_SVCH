@@ -30,12 +30,6 @@ input {
     border: 1px solid black;
 }
 
-.btnReg {
-    border: 2px solid black; 
-    padding: 10px 15px; /* Внутренний отступ */
-    border-radius: 5px; /* Скругление углов */
-    background-color: transparent;
-}
 Link{
     text-decoration: none;
 }
@@ -53,4 +47,12 @@ Link{
     display: flex;
     flex-direction: row;
     align-items:center;
+}
+button{
+    background-color: rgb(0, 200, 220);
+    font-family: 'Pixelify Sans';
+    padding: 10px;
+    font-weight: bold;
+    border-radius: 10px;
+    border: none;
 }

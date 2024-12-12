@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { createAdvice } from '../slices/adviceSlice'; 
-
+import { createAdvice } from '../../slices/adviceSlice'; 
+import '../AddAdviceModal/AddAdviceModal.css'
 
 const AddAdviceModal = ({ isOpen, onClose }) => {
     const dispatch = useDispatch();

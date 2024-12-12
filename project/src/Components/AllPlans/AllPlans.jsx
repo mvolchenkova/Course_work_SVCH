@@ -86,7 +86,7 @@ export default function AllPlans() {
                     ) : filteredPlans.length > 0 ? (
                         filteredPlans.map(plan => (
                             <div key={plan.id} className="planData PixelFont">
-                                <Link to='/plan' onClick={() => handlePlanClick(plan)} style={{ textDecoration: 'none' }}>
+                                <Link to='/plan' key={plan.id} onClick={() => handlePlanClick(plan)} style={{ textDecoration: 'none' }}>
                                     <img src={`http://localhost:5000/${plan.img}`} alt={plan.title} className="planImg" />
                                     <div className="planText">
                                         <b>{plan.title}</b>

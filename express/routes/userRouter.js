@@ -19,8 +19,6 @@ router.get('/exists/:id', userController.exists);
 router.post('/check', userController.getChecked);
 router.post('/logout', userController.logoutUser);
 router.put('/becomecoach', upload.single('file'), userController.becomeCoach)
-// router.put('/:id', userController.updateTrainingAim);
-
-// router.patch('/:id', userController.addTraining)
+router.patch('/:id/block', userController.block)
 
 module.exports = router

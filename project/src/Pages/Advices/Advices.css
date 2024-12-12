@@ -3,3 +3,29 @@
     flex-direction: column;
     align-items: center;
 }
+.advicesDiv{
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 50px;
+
+}
+.advice{
+    display: flex;
+    flex-direction: column;
+    border:1px solid black;
+    border-radius: 20px;
+    width: 90%;
+    padding: 20px;
+    background-color: rgba(130,130,130,0.3);
+
+}
+.titleAdv{
+    font-size: 1.7em;
+    font-weight: bold;
+}
+.advText{
+    font-size: 1.3em;
+}

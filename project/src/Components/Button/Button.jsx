@@ -5,7 +5,7 @@ export default function Button({ text, link }) {
     return (
         <>
             <Link to={link}>
-                <button className="button PixelFont">{text}</button>
+                <button className="PixelFont">{text}</button>
             </Link>
             
         </>

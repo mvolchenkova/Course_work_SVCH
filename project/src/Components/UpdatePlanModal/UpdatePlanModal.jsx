@@ -1,7 +1,7 @@
-// UpdatePlanModal.jsx
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { updateTrainingPlan } from '../../slices/tplanSlice'; 
+import '../UpdatePlanModal/UpdatePlanModal.css'
 
 const UpdatePlanModal = ({ isOpen, onClose, currentPlan }) => {
     const dispatch = useDispatch();

@@ -61,6 +61,11 @@ export const deleteUserThunk = createAsyncThunk(
     }
 );
 
+export const toggleUserBlock = createAsyncThunk('api/users/:id/block', async (userId) => {
+    const response = await axios.patch(`http://localhost:5000/api/users/${userId}/block`);
+    return response.data; // Assuming the response contains the updated user object
+});
+
 
 // Создание слайса
 const userSlice = createSlice({
@@ -81,7 +86,13 @@ const userSlice = createSlice({
         // },
         setCurrentUser: (state, action) => {
             state.currentUser = action.payload;
-        },      
+        },   
+        toggleBlock(state, action) {
+            const user = state.users.find(user => user.idUser === action.payload);
+            if (user) {
+                user.isBlocked = !user.isBlocked; 
+            }
+        },   
     },
     extraReducers: (builder) => {
         builder
@@ -112,24 +123,30 @@ const userSlice = createSlice({
             
             .addCase(fetchUsers.fulfilled, (state, action) => {
                 state.loading = false;
-                state.users = action.payload.users; // This should just be the users array
+                state.users = action.payload.users; 
             })
             .addCase(updateUserThunk.fulfilled, (state, action) => {
-                state.currentUser = action.payload; // Обновляем данные текущего пользователя
+                state.currentUser = action.payload; 
                 const index = state.users.findIndex(user => user.idUser === action.payload.idUser);
                 if (index !== -1) {
-                    state.users[index] = action.payload; // Обновляем массив пользователей, если необходимо
+                    state.users[index] = action.payload; 
                 }
             })
             .addCase(adminAddUser.fulfilled, (state, action) => {
                 state.loading = false;
-                state.users.push(action.payload); // Add new user to the list
+                state.users.push(action.payload); 
             })
             .addCase(adminAddUser.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message;
             })
-            
+            .addCase(toggleUserBlock.fulfilled, (state, action) => {
+                const updatedUser = action.payload;
+                const index = state.users.findIndex(user => user.idUser === updatedUser.idUser);
+                if (index !== -1) {
+                    state.users[index] = updatedUser; 
+                }
+            });
             
             
     },

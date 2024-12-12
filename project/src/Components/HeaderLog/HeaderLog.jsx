@@ -14,6 +14,10 @@ export default function HeaderLog() {
         try {
             await dispatch(logoutUser());
             localStorage.removeItem('user'); 
+            localStorage.removeItem('finishedTr')
+            localStorage.removeItem('trAim')
+            localStorage.removeItem('userId')
+            localStorage.removeItem('name')
             navigate('/'); 
             window.location.reload(); 
         } catch (error) {

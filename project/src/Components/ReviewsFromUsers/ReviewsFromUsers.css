@@ -7,7 +7,9 @@
     display: flex;
     flex-direction: row;
     align-items:center;
-    justify-content: center;
+    justify-content: space-between;
+    width: 95%;
+    
 }
 .ReviewsFromUsers{
     display: flex;
@@ -17,11 +19,13 @@
     padding-top: 100px;
 }
 .writeReviewButton{
-    border: 1px solid black;
-    border-radius: 8px;
+    border: none;
+    border-radius: 10px;
     padding: 10px;
-    font-size: 1.5em;
+    font-size: 1.3em;
     margin-top: 50px;
+    background-color:rgb(0,200,220);
+    font-weight: bold;
 }
 .reviewsDiv>div>img{
     width: 70px;
@@ -32,11 +36,12 @@
     align-items:center;
     gap:20px;
     overflow: hidden;
-    width: 100%;
+    width: 80%;
 }
 .review{
-    height: 100px;
-    width: 250px;
+    height: max-content;
+    min-height: 200px;
+    min-width: 250px;
     background-color: rgba(130,130,130,0.3);
     border: 2px solid black;
     border-radius: 10px;
@@ -48,4 +53,16 @@
 .review>p{
     margin: 0;
     font-size: 1.25em;
+    text-align: justify;
+}
+.username{
+    font-weight: bold;
+    font-size: 1.3em;
+    margin: 5px;
+}
+.nameStar{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items:center;
 }

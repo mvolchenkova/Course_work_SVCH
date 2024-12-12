@@ -6,10 +6,10 @@ const path = require('path');
 class ReviewController {
     async create(req, res) {
         try {
-            console.log(req.body)
-            const { idUser, text, rating } = req.body;
             
-            const review = await Review.create({ idUser, text, rating });
+            const { idUser, text, rating, username } = req.body;
+            console.log(username)
+            const review = await Review.create({ idUser, text, rating, username });
             return res.status(201).json(review);
         } catch (error) {
             console.error('Ошибка при создании отзыва:', error);

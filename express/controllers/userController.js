@@ -174,12 +174,19 @@ class UserController {
             const { phone, password } = req.body;
     
             const user = await User.findOne({ where: { phone } });
+            console.log(user)
             if (!user) {
                 return res.status(404).json({ message: 'Пользователь не найден' });
             }
     
             if (password !== user.password) {
                 return res.status(401).json({ message: 'Неверный пароль' });
+            }
+
+
+            if (user.isBlocked) {
+                console.error('Пользователь заблокирован:', user.phone);
+                return res.status(401).json({ message: 'Вы заблокированы. Вход невозможен.' });
             }
     
             res.status(200).json({ phone: user.phone, 
@@ -295,6 +302,20 @@ class UserController {
         } catch (error) {
             console.error('Ошибка при добавлении выполненной тренировки:', error);
         }
+    }
+
+    async block(req, res) {
+        const { id } = req.params;
+        const user = await User.findByPk(id);
+        
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+
+        user.isBlocked = !user.isBlocked; 
+        await user.save();
+
+        res.json(user);
     }
     
 }

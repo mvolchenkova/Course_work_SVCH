@@ -138,7 +138,8 @@ const User = sequelize.define('User', {
         type: DataTypes.INTEGER,
         allowNull: true
     },
-    lastTrainingDate:{ type: DataTypes.DATE}
+    lastTrainingDate:{ type: DataTypes.DATE},
+    isBlocked: { type: DataTypes.BOOLEAN, defaultValue: false }
 }, {
     timestamps: true,
     tableName: 'users',
@@ -305,6 +306,9 @@ const Review = sequelize.define('review', {
     email: {
         type: DataTypes.TEXT,
         allowNull: true
+    },
+    username: {
+        type: DataTypes.STRING
     }
 },{
     timestamps: true,

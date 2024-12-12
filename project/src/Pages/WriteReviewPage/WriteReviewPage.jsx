@@ -6,27 +6,28 @@ import { useDispatch } from 'react-redux';
 import { sendReview } from '../../slices/reviewSlice';
 import Rating from '@mui/material/Rating';
 import Box from '@mui/material/Box';
- 
+
 export default function WritingReviewPage() {
     const dispatch = useDispatch();
     const [email, setEmail] = useState('');
     const [review, setReview] = useState('');
     const [error, setError] = useState('');
-    const [rating, setRating] = useState(0); 
+    const [rating, setRating] = useState(0);
     const [successMessage, setSuccessMessage] = useState('');
-    const idUser = localStorage.getItem('userId')
+    const idUser = localStorage.getItem('userId');
+    const username = localStorage.getItem('name');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         
-        // Простая валидация
+        // Simple validation
         if (!email || !review) {
             setError('Все поля обязательны для заполнения.');
             return;
         }
         
         try {
-            await dispatch(sendReview({ idUser, text: review, rating })).unwrap();
+            await dispatch(sendReview({ idUser, text: review, rating, username })).unwrap();
             setSuccessMessage('Ваш отзыв успешно отправлен!');
             setEmail('');
             setRating(0);
@@ -41,7 +42,7 @@ export default function WritingReviewPage() {
         <main>
             <HeaderLog />
             <div className="ask-container">
-                <h2>Напишие свой отзыв здесь. Ваше мнение важно для нас.</h2>
+                <h2>Напишите свой отзыв здесь. Ваше мнение важно для нас.</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label htmlFor="email">Ваша электронная почта:</label>
@@ -60,8 +61,10 @@ export default function WritingReviewPage() {
                             value={review}
                             onChange={(e) => setReview(e.target.value)}
                             required
-                            style={{ height: '150px' }} // Увеличиваем высоту
+                            maxLength={120} // Limit input to 120 characters
+                            style={{ height: '150px' }} // Increase height
                         ></textarea>
+                        <p>{review.length} / 120</p> {/* Display character count */}
                     </div>
                     <div className="form-group rating">
                         <label htmlFor="rating">Ваша оценка:</label>
