@@ -11,7 +11,7 @@ export default function PlanPage() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const currentPlan = useSelector((state) => state.trainingPlans.currentPlan);
-
+    const role = localStorage.getItem('role')
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleDeletePlan = async () => {
@@ -57,9 +57,16 @@ export default function PlanPage() {
                         <p>No lessons available.</p>
                     )}
                 </div>
+                {( role == 'admin' || role == 'trainer' )&&(
+                <div className='buttons'>
+                    <button onClick={handleDeletePlan}>DELETE PLAN</button>
+                    <button onClick={() => setIsModalOpen(true)}>UPDATE PLAN</button>
+                </div>
+                
+                )}
             </main>
-            <button onClick={handleDeletePlan}>DELETE PLAN</button>
-            <button onClick={() => setIsModalOpen(true)}>UPDATE PLAN</button>
+            
+            
             <Footer />
             <UpdatePlanModal 
                 isOpen={isModalOpen} 

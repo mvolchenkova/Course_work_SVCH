@@ -16,6 +16,7 @@ export default function AllNutrition() {
     const [getInput, setInput] = useState('');
     const [favorites, setFavorites] = useState({});
     const [isModalOpen, setModalOpen] = useState(false);
+    const role = localStorage.getItem('role')
 
     const isLoading = status === 'loading';
 
@@ -108,10 +109,13 @@ export default function AllNutrition() {
                         <p>No recipes found.</p>
                     )}
                 </div>
+                {(role=='admin'||role=='trainer')&&(
+                    <div className=''>
+                        <button onClick={handleAddRecipe}>ADD RECIPE</button>
+                    </div>
+                )}
             </div>
-            <div className=''>
-                <button onClick={handleAddRecipe}>ADD RECIPE</button>
-            </div>
+            
             <AddRecipeModal isOpen={isModalOpen} onClose={closeModal} />
         </main>
     );

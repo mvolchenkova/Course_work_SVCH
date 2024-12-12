@@ -22,6 +22,7 @@ export default function RegAuth() {
             localStorage.setItem('trAim', resultAction.trAim);
             localStorage.setItem('finishedTr', resultAction.finishedTr);
             localStorage.setItem('name', resultAction.name);
+            localStorage.setItem('role', resultAction.role)
     
             navigate('/homePage');
         } catch (error) {

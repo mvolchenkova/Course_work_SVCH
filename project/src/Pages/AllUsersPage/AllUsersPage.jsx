@@ -150,7 +150,7 @@ export default function AllUsersPage() {
                             </TableHead>
                             <TableBody>
                                 {questionRows.map((question) => (
-                                    <TableRow key={question.userId}>
+                                    <TableRow key={question.questionId}>
                                         <TableCell component="th" scope="row">
                                             {question.userId}
                                         </TableCell>

@@ -10,7 +10,7 @@ export default function Advices() {
     const dispatch = useDispatch();
     const { advices, loading, error } = useSelector((state) => state.advices);
     const [isModalOpen, setModalOpen] = useState(false);
-
+    const role = localStorage.getItem('role')
     useEffect(() => {
         dispatch(fetchAdvices());
     }, [dispatch]);
@@ -41,7 +41,9 @@ export default function Advices() {
                         </div>
                     ))}
                 </div>
-                <button onClick={handleOpenModal}>ADD ADVICE</button>
+                {(role=='admin'||role=='trainer')&&(
+                    <button onClick={handleOpenModal}>ADD ADVICE</button>
+                )}
             </main>
             <Footer />
         </>

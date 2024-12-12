@@ -16,7 +16,7 @@ export default function AllPlans() {
     const [getInput, setInput] = useState('');
     const [favorites, setFavorites] = useState({});
     const [isModalOpen, setModalOpen] = useState(false);
-
+    const role = localStorage.getItem('role')
     const isLoading = status === 'loading';
 
     useEffect(() => {
@@ -111,9 +111,12 @@ export default function AllPlans() {
                     )}
                 </div>
             </div>
-            <div className=''>
-                <button onClick={handleAddPlan}>ADD PLAN</button>
-            </div>
+            { ( role == 'admin' || role == 'trainer' ) &&(
+                <div className=''>
+                    <button onClick={handleAddPlan}>ADD PLAN</button>
+                </div>
+            )}
+            
             <AddPlanModal isOpen={isModalOpen} onClose={closeModal} /> 
         </main>
     );

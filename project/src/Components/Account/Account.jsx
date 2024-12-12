@@ -6,7 +6,6 @@ import { deleteUserThunk, logoutUser, updateUserThunk } from '../../slices/userS
 
 export default function Account() {
     const dispatch = useDispatch();
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
@@ -14,23 +13,10 @@ export default function Account() {
     
     const currentUser = JSON.parse(localStorage.getItem('user'));
 
-    const openModal = () => setIsModalOpen(true);
-    const closeModal = () => setIsModalOpen(false);
     const openChangePasswordModal = () => setIsChangePasswordOpen(true);
     const closeChangePasswordModal = () => setIsChangePasswordOpen(false);
 
-    const handleOnDelete = async () => {
-        try {
-            await dispatch(deleteUserThunk(currentUser.userId)); 
-            closeModal();
-            dispatch(logoutUser());  
-            localStorage.removeItem('user');
-            navigate('/'); 
-            window.location.reload();
-        } catch (error) {
-            console.error('Error deleting account:', error);
-        }
-    };
+    
 
     const handleChangePassword = async () => {
         try {
@@ -76,23 +62,13 @@ export default function Account() {
                             </div>
                             <div className='accButtons PixelFont'>
                                 <button onClick={openChangePasswordModal}>CHANGE PASSWORD</button>
-                                <button onClick={openModal} className="deleteAccBut">DELETE ACCOUNT</button>
                             </div>
                         </div>
                     ) : (
                         <p>No user data available.</p>
                     )}
                 </div>
-                {isModalOpen && (
-                    <div className="modal">
-                        <div className="modalContent">
-                            <h2>Confirmation of Deletion</h2>
-                            <p>Are you sure you want to delete this account?</p>
-                            <button onClick={handleOnDelete}>Yes, delete</button>
-                            <button onClick={closeModal}>Cancel</button>
-                        </div>
-                    </div>
-                )}
+                
                 {isChangePasswordOpen && (
                     <div className="modal">
                         <div className="modalContent">

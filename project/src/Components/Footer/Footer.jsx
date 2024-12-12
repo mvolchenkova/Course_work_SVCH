@@ -7,6 +7,7 @@ import '../Footer/Footer.css'
 export default function Footer(){
     const navigate = useNavigate();
     const user = localStorage.getItem('user')
+    const role = localStorage.getItem('role')
     const handleWriteReviewClick = (event) => {
         if (!user) {
             event.preventDefault(); 
@@ -44,8 +45,9 @@ export default function Footer(){
                         <Link to="/ask">Ask a question</Link>
                         <Link to="/review" onClick={handleWriteReviewClick}>Write a review</Link>
                         <Link to="/becomecoach">Become a coach</Link>
-                        {user.role==admin}
-                        <Link to="/adminpanel">adminpanel</Link>
+                        {role == 'admin' && (
+                            <Link to="/adminpanel">Admin Panel</Link>
+                        )}
                     </div>
                 </div>
             </footer>
