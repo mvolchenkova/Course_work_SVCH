@@ -2,12 +2,7 @@ const { DataTypes, DatabaseError } = require('sequelize');
 const sequelize = require('../db');
 
 const TrainingPlan = sequelize.define('trainingplan', {
-    idTplan: {
-        type: DataTypes.BIGINT,
-        primaryKey: true,
-        autoIncrement: true, 
-        allowNull: false,
-    },
+    idTplan: {type: DataTypes.BIGINT, primaryKey: true, autoIncrement: true, allowNull: false },
     author: {
         type: DataTypes.TEXT,
         allowNull: false,
@@ -139,7 +134,9 @@ const User = sequelize.define('User', {
         allowNull: true
     },
     lastTrainingDate:{ type: DataTypes.DATE},
-    isBlocked: { type: DataTypes.BOOLEAN, defaultValue: false }
+    isBlocked: { type: DataTypes.BOOLEAN, defaultValue: false },
+    favPlans: {type: DataTypes.ARRAY(DataTypes.BIGINT),defaultValue: [], allowNull: false},
+    favRecipes: {type: DataTypes.ARRAY(DataTypes.BIGINT)}
 }, {
     timestamps: true,
     tableName: 'users',
@@ -375,6 +372,16 @@ const Article = sequelize.define('article', {
         allowNull: false
     }
  })
+
+ const Ingredient = sequelize.define('ingredient', {
+    ingredientId: {type: DataTypes.BIGINT, primaryKey: true, autoIncrement: true},
+    ingredientName: {type: DataTypes.TEXT, allowNull: false}
+ })
+
+ const Instruction = sequelize.define('instruction', {
+    instructionId: {type: DataTypes.BIGINT, primaryKey: true, autoIncrement: true},
+    instructionName: {type: DataTypes.TEXT, allowNull: false}
+ })
 //user-favtplans
 User.hasMany(FavTplan, { foreignKey: 'userIdUser', sourceKey: 'idUser' });
 FavTplan.belongsTo(User, { foreignKey: 'userIdUser', targetKey: 'idUser' });
@@ -387,4 +394,10 @@ Review.belongsTo(User, { foreignKey: 'userIdUser', sourceKey: 'idUser' })
 User.hasMany(Task, { foreignKey: 'userIdUser', sourceKey: 'idUser' });
 Task.belongsTo(User, { foreignKey: 'userIdUser', targetKey: 'idUser' });
 
-module.exports = { User, TrainingPlan, Recipe, Review, Article, Question, Advice};
+User.hasMany(Ingredient)
+Ingredient.belongsTo(User)
+
+User.hasMany(Instruction)
+Instruction.belongsTo(User)
+
+module.exports = { User, TrainingPlan, Recipe, Review, Article, Question, Advice, Ingredient, Instruction};

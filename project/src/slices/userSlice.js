@@ -3,14 +3,16 @@ import axios from 'axios';
 
 const initialState = {
     users: [],
+    favPlans: [],
+    favRecipes: [],
     loading: false,
     currentUser: null,
     error: null,
 };
 
 // Async thunk для логина пользователя
-export const loginUser = createAsyncThunk('api/users/check', async (credentials) => {
-    const response = await axios.post('http://localhost:5000/api/users/check', credentials);
+export const loginUser = createAsyncThunk('api/users/check', async ({phone, password}) => {
+    const response = await axios.post('http://localhost:5000/api/users/check', {phone, password});
     return response.data;
 });
 
@@ -37,7 +39,6 @@ export const adminAddUser = createAsyncThunk('api/users/register/admin', async (
     return response.data; 
 });
 
-// Async thunk для обновления данных пользователя
 export const updateUserThunk = createAsyncThunk('api/users/:id', async ( currentUser ) => {
     const response = await axios.put(`http://localhost:5000/api/users/${currentUser.userId}`, currentUser );
     return response.data; 
@@ -57,17 +58,21 @@ export const deleteUserThunk = createAsyncThunk(
         if (!response.ok) {
             throw new Error('Failed to delete the user');
         }
-        return userId; // Return the user ID for further processing
+        return userId; 
     }
 );
 
 export const toggleUserBlock = createAsyncThunk('api/users/:id/block', async (userId) => {
     const response = await axios.patch(`http://localhost:5000/api/users/${userId}/block`);
-    return response.data; // Assuming the response contains the updated user object
+    return response.data; 
 });
 
+export const addFavoritePlan = createAsyncThunk('api/users/:id/addFavoritePlan', async ({userId, idTplan}) => {
+        const response = await axios.put(`http://localhost:5000/api/users/${userId}/addFavoritePlan`, {idTplan});
+        return response.data; 
+    }
+);  
 
-// Создание слайса
 const userSlice = createSlice({
     name: 'users',
     initialState,
@@ -81,9 +86,6 @@ const userSlice = createSlice({
                 state.users[index] = action.payload;
             }
         },
-        // deleteUser: (state, action) => {
-        //     state.users = state.users.filter(user => user.idUser !== action.payload.userId);
-        // },
         setCurrentUser: (state, action) => {
             state.currentUser = action.payload;
         },   
@@ -102,7 +104,7 @@ const userSlice = createSlice({
             })
             .addCase(loginUser.fulfilled, (state, action) => {
                 state.loading = false;
-                state.currentUser = action.payload; 
+                state.currentUser = action.payload.user; 
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.loading = false;
@@ -146,8 +148,12 @@ const userSlice = createSlice({
                 if (index !== -1) {
                     state.users[index] = updatedUser; 
                 }
+            })
+            .addCase(addFavoritePlan.fulfilled, (state, action) => {
+                if (state.currentUser) {
+                    state.currentUser.favPlans = action.payload; // Обновляем массив избранных планов
+                }
             });
-            
             
     },
 });

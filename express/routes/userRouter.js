@@ -20,5 +20,6 @@ router.post('/check', userController.getChecked);
 router.post('/logout', userController.logoutUser);
 router.put('/becomecoach', upload.single('file'), userController.becomeCoach)
 router.patch('/:id/block', userController.block)
+router.put('/:id/addFavoritePlan', userController.addFavoritePlan)
 
 module.exports = router

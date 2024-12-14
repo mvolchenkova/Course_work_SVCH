@@ -4,6 +4,13 @@ const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
 const multer = require('multer');
 const path = require('path');
+const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
+const { body, validationResult } = require('express-validator');
+
+const dotenv = require('dotenv');
+dotenv.config();
+
 
 // Настройка multer для загрузки файлов
 const storage = multer.diskStorage({
@@ -20,16 +27,32 @@ const upload = multer({ storage: storage });
 class UserController {
     // Создание новой записи
     async create(req, res) {
+        const validationRules = [
+            body('name').notEmpty().withMessage('Name required').isLength({ min: 2 }).withMessage('The name must be at least 2 characters'),
+            body('surname').notEmpty().withMessage('Surname required').isLength({ min: 2 }).withMessage('Last name must be at least 2 characters long'),
+            body('phone').notEmpty().withMessage('Phone required').isMobilePhone().withMessage('Invalid phone number format'),
+            body('password').notEmpty().withMessage('Password required').isLength({ min: 6 }).withMessage('The password must be at least 6 characters'),
+            body('sex').isIn(['male', 'female']).withMessage('Sex should be male/female'), 
+        ];
+    
+        await Promise.all(validationRules.map(validation => validation.run(req)));
+    
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+    
+    
         try {
             const { surname, name, phone, password, birthdate, sex, role } = req.body;
-            const user = await User.create({ surname, name, phone, password, birthdate, sex, role });
+            const hashPassword = await bcrypt.hash(password, 15);
+            const user = await User.create({ surname, name, phone, password: hashPassword, birthdate, sex, role });
             return res.status(201).json(user);
         } catch (error) {
             console.error('Ошибка при создании пользователя:', error);
             return res.status(500).json({ message: 'Ошибка при создании пользователя' });
         }
     }
-
     // Получение списка записей с поддержкой пагинации
     async getAll(req, res) {
         try {
@@ -130,8 +153,9 @@ class UserController {
                 return res.status(404).json({ message: 'Пользователь не найден' });
             }
     
-            const { trAim, finishedTr, password } = req.body;
-            const updated = await user.update({ trAim, finishedTr, password });
+            const { trAim, finishedTr, password, role } = req.body;
+            const hashPassword = await bcrypt.hash(password, 15);
+            const updated = await user.update({ trAim, finishedTr, password: hashPassword, role });
             console.log('Обновленный пользователь:', updated);
     
             return res.json(updated); // Возвращаем обновленного пользователя
@@ -172,32 +196,49 @@ class UserController {
     async getChecked(req, res) {
         try {
             const { phone, password } = req.body;
-    
+            
+            const loginValidationRules = [
+                body('phone').notEmpty().withMessage('Phone required').isMobilePhone().withMessage('Invalid phone input'),
+                body('password').notEmpty().withMessage('Password required'),
+            ];
+        
+            await Promise.all(loginValidationRules.map(validation => validation.run(req)));
+            const errors = validationResult(req);
+        
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() });
+            }
+
             const user = await User.findOne({ where: { phone } });
-            console.log(user)
             if (!user) {
                 return res.status(404).json({ message: 'Пользователь не найден' });
             }
-    
-            if (password !== user.password) {
-                return res.status(401).json({ message: 'Неверный пароль' });
+            
+            const isPassValid = bcrypt.compareSync(password, user.password)
+            
+            if(!isPassValid){
+                return res.status(400).json({message: "User not found"})
             }
-
+            
+            const token = jwt.sign({ id: user.idUser }, process.env.SECRETKEY, { expiresIn: "1h" });
 
             if (user.isBlocked) {
                 console.error('Пользователь заблокирован:', user.phone);
                 return res.status(401).json({ message: 'Вы заблокированы. Вход невозможен.' });
             }
-    
-            res.status(200).json({ phone: user.phone, 
-                                    name: user.name, 
-                                    surname: user.surname, 
-                                    sex: user.sex,  
-                                    userId: user.idUser, 
-                                    trAim: user.trAim,
-                                    birthdate: user.birthdate,
-                                    role: user.role,
-                                    finishedTr: user.finishedTr}); 
+           
+            res.status(200).json({
+                token,
+                    user: { phone: user.phone, 
+                    name: user.name, 
+                    surname: user.surname, 
+                    sex: user.sex,  
+                    userId: user.idUser, 
+                    trAim: user.trAim,
+                    birthdate: user.birthdate,
+                    role: user.role,
+                    finishedTr: user.finishedTr}
+        }); 
         } catch (error) {
             console.error('Ошибка при аутентификации:', error);
             res.status(500).json({ message: 'Ошибка сервера' });
@@ -317,7 +358,34 @@ class UserController {
 
         res.json(user);
     }
+
+
+    async addFavoritePlan(req, res) {
+        try {
+            const { idTplan } = req.body;
+            const { id } = req.params;
     
+            const user = await User.findByPk(id);
+            if (!user) {
+                return res.status(404).json({ message: 'Пользователь не найден' });
+            }
+            console.log(user.favPlans)
+            
+            console.log(user.favPlans)
+
+            if (!user.favPlans.includes(idTplan)) {
+                user.favPlans.push(idTplan); 
+                await user.save();
+                console.log('Изменения сохранены:', user.favPlans);
+                console.log('Изменения сохранены в базе:', await User.findByPk(id));
+            }
+            console.log(user)
+            return res.status(200).json(user.favPlans);
+        } catch (error) {
+            console.error('Ошибка при добавлении плана в избранное:', error);
+            return res.status(500).json({ message: 'Ошибка сервера' });
+        }
+    }
 }
 
 module.exports = new UserController();

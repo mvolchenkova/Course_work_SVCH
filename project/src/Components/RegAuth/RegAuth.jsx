@@ -15,25 +15,25 @@ export default function RegAuth() {
     
         try {
             const resultAction = await dispatch(loginUser({ phone, password })).unwrap();
-            
-            // Сохранение данных пользователя в localStorage
-            localStorage.setItem('user', JSON.stringify(resultAction)); 
-            localStorage.setItem('userId', resultAction.userId);
-            localStorage.setItem('trAim', resultAction.trAim);
-            localStorage.setItem('finishedTr', resultAction.finishedTr);
-            localStorage.setItem('name', resultAction.name);
-            localStorage.setItem('role', resultAction.role)
-    
-            navigate('/homePage');
+        console.log('Login response:', resultAction);
+
+        const userData = resultAction.user; 
+
+        localStorage.setItem('user', JSON.stringify(userData));
+        localStorage.setItem('userId', userData.userId); 
+        localStorage.setItem('trAim', userData.trAim);
+        localStorage.setItem('finishedTr', userData.finishedTr);
+        localStorage.setItem('name', userData.name);
+        localStorage.setItem('role', userData.role);
+
+        navigate('/homePage');
         } catch (error) {
-            if (error.response) {
-                alert(error.response.data.message || 'Неизвестная ошибка');
-            } else if (error.request) {
-                alert('Нет ответа от сервера. Проверьте соединение.');
-            } else {
-                alert('Вы заблокированы. Вход невозможен');
+            if (error.response && error.response.status === 400) {
+                const validationErrors = error.response.data.errors;
+                validationErrors.forEach(err => {
+                    alert(err.msg); // Or display the errors in a more user-friendly way
+                });
             }
-            console.error('Ошибка входа:', error);
         }
     };
 

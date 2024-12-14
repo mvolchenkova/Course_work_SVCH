@@ -14,6 +14,8 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 function createData(idUser, surname, name, phone, birthdate, role, isBlocked) {
     return { idUser, surname, name, phone, birthdate, role, isBlocked };
@@ -78,6 +80,40 @@ export default function AllUsersPage() {
         dispatch(toggleUserBlock(id)); // Dispatch the thunk to toggle the block status
     };
 
+
+    const generateUserReport = () => {
+        const doc = new jsPDF();
+        doc.setFontSize(20);
+        doc.text('User Report', 20, 20);
+    
+        doc.autoTable({
+            head: [['ID', 'Name', 'Surname', 'Phone', 'Birthdate', 'Role', 'Blocked']],
+            body: users.map(user => [
+                user.idUser, user.name, user.surname, user.phone, user.birthdate, user.role, user.isBlocked ? 'Yes' : 'No'
+            ]),
+            startY: 30, // Start the table below the title
+            styles: { fontSize: 12 } // Adjust font size as needed
+        });
+    
+        doc.save('user_report.pdf');
+    };
+    
+    
+    const generateQuestionReport = () => {
+        const doc = new jsPDF();
+        doc.setFontSize(20);
+        doc.text('Question Report', 20, 20);
+    
+        doc.autoTable({
+            head: [['User ID', 'Question', 'Email']],
+            body: questions.map(question => [question.userId, question.text, question.email]),
+            startY: 30,
+            styles: { fontSize: 12 }
+        });
+    
+        doc.save('question_report.pdf');
+    };
+
     return (
         <>
             <HeaderLog />
@@ -132,6 +168,7 @@ export default function AllUsersPage() {
                     <button onClick={handlePrevPageUsers} disabled={pageUsers === 1}>Previous</button>
                     <button onClick={handleNextPageUsers}>Next</button>
                     <button onClick={handleAddUser} className='addButton'>ADD USER</button>
+                    <button onClick={generateUserReport}>Generate User Report</button>
                 </div>
             </div>
             <div className='feature'>
@@ -167,6 +204,7 @@ export default function AllUsersPage() {
                 <div className='buttons'>
                     <button onClick={handlePrevPageQuestions} disabled={pageQuestions === 1}>Previous</button>
                     <button onClick={handleNextPageQuestions}>Next</button>
+                    <button onClick={generateQuestionReport}>Generate Question Report</button>
                 </div>
             </div>
             <Footer />

@@ -7,6 +7,8 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { FavoriteBorder } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchTrainingPlans, setCurrentPlan } from '../../slices/tplanSlice'; 
+import {addFavoritePlan} from '../../slices/userSlice'
+import { updateUser } from '../../slices/userSlice';
 
 export default function AllPlans() {
     const dispatch = useDispatch();
@@ -18,6 +20,8 @@ export default function AllPlans() {
     const [isModalOpen, setModalOpen] = useState(false);
     const role = localStorage.getItem('role')
     const isLoading = status === 'loading';
+    const userId = localStorage.getItem('userId')
+    const user = localStorage.getItem('user')
 
     useEffect(() => {
         if (status === 'idle') {
@@ -45,11 +49,26 @@ export default function AllPlans() {
         }
     };
 
-    const toggleFavorite = (planId) => {
-        setFavorites(prev => ({
-            ...prev,
-            [planId]: !prev[planId],
-        }));
+    const toggleFavorite = async (idTplan) => {
+        console.log('Current userId:', userId); 
+        if (!userId) {
+            alert('Please login to add favourites.');
+            return;
+        }
+    
+        try {
+            const updatedFavPlans = await dispatch(addFavoritePlan({ userId, idTplan })); 
+            console.log('Updated favorite plans:', updatedFavPlans.payload); 
+    
+            setFavorites(prev => ({
+                ...prev,
+                [idTplan]: !prev[idTplan],
+            }));
+    
+            dispatch(updateUser({ ...user, favPlans: updatedFavPlans.payload }));
+        } catch (error) {
+            console.error('Ошибка при добавлении плана в избранное:', error);
+        }
     };
 
     const handlePlanClick = (plan) => {
@@ -85,8 +104,8 @@ export default function AllPlans() {
                         <p>Loading plans...</p>
                     ) : filteredPlans.length > 0 ? (
                         filteredPlans.map(plan => (
-                            <div key={plan.id} className="planData PixelFont">
-                                <Link to='/plan' key={plan.id} onClick={() => handlePlanClick(plan)} style={{ textDecoration: 'none' }}>
+                            <div key={plan.idTplan} className="planData PixelFont">
+                                <Link to='/plan' key={plan.idTplan} onClick={() => handlePlanClick(plan)} style={{ textDecoration: 'none' }}>
                                     <img src={`http://localhost:5000/${plan.img}`} alt={plan.title} className="planImg" />
                                     <div className="planText">
                                         <b>{plan.title}</b>
@@ -96,9 +115,9 @@ export default function AllPlans() {
                                 </Link>
                                 <IconButton 
                                     aria-label="add to favorites" 
-                                    onClick={() => toggleFavorite(plan.id)}
+                                    onClick={() => toggleFavorite(plan.idTplan)}
                                 >
-                                    {favorites[plan.id] ? (
+                                    {favorites[plan.idTplan] ? (
                                         <FavoriteIcon style={{ color: 'red' }} />
                                     ) : (
                                         <FavoriteBorder />

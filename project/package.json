@@ -18,6 +18,8 @@
     "express": "^4.21.1",
     "formik": "^2.4.6",
     "install": "^0.13.0",
+    "jspdf": "^2.5.2",
+    "jspdf-autotable": "^3.8.4",
     "npm": "^10.9.0",
     "pg": "^8.13.1",
     "pg-hstore": "^2.3.4",
