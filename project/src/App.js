@@ -13,7 +13,6 @@ import { useDispatch } from 'react-redux';
 import PrivateRouteToBecomeCoach from './Components/privateRoutes/PrivateRouteToBecomeCoach/PrivateRouteToBecomeCoach';
 import BecomeCoachPage from './Pages/BecomeCoachPage'
 import AllUsersPage from './Pages/AllUsersPage/AllUsersPage';
-import PrivateRouteToAllUsers from './Components/privateRoutes/PrivateRouteToAllUsers/PrivateRouteToAllUsers'
 import AccountPage from './Pages/AccountPage'
 import ArticlesPage from './Pages/ArticlesPage';
 import PlanPage from './Pages/PlanPage/PlanPage'

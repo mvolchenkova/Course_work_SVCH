@@ -12,47 +12,48 @@ const initialState = {
 
 // Async thunk для логина пользователя
 export const loginUser = createAsyncThunk('api/users/check', async ({phone, password}) => {
-    const response = await axios.post('http://localhost:5000/api/users/check', {phone, password});
+    const response = await axios.post(`${process.env.REACT_APP_API_URL}/users/check`, {phone, password});
     return response.data;
 });
 
 // Async thunk для логаута пользователя
 export const logoutUser = createAsyncThunk('api/users/logoutUser', async () => {
-    const response = await axios.post('http://localhost:5000/api/users/logout'); // Убедитесь, что путь правильный
+    const response = await axios.post(`${process.env.REACT_APP_API_URL}/users/logout`); // Убедитесь, что путь правильный
     return response.data;
 });
 
 // Async thunk для получения пользователей
 export const fetchUsers = createAsyncThunk('api/users', async ({ page = 1, limit = 10 }) => {
-    const response = await axios.get(`http://localhost:5000/api/users?page=${page}&limit=${limit}`);
+    console.log(process.env.REACT_APP_API_URL);
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/users?page=${page}&limit=${limit}`);
     return response.data; 
 });
 
 // Async thunk для регистрации пользователя
 export const registerUser = createAsyncThunk('api/users/register', async (userData) => {
-    const response = await axios.post('http://localhost:5000/api/users', userData);
+    const response = await axios.post(`${process.env.REACT_APP_API_URL}/users`, userData);
     return response.data; 
 });
 
 export const adminAddUser = createAsyncThunk('api/users/register/admin', async (userData) => {
-    const response = await axios.post('http://localhost:5000/api/users', userData);
+    const response = await axios.post(`${process.env.REACT_APP_API_URL}/users`, userData);
     return response.data; 
 });
 
 export const updateUserThunk = createAsyncThunk('api/users/:id', async ( currentUser ) => {
-    const response = await axios.put(`http://localhost:5000/api/users/${currentUser.userId}`, currentUser );
+    const response = await axios.put(`${process.env.REACT_APP_API_URL}/users/${currentUser.userId}`, currentUser );
     return response.data; 
 });
 
 export const becomeCoachThunk = createAsyncThunk('api/users/becomecoach/:id', async ({ currentUser }) => {
-    const response = await axios.put(`http://localhost:5000/api/users/becomecoach/${currentUser.userId}`, { currentUser });
+    const response = await axios.put(`${process.env.REACT_APP_API_URL}/users/becomecoach/${currentUser.userId}`, { currentUser });
     return response.data; 
 });
 
 export const deleteUserThunk = createAsyncThunk(
     'user/deleteUser',
     async (userId) => {
-        const response = await fetch(`http://localhost:5000/api/users/${userId}`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/users/${userId}`, {
             method: 'DELETE',
         });
         if (!response.ok) {
@@ -63,15 +64,15 @@ export const deleteUserThunk = createAsyncThunk(
 );
 
 export const toggleUserBlock = createAsyncThunk('api/users/:id/block', async (userId) => {
-    const response = await axios.patch(`http://localhost:5000/api/users/${userId}/block`);
+    const response = await axios.patch(`${process.env.REACT_APP_API_URL}/users/${userId}/block`);
     return response.data; 
 });
 
 export const addFavoritePlan = createAsyncThunk('api/users/:id/addFavoritePlan', async ({userId, idTplan}) => {
-        const response = await axios.put(`http://localhost:5000/api/users/${userId}/addFavoritePlan`, {idTplan});
-        return response.data; 
-    }
-);  
+    const response = await axios.put(`${process.env.REACT_APP_API_URL}/users/${userId}/addFavoritePlan`, {idTplan});
+    return response.data;
+}
+);
 
 const userSlice = createSlice({
     name: 'users',
@@ -150,10 +151,8 @@ const userSlice = createSlice({
                 }
             })
             .addCase(addFavoritePlan.fulfilled, (state, action) => {
-                if (state.currentUser) {
-                    state.currentUser.favPlans = action.payload; // Обновляем массив избранных планов
-                }
-            });
+                state.currentUser = action.payload;
+             })
             
     },
 });

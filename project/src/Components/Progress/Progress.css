@@ -11,9 +11,6 @@
 .aimdiv{
     padding-left: 30px;
 }
-.aimdiv>p{
-    font-size: 1.3em;
-}
 .modal {
     position: fixed;
     top: 0;
@@ -53,7 +50,7 @@
     align-items: center;
     gap: 20px;
 }
-.complTr{
+.complTr, .trAim{
     font-size: 1.3em;
     margin: 5px;
 }
@@ -64,4 +61,26 @@ button{
     font-weight: bold;
     border-radius: 10px;
     border: none;
+}
+
+@media(max-width: 500px) {
+    .complTr, .trAim{
+        font-size: 0.7em;
+    }
+    .aimdiv{
+        padding-left: 0;
+    }
+    .yourProgress{
+        font-size: 1.2em;
+    }
+    button{
+        font-size: 0.7em;
+        padding: 5px;
+    }
+    .chart{
+        width: 150px;
+    }
+    .aimAndProgressDiv{
+        padding: 10px;
+    }
 }

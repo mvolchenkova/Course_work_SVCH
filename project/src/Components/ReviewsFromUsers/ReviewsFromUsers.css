@@ -16,7 +16,6 @@
     flex-direction: column;
     align-items:center;
     padding-bottom: 100px;
-    padding-top: 100px;
 }
 .writeReviewButton{
     border: none;
@@ -65,4 +64,26 @@
     flex-direction: row;
     justify-content: space-between;
     align-items:center;
+}
+
+@media(max-width: 1000px) {
+    .reviewsTitle{
+        font-size: 2em;
+    }
+    .review>p{
+        font-size: 0.9em;
+    }
+    .username{
+        font-size: 1em;
+    }
+    .review{
+        min-height: 100px;
+        min-width: 200px;
+    }
+}
+
+@media(max-width: 550px) {
+    .reviewsDiv>div>img{
+        width: 30px;
+    }
 }

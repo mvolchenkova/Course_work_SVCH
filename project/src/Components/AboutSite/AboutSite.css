@@ -16,10 +16,46 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 200px;
+    margin-top: 100px;
     margin-bottom: 100px;
 }
 .runGirlImg, .cookGirlImg{
     width: 50%;
     height:fit-content
+}
+
+@media (max-width: 1000px) {
+    .blockName{
+        font-size: 1.3em;
+    }
+    .blockText{
+        font-size: 1.15em;
+    }
+    .AboutSiteDiv{
+        margin-top: 50px;
+    }
+}
+
+@media(max-width: 768px) {
+    .blockName{
+        font-size: 1.1em;
+    }
+    .blockText{
+        font-size: 0.8em;
+    }
+}
+
+@media(max-width: 450px) {
+    .blockName{
+        font-size: 1em;
+    }
+    .blockText{
+        font-size: 0.7em;
+    }
+    .runGirlImg, .cookGirlImg{
+        display: none;
+    }
+    .AboutSiteDiv{
+        margin-top: 0px;
+    }
 }

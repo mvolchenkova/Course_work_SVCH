@@ -7,6 +7,7 @@ header {
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(15px);
     z-index: 1000; 
+    align-items:center;
 }
 
 .logoutButton, .themeButton, .langButton {
@@ -37,4 +38,30 @@ header {
 }
 .homelink{
     font-size: 1.4em;
+}
+
+@media(max-width: 650px) {
+    .options{
+        font-size: 0.8em;
+        gap: 5px;
+    }
+    header>a>img{
+        width: 150px;
+    }
+    .profileImage{
+        width:40px;
+        height: auto;
+    }
+    .logoutButton{
+        padding: 5px;
+    }
+}
+
+@media(max-width: 450px) {
+    .options{
+        font-size: 0.6em;
+    }
+    header>a>img{
+        width: 100px;
+    }
 }

@@ -2,19 +2,19 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 export const fetchRecipes = createAsyncThunk('api/recipes/fetch', async () => {
-    const response = await axios.get('http://localhost:5000/api/recipes');
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/recipes`);
     return response.data;
 });
 
 // export const adminAddRecipe = createAsyncThunk('api/recipes', async ({recipeData}) => {
 //     console.log(recipeData)
-//     const response = await axios.post('http://localhost:5000/api/recipes', {recipeData});
+//     const response = await axios.post('${process.env.REACT_APP_API_URL}/recipes', {recipeData});
 //     return response.data; 
 export const adminAddRecipe = createAsyncThunk(
     'recipes/addRecipe',
     async (formData) => {
         try {
-            const response = await axios.post('http://localhost:5000/api/recipes', formData, {
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/recipes`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }

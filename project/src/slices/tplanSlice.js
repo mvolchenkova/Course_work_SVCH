@@ -2,21 +2,21 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 export const fetchTrainingPlans = createAsyncThunk('api/tplans/search', async () => {
-    const response = await axios.get('http://localhost:5000/api/tplans/search');
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/tplans/search`);
     return response.data;
 });
 export const adminAddPlan = createAsyncThunk('api/tplans', async (planData) => {
-    const response = await axios.post('http://localhost:5000/api/tplans', planData);
+    const response = await axios.post(`${process.env.REACT_APP_API_URL}/tplans`, planData);
     return response.data; 
 });
 
 export const deleteTrainingPlan = createAsyncThunk('api/tplans/delete', async (id) => {
-    await axios.delete(`http://localhost:5000/api/tplans/${id}`);
+    await axios.delete(`${process.env.REACT_APP_API_URL}/tplans/${id}`);
     return id; 
 });
 
 export const updateTrainingPlan = createAsyncThunk('api/tplans/update', async ({ id, ...planData }) => {
-    const response = await axios.put(`http://localhost:5000/api/tplans/${id}`, planData);
+    const response = await axios.put(`${process.env.REACT_APP_API_URL}/tplans/${id}`, planData);
     return response.data; 
 });
 

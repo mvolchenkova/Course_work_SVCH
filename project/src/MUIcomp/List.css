@@ -7,4 +7,19 @@
     border-radius: 20px;
     width: 250px;
     margin-left: 50px;
+    font-size: 1.5em;
+  }
+
+  @media(max-width: 768px) {
+    .listDiv{
+      width: 180px;
+      font-size: 1em;
+      margin-left: 10px;
+    }
+  
+  }
+  @media(max-width: 450px) {
+    .listDiv{
+      width: 140px;
+    }
   }

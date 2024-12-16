@@ -13,3 +13,11 @@
 .image-option:hover {
     border-color: #007bff; /* Highlight on hover */
 }
+
+#addPlInput{
+    width: 90%;
+}
+
+@media(max-width: 600px) {
+    
+}

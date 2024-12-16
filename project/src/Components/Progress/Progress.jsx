@@ -135,7 +135,7 @@ export default function Progress() {
             {!showAddAim && (
                 <div className="aimAndProgressDiv">
                     <div className="aimdiv">
-                        <p className='complTr'>Your training aim: {trainingAim}</p>
+                        <p className='trAim'>Your training aim: {trainingAim}</p>
                         <button className='PixelFont' onClick={() => setShowModal(true)}>CHANGE AIM</button>
                     </div>
                     <div>

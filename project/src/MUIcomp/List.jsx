@@ -26,7 +26,7 @@ export default function NestedList() {
       {/* Первый список */}
       <List
         sx={{ width: '100%', maxWidth: 360, bgcolor: 'rgb(0, 200, 220)', borderRadius: '30px',
-      fontSize: '1.5em', margin: 0}}
+       margin: 0}}
         component="nav"
         aria-labelledby="nested-list-subheader"
       >
@@ -74,7 +74,7 @@ export default function NestedList() {
       {/* Второй список */}
       <List
         sx={{ width: '100%', maxWidth: 360, bgcolor: 'rgb(0, 200, 220)', borderRadius: '30px', marginTop: '10px',
-        fontSize: '1.5em', margin: 0 }}
+        margin: 0 }}
         component="nav"
         aria-labelledby="nested-list-subheader"
       >
@@ -121,7 +121,7 @@ export default function NestedList() {
       {/* Третий список */}
       <List
         sx={{ width: '100%', maxWidth: 360, bgcolor: 'rgb(0, 200, 220)', borderRadius: '30px', marginTop: '10px',
-        fontSize: '1.5em', margin: 0 }}
+         margin: 0 }}
         component="nav"
         aria-labelledby="nested-list-subheader"
       >
@@ -162,7 +162,7 @@ export default function NestedList() {
       {/* Четвертый список */}
       <List
         sx={{ width: '100%', maxWidth: 360, bgcolor: 'rgb(0, 200, 220)', borderRadius: '30px', marginTop: '10px',
-        fontSize: '1.5em', margin: 0 }}
+         margin: 0 }}
         component="nav"
         aria-labelledby="nested-list-subheader"
       >
@@ -183,6 +183,7 @@ export default function NestedList() {
           </IconButton>
         </ListItemButton>
         <Collapse in={openList4} timeout="auto" unmountOnExit>
+          
           <List component="div" disablePadding>
             <Link to="/articles">
               <ListItemButton sx={{ pl: 4 }}>

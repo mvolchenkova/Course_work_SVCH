@@ -10,13 +10,13 @@ const initialState = {
 export const createAdvice = createAsyncThunk(
     'api/advices/create',
     async ({ title, text }) => {
-        const response = await axios.post('http://localhost:5000/api/advices', { title, text });
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/advices`, { title, text });
         return response.data;
     }
 );
 
 export const fetchAdvices = createAsyncThunk('api/advices', async () => {
-    const response = await axios.get(`http://localhost:5000/api/advices`);
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/advices`);
     return response.data; 
 });
 

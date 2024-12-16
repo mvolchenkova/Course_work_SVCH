@@ -5,6 +5,7 @@ import recipeReducer from '../slices/recipeSlice'
 import reviewReducer from '../slices/reviewSlice'
 import questionReducer from '../slices/questionSlice'
 import adviceReducer from '../slices/adviceSlice'
+import articleReducer from '../slices/articleSlice'
 
 const store = configureStore({
     reducer: {
@@ -13,7 +14,8 @@ const store = configureStore({
         recipes: recipeReducer,
         reviews: reviewReducer,
         questions: questionReducer,
-        advices: adviceReducer
+        advices: adviceReducer,
+        articles: articleReducer,
     },
 });
 

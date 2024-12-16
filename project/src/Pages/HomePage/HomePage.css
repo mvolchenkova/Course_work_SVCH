@@ -20,7 +20,7 @@
 
 .container {
     display: flex; 
-    flex-direction: row; /* Выравнивание по вертикали */
+    flex-direction: row; 
     margin-top: 150px;
     width: 100%;
 }
@@ -31,4 +31,24 @@
 .homeDiv{
     display: flex;
     flex-direction: column;
+}
+.aimAndProgressDiv{
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20px;
+}
+
+@media(max-width: 768px) {
+    .yourProgress{
+        font-size: 1.4em;
+    }
+    .complTr{
+        font-size: 1em;
+    }
+    .aimdiv{
+        padding-left: 0;
+    }
+    .chart{
+        width: 200px;
+    }
 }

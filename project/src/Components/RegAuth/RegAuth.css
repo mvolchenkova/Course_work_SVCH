@@ -1,16 +1,14 @@
 .regAuthDiv{
     display: flex;
     flex-direction: row;
-    justify-content: center;
-    gap:50px;
-    margin-top: 100px;
+    justify-content: space-around;
     flex-wrap: wrap;
-    width: 94%;
+    width: 100%;
 }
 
 .formGroup {
     margin-bottom: 15px;
-    width: 100%; 
+    width: 250px; 
 }
 
 label {
@@ -48,4 +46,24 @@ button{
     font-weight: bold;
     border-radius: 10px;
     border: none;
+}
+#phone, #password{
+    width: 230px;
+}
+.regImg{
+    width: 300px;
+}
+
+@media(max-width: 768px) {
+    .regImg{
+        width: 200px;
+    }
+}
+@media(max-width: 600px) {
+    .regImg{
+        display: none;
+    }
+    .regAuthForm{
+        width: 250px;
+    }
 }

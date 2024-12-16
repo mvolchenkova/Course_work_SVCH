@@ -57,17 +57,12 @@ export default function AllPlans() {
         }
     
         try {
-            const updatedFavPlans = await dispatch(addFavoritePlan({ userId, idTplan })); 
-            console.log('Updated favorite plans:', updatedFavPlans.payload); 
-    
-            setFavorites(prev => ({
-                ...prev,
-                [idTplan]: !prev[idTplan],
-            }));
-    
-            dispatch(updateUser({ ...user, favPlans: updatedFavPlans.payload }));
+            const updatedUser = await dispatch(addFavoritePlan({ userId, idTplan })).unwrap(); // unwrap() handles potential rejections
+            setFavorites(prev => ({ ...prev, [idTplan]: !prev[idTplan] }));
+            dispatch(updateUser(updatedUser)); // Use the entire updatedUser object
         } catch (error) {
-            console.error('Ошибка при добавлении плана в избранное:', error);
+            // Handle the error
+            console.error("Error adding favorite plan:", error);
         }
     };
 

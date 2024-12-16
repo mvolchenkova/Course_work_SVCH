@@ -122,10 +122,10 @@ const AddPlanModal = ({ isOpen, onClose }) => {
             <div className="modal-content">
                 <h2>Add Plan</h2>
                 <form onSubmit={handleSubmit}>
-                    <input name="author" type="text" placeholder="Author" value={planData.author} onChange={handleChange} required />
-                    <input name="title" type="text" placeholder="Title" value={planData.title} onChange={handleChange} required />
-                    <input name="amount" type="text" placeholder="Amount" value={planData.amount} onChange={handleChange} required />
-                    <input name="description" type="text" placeholder="Description" value={planData.description} onChange={handleChange} required />
+                    <input id="addPlInput" name="author" type="text" placeholder="Author" value={planData.author} onChange={handleChange} required />
+                    <input id="addPlInput" name="title" type="text" placeholder="Title" value={planData.title} onChange={handleChange} required />
+                    <input id="addPlInput" name="amount" type="text" placeholder="Amount" value={planData.amount} onChange={handleChange} required />
+                    <input id="addPlInput" name="description" type="text" placeholder="Description" value={planData.description} onChange={handleChange} required />
 
                     <div>
                         <button type="button" onClick={() => setImageModalOpen(true)}>Select Image</button>

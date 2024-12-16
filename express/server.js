@@ -35,6 +35,8 @@ app.use('/api/questions', questionRouter)
 app.use('/api/reviews', reviewRouter)
 app.use('/api/advices', adviceRouter)
 app.use('/api', router);
+app.use(express.json({ limit: '50mb' })); 
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 
 const start = async () => {

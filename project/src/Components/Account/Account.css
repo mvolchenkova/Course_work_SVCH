@@ -63,3 +63,12 @@
 input{
     width: 90%;
 }
+
+@media(max-width: 450px){
+    .accMain{
+        font-size: 0.8em;
+    }
+    .profileImageAcc{
+        width: 60px;
+    }
+}

@@ -369,18 +369,22 @@ class UserController {
             if (!user) {
                 return res.status(404).json({ message: 'Пользователь не найден' });
             }
-            console.log(user.favPlans)
-            
-            console.log(user.favPlans)
-
+    
+            console.log("idTplan:", idTplan);
+            console.log("User before update:", user);
+    
             if (!user.favPlans.includes(idTplan)) {
-                user.favPlans.push(idTplan); 
-                await user.save();
-                console.log('Изменения сохранены:', user.favPlans);
-                console.log('Изменения сохранены в базе:', await User.findByPk(id));
+                user.favPlans.push(idTplan);
+                console.log("User after update, before save:", user); // Log before saving
+                const saveResult = await user.save(); // Store the result of save()
+                console.log("Save result:", saveResult); // Log the save result
+    
+                const updatedUser = await User.findByPk(id); //Fetch updated user from DB
+                console.log("User after save:", updatedUser);
+                return res.status(200).json(updatedUser);
             }
-            console.log(user)
-            return res.status(200).json(user.favPlans);
+             const updatedUser = await User.findByPk(id); //Fetch updated user from DB
+            return res.status(200).json(updatedUser);
         } catch (error) {
             console.error('Ошибка при добавлении плана в избранное:', error);
             return res.status(500).json({ message: 'Ошибка сервера' });
