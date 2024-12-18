@@ -53,6 +53,8 @@ export default function Registration() {
             localStorage.setItem('role', userData.role)
             const result = await dispatch(registerUser(userData)).unwrap();
             localStorage.setItem('userId', result.idUser);
+            localStorage.setItem('favPlans', [])
+            localStorage.setItem('favRecipes', [])
             navigate('/homePage')
         } catch (error) {
             console.error('Ошибка при регистрации:', error);

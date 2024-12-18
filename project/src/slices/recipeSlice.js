@@ -26,10 +26,29 @@ export const adminAddRecipe = createAsyncThunk(
         }
     }
 );
+
+export const findFavRecipes = createAsyncThunk('api/recipes/findFavRecipes', async (_, {rejectWithValue}) => {
+    try{
+        const favRecipes = JSON.parse(localStorage.getItem('favRecipes'));
+        console.log(favRecipes);
+
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/recipes/findFavRecipes`, {
+            params: { favRecipes: JSON.stringify(favRecipes) } 
+        });
+        return response.data;
+    }
+    catch(error){
+        rejectWithValue(error)
+    }
+    
+});
+
+
 const recipesSlice = createSlice({
     name: 'recipes',
     initialState: {
         recipes: [],
+        favRecipes: [],
         currentRecipe: null,
         status: 'idle', // 'idle' | 'loading' | 'succeeded' | 'failed'
         error: null,
@@ -62,7 +81,15 @@ const recipesSlice = createSlice({
             .addCase(adminAddRecipe.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.error.message;
-            });
+            })
+            .addCase(findFavRecipes.fulfilled, (state, action)=>{
+                state.loading = false;
+                state.favRecipes = action.payload;
+            })
+            .addCase(findFavRecipes.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message;
+            })
     },
 });
 

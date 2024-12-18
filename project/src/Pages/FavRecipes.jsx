@@ -2,29 +2,29 @@ import HeaderLog from '../Components/HeaderLog/HeaderLog';
 import Footer from '../Components/Footer/Footer';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
-import { findFavPlans, setCurrentPlan } from '../slices/tplanSlice';
+import { findFavRecipes, setCurrentRecipe } from '../slices/recipeSlice';
 import { Link } from 'react-router-dom';
 import IconButton from '@mui/material/IconButton';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { FavoriteBorder } from '@mui/icons-material';
-import {addFavoritePlan} from '../slices/userSlice'
+import {addFavoriteRecipe} from '../slices/userSlice'
 
 
-export default function FavPlans() {
+export default function FavRecipes() {
     const dispatch = useDispatch();
-    const plans = useSelector(state=>state.trainingPlans.favPlans)
-    console.log(plans)
-    const isLoading = useSelector(state=>state.tplans)
+    const recipes = useSelector(state=>state.recipes.favRecipes)
+    console.log(recipes)
+    const isLoading = useSelector(state=>state.recipes)
     const userId = localStorage.getItem('userId')
     const [isModalOpen, setModalOpen] = useState(false);
-    const favPlans = localStorage.getItem('favPlans')
+    const favRecipes = localStorage.getItem('favRecipes')
 
 
     useEffect(() => {
-        dispatch(findFavPlans()); 
+        dispatch(findFavRecipes()); 
     }, [dispatch]); 
 
-    const toggleFavorite = async (idTplan) => {
+    const toggleFavorite = async (idRecipe) => {
         console.log('Current userId:', userId); 
         if (!userId) {
             alert('Please login to add favourites.');
@@ -32,22 +32,22 @@ export default function FavPlans() {
         }
     
         try {
-            const updatedUser = await dispatch(addFavoritePlan({ userId, idTplan })).unwrap(); 
+            const updatedUser = await dispatch(addFavoriteRecipe({ userId, idRecipe })).unwrap(); 
             localStorage.setItem('user', JSON.stringify(updatedUser))
-            localStorage.setItem('favPlans', JSON.stringify(updatedUser.favPlans))
+            localStorage.setItem('favRecipes', JSON.stringify(updatedUser.favRecipes))
             window.location.reload();
             console.log(updatedUser)
         } catch (error) {
             // Handle the error
-            console.error("Error adding favorite plan:", error);
+            console.error("Error adding favorite recipe:", error);
         }
     };
 
-    const handlePlanClick = (plan) => {
-        dispatch(setCurrentPlan(plan)); // Устанавливаем текущий план
+    const handleRecipeClick = (recipe) => {
+        dispatch(setCurrentRecipe(recipe)); // Устанавливаем текущий план
     };
 
-    const handleAddPlan = () => {
+    const handleAddRecipe = () => {
         setModalOpen(true); // Open the modal
     };
 
@@ -59,25 +59,23 @@ export default function FavPlans() {
         <>
             <HeaderLog />
             <div className="planDiv">
-                    
                     {isLoading ? (
-                        <p>Loading plans...</p>
-                    ) : plans ? (
-                        plans.map(plan => (
-                            <div key={plan.idTplan} className="planData PixelFont">
-                                <Link to='/plan' key={plan.idTplan} onClick={() => handlePlanClick(plan)} style={{ textDecoration: 'none' }}>
-                                    <img src={`http://localhost:5000/${plan.img}`} alt={plan.title} className="planImg" />
+                        <p>Loading recipes...</p>
+                    ) : recipes ? (
+                        recipes.map(recipe => (
+                            <div key={recipe.idRecipe} className="planData PixelFont">
+                                <Link to='/recipe' key={recipe.idRecipe} onClick={() => handleRecipeClick(recipe)} style={{ textDecoration: 'none' }}>
+                                    <img src={`http://localhost:5000/${recipe.img}`} alt={recipe.title} className="planImg" />
                                     <div className="planText">
-                                        <b>{plan.title}</b>
-                                        <p>{plan.author}</p>
-                                        <p>{plan.amount} trainings</p>
+                                        <b>{recipe.title}</b>
+                                        <p>{recipe.time} minutes</p>
                                     </div>
                                 </Link>
                                 <IconButton 
                                     aria-label="add to favorites" 
-                                    onClick={() => toggleFavorite(plan.idTplan)}
+                                    onClick={() => toggleFavorite(recipe.idRecipe)}
                                 >
-                                    {favPlans.includes(plan.idTplan) ? (
+                                    {favRecipes.includes(recipe.idRecipe) ? (
                                         <FavoriteIcon style={{ color: 'red' }} />
                                     ) : (
                                         <FavoriteBorder />
@@ -86,7 +84,7 @@ export default function FavPlans() {
                             </div>
                         ))
                     ) : (
-                        <p>No plans found.</p>
+                        <p>No recipes found.</p>
                     )}
                 </div>
             <Footer />

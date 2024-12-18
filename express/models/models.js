@@ -135,8 +135,8 @@ const User = sequelize.define('User', {
     },
     lastTrainingDate:{ type: DataTypes.DATE},
     isBlocked: { type: DataTypes.BOOLEAN, defaultValue: false },
-    favPlans: {type: DataTypes.ARRAY(DataTypes.BIGINT),defaultValue: [], allowNull: false},
-    favRecipes: {type: DataTypes.ARRAY(DataTypes.BIGINT)}
+    favPlans: {type: DataTypes.ARRAY(DataTypes.BIGINT), defaultValue: []},
+    favRecipes: {type: DataTypes.ARRAY(DataTypes.BIGINT), defaultValue: []}
 }, {
     timestamps: true,
     tableName: 'users',
@@ -241,7 +241,7 @@ const Task = sequelize.define('Task', {
 
 const Recipe = sequelize.define('recipe', {
     idRecipe: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.BIGINT,
         primaryKey: true,
         autoIncrement: true, 
         allowNull: false,
@@ -382,6 +382,7 @@ const Article = sequelize.define('article', {
     instructionId: {type: DataTypes.BIGINT, primaryKey: true, autoIncrement: true},
     instructionName: {type: DataTypes.TEXT, allowNull: false}
  })
+
 //user-favtplans
 User.hasMany(FavTplan, { foreignKey: 'userIdUser', sourceKey: 'idUser' });
 FavTplan.belongsTo(User, { foreignKey: 'userIdUser', targetKey: 'idUser' });
@@ -397,7 +398,7 @@ Task.belongsTo(User, { foreignKey: 'userIdUser', targetKey: 'idUser' });
 User.hasMany(Ingredient)
 Ingredient.belongsTo(User)
 
-User.hasMany(Instruction)
-Instruction.belongsTo(User)
 
+User.hasMany(TrainingPlan)
+TrainingPlan.hasMany(User)
 module.exports = { User, TrainingPlan, Recipe, Review, Article, Question, Advice, Ingredient, Instruction};

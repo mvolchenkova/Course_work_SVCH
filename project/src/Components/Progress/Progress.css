@@ -78,9 +78,12 @@ button{
         padding: 5px;
     }
     .chart{
-        width: 150px;
+        width: 120px;
     }
     .aimAndProgressDiv{
         padding: 10px;
+    }
+    rect{
+        width: 200px;
     }
 }

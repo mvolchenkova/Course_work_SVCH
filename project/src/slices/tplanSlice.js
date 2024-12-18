@@ -20,10 +20,27 @@ export const updateTrainingPlan = createAsyncThunk('api/tplans/update', async ({
     return response.data; 
 });
 
+export const findFavPlans = createAsyncThunk('api/tplans/findFavPlans', async (_, {rejectWithValue}) => {
+    try{
+        const favPlans = JSON.parse(localStorage.getItem('favPlans'));
+        console.log(favPlans);
+
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/tplans/findFavPlans`, {
+            params: { favPlans: JSON.stringify(favPlans) } 
+        });
+        return response.data;
+    }
+    catch(error){
+        rejectWithValue(error)
+    }
+    
+});
+
 const trainingPlansSlice = createSlice({
     name: 'tplans',
     initialState: {
         plans: [],
+        favPlans: [],
         currentPlan: null,
         status: 'idle', // 'idle' | 'loading' | 'succeeded' | 'failed'
         error: null,
@@ -35,7 +52,7 @@ const trainingPlansSlice = createSlice({
         removePlan: (state, action) => {
             state.plans = state.plans.filter(plan => plan.idTplan !== action.payload);
             if (state.currentPlan && state.currentPlan.idTplan === action.payload) {
-                state.currentPlan = null; // Clear current plan if deleted
+                state.currentPlan = null; 
             }
         }
     },
@@ -75,13 +92,21 @@ const trainingPlansSlice = createSlice({
                 state.loading = false;
                 const index = state.plans.findIndex(plan => plan.idTplan === action.payload.idTplan);
                 if (index !== -1) {
-                    state.plans[index] = action.payload; // Update the plan in the state
+                    state.plans[index] = action.payload; 
                 }
                 if (state.currentPlan && state.currentPlan.idTplan === action.payload.idTplan) {
-                    state.currentPlan = action.payload; // Update currentPlan if it's the same
+                    state.currentPlan = action.payload; 
                 }
             })
             .addCase(updateTrainingPlan.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message;
+            })
+            .addCase(findFavPlans.fulfilled, (state, action)=>{
+                state.loading = false;
+                state.favPlans = action.payload;
+            })
+            .addCase(findFavPlans.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message;
             })

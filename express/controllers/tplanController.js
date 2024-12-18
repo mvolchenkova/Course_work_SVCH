@@ -126,8 +126,15 @@ class tplanController {
     // Получение детальной информации по ID
     async getById(req, res) {
         try {
-            const { id } = req.params;
-            const tplan = await TrainingPlan.findByPk(id);
+            const { id } = req.params; 
+            console.log('Received ID:', id); 
+            const numericId = parseInt(id, 10); 
+    
+            if (isNaN(numericId)) {
+                return res.status(400).json({ message: 'Invalid ID format' });
+            }
+    
+            const tplan = await TrainingPlan.findByPk(numericId);
             if (!tplan) {
                 return res.status(404).json({ message: 'Тренировочный план не найден' });
             }
@@ -182,6 +189,40 @@ class tplanController {
         } catch (error) {
             console.error('Ошибка при проверке существования тренировочного плана:', error);
             return res.status(500).json({ message: 'Ошибка при проверке существования тренировочного плана' });
+        }
+    }
+    
+
+
+    async findFavPlans(req, res) {
+        try {
+            const favPlans = req.query.favPlans; 
+    
+            if (!favPlans) { 
+              return res.status(400).json({ error: "favPlans parameter is missing" });
+            }
+    
+            const parsedFavPlans = JSON.parse(favPlans); 
+    
+            const trainingPlans = [];
+    
+            for (let index = 0; index < parsedFavPlans.length; index++) {
+                const element = parsedFavPlans[index];
+                const plan = await TrainingPlan.findByPk(element);
+                console.log(plan)
+                if (plan) {
+                    trainingPlans.push(plan);
+                }
+            }
+    
+            if (trainingPlans.length > 0) {
+                res.json(trainingPlans);
+            } else {
+                res.status(404).json({ error: "No matching training plans found." });
+            }
+        } catch (error) {
+            console.error("Ошибка при получении тренировочных планов:", error);
+            res.status(500).json({ error: "Ошибка сервера" });
         }
     }
 }

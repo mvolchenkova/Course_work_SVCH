@@ -58,16 +58,18 @@ export default function NestedList() {
             </ListItemButton>
           </List>
           </Link>
+          <Link to="/favPlans">
+            <List component="div" disablePadding>
+              <ListItemButton sx={{ pl: 4 }}>
+                <ListItemText 
+                  primary="Favourite plans" 
+                  style={{ fontFamily: 'Pixelify Sans' }}
+                  disableTypography={true}
+                />
+              </ListItemButton>
+            </List>
+          </Link>
           
-          <List component="div" disablePadding>
-            <ListItemButton sx={{ pl: 4 }}>
-              <ListItemText 
-                primary="Favourite plans" 
-                style={{ fontFamily: 'Pixelify Sans' }}
-                disableTypography={true}
-              />
-            </ListItemButton>
-          </List>
         </Collapse>
       </List>
 
@@ -106,15 +108,18 @@ export default function NestedList() {
             </ListItemButton>
           </List>
           </Link>
-          <List component="div" disablePadding>
-            <ListItemButton sx={{ pl: 4 }}>
-              <ListItemText 
-                primary="Favourite recipes" 
-                style={{ fontFamily: 'Pixelify Sans' }}
-                disableTypography={true}
-              />
-            </ListItemButton>
-          </List>
+          <Link to="/favRecipes">
+            <List component="div" disablePadding>
+              <ListItemButton sx={{ pl: 4 }}>
+                <ListItemText 
+                  primary="Favourite recipes" 
+                  style={{ fontFamily: 'Pixelify Sans' }}
+                  disableTypography={true}
+                />
+              </ListItemButton>
+            </List>
+          </Link>
+          
         </Collapse>
       </List>
 

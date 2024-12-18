@@ -1,4 +1,4 @@
-const { User } = require('../models/models');
+const { User, TrainingPlan } = require('../models/models');
 const { Op } = require('sequelize');
 const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
@@ -123,7 +123,7 @@ class UserController {
     async getById(req, res) {
         try {
             const { id } = req.params;
-            const user = await User.findByPk(id);
+            const user = await User.findByPk(id)
             if (!user) {
                 return res.status(404).json({ message: 'Пользователь не найден' });
             }
@@ -154,13 +154,16 @@ class UserController {
             }
     
             const { trAim, finishedTr, password, role } = req.body;
-            const hashPassword = await bcrypt.hash(password, 15);
+            if(password){
+                var hashPassword = await bcrypt.hash(password, 15);
+            }
+            
             const updated = await user.update({ trAim, finishedTr, password: hashPassword, role });
             console.log('Обновленный пользователь:', updated);
     
             return res.json(updated); // Возвращаем обновленного пользователя
         } catch (error) {
-            console.error('Ошибка при обновлении пользователя:', error);
+            console.error('Ошибка при обновлении пользователя: '+ error);
             return res.status(500).json({ message: 'Ошибка при обновлении пользователя' });
         }
     }
@@ -222,6 +225,7 @@ class UserController {
             
             const token = jwt.sign({ id: user.idUser }, process.env.SECRETKEY, { expiresIn: "1h" });
 
+
             if (user.isBlocked) {
                 console.error('Пользователь заблокирован:', user.phone);
                 return res.status(401).json({ message: 'Вы заблокированы. Вход невозможен.' });
@@ -237,7 +241,9 @@ class UserController {
                     trAim: user.trAim,
                     birthdate: user.birthdate,
                     role: user.role,
-                    finishedTr: user.finishedTr}
+                    finishedTr: user.finishedTr,
+                    favPlans: user.favPlans,
+                    favRecipes: user.favRecipes}
         }); 
         } catch (error) {
             console.error('Ошибка при аутентификации:', error);
@@ -362,34 +368,74 @@ class UserController {
 
     async addFavoritePlan(req, res) {
         try {
-            const { idTplan } = req.body;
+            const {idTplan} = req.body;
             const { id } = req.params;
-    
             const user = await User.findByPk(id);
             if (!user) {
                 return res.status(404).json({ message: 'Пользователь не найден' });
             }
-    
-            console.log("idTplan:", idTplan);
-            console.log("User before update:", user);
-    
+            let plans = Object.assign([], user.favPlans);
+            let plans1 = Object.assign([], plans.filter(plan => plan != idTplan))
+
+
             if (!user.favPlans.includes(idTplan)) {
-                user.favPlans.push(idTplan);
-                console.log("User after update, before save:", user); // Log before saving
-                const saveResult = await user.save(); // Store the result of save()
-                console.log("Save result:", saveResult); // Log the save result
-    
-                const updatedUser = await User.findByPk(id); //Fetch updated user from DB
-                console.log("User after save:", updatedUser);
-                return res.status(200).json(updatedUser);
+                console.log("1 " + JSON.stringify(user) )
+                plans.push(idTplan)
+                await user.update({
+                    favPlans: plans
+                })
+
+               
             }
-             const updatedUser = await User.findByPk(id); //Fetch updated user from DB
-            return res.status(200).json(updatedUser);
+            else{
+                await user.update({
+                    favPlans: plans1
+                })
+            }
+            
+                res.status(200).json(user);
         } catch (error) {
             console.error('Ошибка при добавлении плана в избранное:', error);
             return res.status(500).json({ message: 'Ошибка сервера' });
         }
     }
+
+
+    async addFavoriteRecipe(req, res) {
+        try {
+            const {idRecipe} = req.body;
+            const { id } = req.params;
+            const user = await User.findByPk(id);
+            if (!user) {
+                return res.status(404).json({ message: 'Пользователь не найден' });
+            }
+            let recipes = Object.assign([], user.favRecipes);
+            let recipes1 = Object.assign([], recipes.filter(recipe => recipe != idRecipe))
+
+
+            if (!user.favRecipes.includes(idRecipe)) {
+                console.log("1 " + JSON.stringify(user) )
+                recipes.push(idRecipe)
+                await user.update({
+                    favRecipes: recipes
+                })
+
+               
+            }
+            else{
+                await user.update({
+                    favRecipes: recipes1
+                })
+            }
+            
+                res.status(200).json(user);
+        } catch (error) {
+            console.error('Ошибка при добавлении плана в избранное:', error);
+            return res.status(500).json({ message: 'Ошибка сервера' });
+        }
+    }
+
+
 }
 
 module.exports = new UserController();

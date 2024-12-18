@@ -138,6 +138,39 @@ class RecipeController {
             return res.status(500).json({ message: 'Ошибка при поиске рецептов' });
         }
     }
+
+    async findFavRecipes(req, res) {
+        try {
+            const favRecipes = req.query.favRecipes; 
+    
+            if (!favRecipes) { 
+              return res.status(400).json({ error: "favRecipes parameter is missing" });
+            }
+    
+            const parsedFavRecipes = JSON.parse(favRecipes); 
+    
+            const recipes = [];
+    
+            for (let index = 0; index < parsedFavRecipes.length; index++) {
+                const element = parsedFavRecipes[index];
+                const recipe = await Recipe.findByPk(element);
+                console.log(recipe)
+                if (recipe) {
+                    recipes.push(recipe);
+                }
+            }
+    
+            if (recipes.length > 0) {
+                res.json(recipes);
+            } else {
+                res.status(404).json({ error: "No matching training plans found." });
+            }
+        } catch (error) {
+            console.error("Ошибка при получении тренировочных планов:", error);
+            res.status(500).json({ error: "Ошибка сервера" });
+        }
+    }
+
 }
 
 

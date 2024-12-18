@@ -8,5 +8,6 @@ router.get('/:id', recipeController.getOne)
 router.delete('/:id', recipeController.delete)
 router.put('/:id', recipeController.update)
 router.get('/search', recipeController.search)
+router.get('/findFavRecipes', recipeController.findFavRecipes)
 
 module.exports = router

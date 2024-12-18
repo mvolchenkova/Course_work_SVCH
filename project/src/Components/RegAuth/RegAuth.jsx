@@ -25,6 +25,9 @@ export default function RegAuth() {
         localStorage.setItem('finishedTr', userData.finishedTr);
         localStorage.setItem('name', userData.name);
         localStorage.setItem('role', userData.role);
+        localStorage.setItem('favPlans', JSON.stringify(userData.favPlans))
+        localStorage.setItem('favRecipes', JSON.stringify(userData.favRecipes))
+        // localStorage.setItem('token', userData.)
 
         navigate('/homePage');
         } catch (error) {

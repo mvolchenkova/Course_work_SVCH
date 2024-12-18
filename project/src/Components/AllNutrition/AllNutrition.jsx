@@ -7,6 +7,7 @@ import { FavoriteBorder } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchRecipes, setCurrentRecipe } from '../../slices/recipeSlice'; 
 import AddRecipeModal from '../AddRecipeModal/AddRecipeModal';
+import { addFavoriteRecipe } from '../../slices/userSlice';
 
 export default function AllNutrition() {
     const dispatch = useDispatch();
@@ -17,15 +18,18 @@ export default function AllNutrition() {
     const [favorites, setFavorites] = useState({});
     const [isModalOpen, setModalOpen] = useState(false);
     const role = localStorage.getItem('role')
-
+    const userId = localStorage.getItem('userId')
     const isLoading = status === 'loading';
+    const favRecipes = localStorage.getItem('favRecipes')
 
     useEffect(() => {
         if (status === 'idle') {
             dispatch(fetchRecipes());
         }
     }, [status, dispatch]);
-    
+    useEffect(() => {
+        setFilteredRecipes(recipes);
+    }, [recipes]);
     const handleAddRecipe = () => {
         setModalOpen(true); 
     };
@@ -33,9 +37,7 @@ export default function AllNutrition() {
         setModalOpen(false); 
     };
 
-    useEffect(() => {
-        setFilteredRecipes(recipes);
-    }, [recipes]);
+    
 
     const handleGetInput = (e) => {
         setInput(e.target.value);
@@ -52,14 +54,24 @@ export default function AllNutrition() {
         }
     };
 
-    const toggleFavorite = (idRecipe) => {
-        setFavorites(prev => ({
-            ...prev,
-            [idRecipe]: !prev[idRecipe],
-        }));
+    const toggleFavorite = async (idRecipe) => {
+        if (!userId) {
+            alert('Please login to add favourites.');
+            return;
+        }
+    
+        try {
+            const updatedUser = await dispatch(addFavoriteRecipe({ userId, idRecipe })).unwrap(); 
+            localStorage.setItem('user', JSON.stringify(updatedUser))
+            localStorage.setItem('favRecipes', JSON.stringify(updatedUser.favRecipes))
+            window.location.reload();
+        } catch (error) {
+            // Handle the error
+            console.error("Error adding favorite recipe:", error);
+        }
     };
 
-    const handlePlanClick = (recipe) => {
+    const handleRecipeClick = (recipe) => {
         dispatch(setCurrentRecipe(recipe)); 
     };
 
@@ -83,10 +95,10 @@ export default function AllNutrition() {
                 <div className="planDiv">
                     {isLoading ? (
                         <p>Loading recipes...</p>
-                    ) : filteredRecipes.length > 0 ? (
+                    ) : filteredRecipes ? (
                         filteredRecipes.map(recipe => (
-                            <div key={recipe.id} className="planData PixelFont">
-                                <Link to='/recipe' onClick={() => handlePlanClick(recipe)} style={{ textDecoration: 'none' }}>
+                            <div key={recipe.idRecipe} className="planData PixelFont">
+                                <Link to='/recipe' key={recipe.idRecipe} onClick={() => handleRecipeClick(recipe)} style={{ textDecoration: 'none' }}>
                                     <img src={`http://localhost:5000/${recipe.img}`} alt={recipe.title} className="planImg" />
                                     <div className="planText">
                                         <b>{recipe.title}</b>
@@ -95,9 +107,9 @@ export default function AllNutrition() {
                                 </Link>
                                 <IconButton 
                                     aria-label="add to favorites" 
-                                    onClick={() => toggleFavorite(recipe.id)}
+                                    onClick={() => toggleFavorite(recipe.idRecipe)}
                                 >
-                                    {favorites[recipe.id] ? (
+                                    {favRecipes.includes(recipe.idRecipe) ? (
                                         <FavoriteIcon style={{ color: 'red' }} />
                                     ) : (
                                         <FavoriteBorder />

@@ -21,11 +21,11 @@ export default function AllPlans() {
     const role = localStorage.getItem('role')
     const isLoading = status === 'loading';
     const userId = localStorage.getItem('userId')
-    const user = localStorage.getItem('user')
-
+    const user = (localStorage.getItem('currentUser'))
+    const favPlans = localStorage.getItem('favPlans')
     useEffect(() => {
         if (status === 'idle') {
-            dispatch(fetchTrainingPlans());
+          dispatch(fetchTrainingPlans());
         }
     }, [status, dispatch]);
 
@@ -50,16 +50,16 @@ export default function AllPlans() {
     };
 
     const toggleFavorite = async (idTplan) => {
-        console.log('Current userId:', userId); 
         if (!userId) {
             alert('Please login to add favourites.');
             return;
         }
     
         try {
-            const updatedUser = await dispatch(addFavoritePlan({ userId, idTplan })).unwrap(); // unwrap() handles potential rejections
-            setFavorites(prev => ({ ...prev, [idTplan]: !prev[idTplan] }));
-            dispatch(updateUser(updatedUser)); // Use the entire updatedUser object
+            const updatedUser = await dispatch(addFavoritePlan({ userId, idTplan })).unwrap(); 
+            localStorage.setItem('user', JSON.stringify(updatedUser))
+            localStorage.setItem('favPlans', JSON.stringify(updatedUser.favPlans))
+            window.location.reload();
         } catch (error) {
             // Handle the error
             console.error("Error adding favorite plan:", error);
@@ -95,9 +95,10 @@ export default function AllPlans() {
                     <button onClick={handleSearch} className="searchButton">Search</button>
                 </div>
                 <div className="planDiv">
+                    
                     {isLoading ? (
                         <p>Loading plans...</p>
-                    ) : filteredPlans.length > 0 ? (
+                    ) : filteredPlans ? (
                         filteredPlans.map(plan => (
                             <div key={plan.idTplan} className="planData PixelFont">
                                 <Link to='/plan' key={plan.idTplan} onClick={() => handlePlanClick(plan)} style={{ textDecoration: 'none' }}>
@@ -112,7 +113,7 @@ export default function AllPlans() {
                                     aria-label="add to favorites" 
                                     onClick={() => toggleFavorite(plan.idTplan)}
                                 >
-                                    {favorites[plan.idTplan] ? (
+                                    {favPlans.includes(plan.idTplan) ? (
                                         <FavoriteIcon style={{ color: 'red' }} />
                                     ) : (
                                         <FavoriteBorder />

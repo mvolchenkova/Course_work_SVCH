@@ -26,7 +26,7 @@ export const logoutUser = createAsyncThunk('api/users/logoutUser', async () => {
 export const fetchUsers = createAsyncThunk('api/users', async ({ page = 1, limit = 10 }) => {
     console.log(process.env.REACT_APP_API_URL);
     const response = await axios.get(`${process.env.REACT_APP_API_URL}/users?page=${page}&limit=${limit}`);
-    return response.data; 
+    return response.data.users; 
 });
 
 // Async thunk для регистрации пользователя
@@ -73,6 +73,15 @@ export const addFavoritePlan = createAsyncThunk('api/users/:id/addFavoritePlan',
     return response.data;
 }
 );
+export const addFavoriteRecipe = createAsyncThunk('api/users/:id/addFavoriteRecipe', async ({userId, idRecipe}) => {
+    const response = await axios.put(`${process.env.REACT_APP_API_URL}/users/${userId}/addFavoriteRecipe`, {idRecipe});
+    return response.data;
+}
+);
+// export const fetchFavoritePlans = createAsyncThunk('api/users/:id/fetchFavoritePlans', async (userId) => {
+//     const response = await axios.get(`${process.env.REACT_APP_API_URL}/users/${userId}/favoritePlans`);
+//     return response.data;
+// });
 
 const userSlice = createSlice({
     name: 'users',
@@ -81,7 +90,7 @@ const userSlice = createSlice({
         addUser: (state, action) => {
             state.users.push(action.payload);
         },
-        updateUser: (state, action) => {
+        updateUser: (state, action) => {    
             const index = state.users.findIndex(user => user.idUser === action.payload.idUser);
             if (index !== -1) {
                 state.users[index] = action.payload;
@@ -123,11 +132,21 @@ const userSlice = createSlice({
                 state.loading = false;
                 state.error = action.error.message; 
             })
-            
-            .addCase(fetchUsers.fulfilled, (state, action) => {
-                state.loading = false;
-                state.users = action.payload.users; 
-            })
+            .addCase(fetchUsers.pending, (state) => {
+                state.status = 'loading';
+              })
+              .addCase(fetchUsers.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.users = action.payload; // Записываем пользователей в состояние
+              })
+              .addCase(fetchUsers.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
+              })
+            // .addCase(fetchUsers.fulfilled, (state, action) => {
+            //     state.loading = false;
+            //     state.users = action.payload.users; 
+            // })
             .addCase(updateUserThunk.fulfilled, (state, action) => {
                 state.currentUser = action.payload; 
                 const index = state.users.findIndex(user => user.idUser === action.payload.idUser);
@@ -151,6 +170,9 @@ const userSlice = createSlice({
                 }
             })
             .addCase(addFavoritePlan.fulfilled, (state, action) => {
+                state.currentUser = action.payload;
+             })
+             .addCase(addFavoriteRecipe.fulfilled, (state, action) => {
                 state.currentUser = action.payload;
              })
             
