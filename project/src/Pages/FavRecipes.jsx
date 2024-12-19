@@ -12,9 +12,9 @@ import {addFavoriteRecipe} from '../slices/userSlice'
 
 export default function FavRecipes() {
     const dispatch = useDispatch();
-    const recipes = useSelector(state=>state.recipes.favRecipes)
-    console.log(recipes)
-    const isLoading = useSelector(state=>state.recipes)
+    const recipes = useSelector(state => state.recipes.favRecipes)
+   
+    const isLoading = useSelector(state => state.recipes.loading)
     const userId = localStorage.getItem('userId')
     const [isModalOpen, setModalOpen] = useState(false);
     const favRecipes = localStorage.getItem('favRecipes')
@@ -22,8 +22,8 @@ export default function FavRecipes() {
 
     useEffect(() => {
         dispatch(findFavRecipes()); 
-    }, [dispatch]); 
-
+    }, []); 
+    console.log(isLoading)
     const toggleFavorite = async (idRecipe) => {
         console.log('Current userId:', userId); 
         if (!userId) {
@@ -61,30 +61,32 @@ export default function FavRecipes() {
             <div className="planDiv">
                     {isLoading ? (
                         <p>Loading recipes...</p>
-                    ) : recipes ? (
-                        recipes.map(recipe => (
-                            <div key={recipe.idRecipe} className="planData PixelFont">
-                                <Link to='/recipe' key={recipe.idRecipe} onClick={() => handleRecipeClick(recipe)} style={{ textDecoration: 'none' }}>
-                                    <img src={`http://localhost:5000/${recipe.img}`} alt={recipe.title} className="planImg" />
-                                    <div className="planText">
-                                        <b>{recipe.title}</b>
-                                        <p>{recipe.time} minutes</p>
-                                    </div>
-                                </Link>
-                                <IconButton 
-                                    aria-label="add to favorites" 
-                                    onClick={() => toggleFavorite(recipe.idRecipe)}
-                                >
-                                    {favRecipes.includes(recipe.idRecipe) ? (
-                                        <FavoriteIcon style={{ color: 'red' }} />
-                                    ) : (
-                                        <FavoriteBorder />
-                                    )}
-                                </IconButton>
-                            </div>
-                        ))
                     ) : (
-                        <p>No recipes found.</p>
+                        recipes ? (
+                            recipes.map(recipe => (
+                                <div key={recipe.idRecipe} className="planData PixelFont">
+                                    <Link to='/recipe' key={recipe.idRecipe} onClick={() => handleRecipeClick(recipe)} style={{ textDecoration: 'none' }}>
+                                        <img src={`http://localhost:5000/${recipe.img}`} alt={recipe.title} className="planImg" />
+                                        <div className="planText">
+                                            <b>{recipe.title}</b>
+                                            <p>{recipe.time} minutes</p>
+                                        </div>
+                                    </Link>
+                                    <IconButton 
+                                        aria-label="add to favorites" 
+                                        onClick={() => toggleFavorite(recipe.idRecipe)}
+                                    >
+                                        {favRecipes.includes(recipe.idRecipe) ? (
+                                            <FavoriteIcon style={{ color: 'red' }} />
+                                        ) : (
+                                            <FavoriteBorder />
+                                        )}
+                                    </IconButton>
+                                </div>
+                            ))
+                        ) : (
+                            <p>No recipes found.</p>
+                        )
                     )}
                 </div>
             <Footer />

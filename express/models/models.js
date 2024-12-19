@@ -395,10 +395,4 @@ Review.belongsTo(User, { foreignKey: 'userIdUser', sourceKey: 'idUser' })
 User.hasMany(Task, { foreignKey: 'userIdUser', sourceKey: 'idUser' });
 Task.belongsTo(User, { foreignKey: 'userIdUser', targetKey: 'idUser' });
 
-User.hasMany(Ingredient)
-Ingredient.belongsTo(User)
-
-
-User.hasMany(TrainingPlan)
-TrainingPlan.hasMany(User)
 module.exports = { User, TrainingPlan, Recipe, Review, Article, Question, Advice, Ingredient, Instruction};

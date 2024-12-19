@@ -4,7 +4,7 @@ const recipeController = require('../controllers/recipeController')
 
 router.post('/', recipeController.create)
 router.get('/', recipeController.getAll)
-router.get('/:id', recipeController.getOne)
+router.get('/getbyid/:id', recipeController.getOne)
 router.delete('/:id', recipeController.delete)
 router.put('/:id', recipeController.update)
 router.get('/search', recipeController.search)

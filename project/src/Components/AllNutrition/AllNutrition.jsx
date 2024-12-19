@@ -20,6 +20,7 @@ export default function AllNutrition() {
     const role = localStorage.getItem('role')
     const userId = localStorage.getItem('userId')
     const isLoading = status === 'loading';
+
     const favRecipes = localStorage.getItem('favRecipes')
 
     useEffect(() => {

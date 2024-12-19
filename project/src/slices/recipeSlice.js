@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-export const fetchRecipes = createAsyncThunk('api/recipes/fetch', async () => {
-    const response = await axios.get(`${process.env.REACT_APP_API_URL}/recipes`);
+export const fetchRecipes = createAsyncThunk('api/recipes/search', async () => {
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/recipes/search`);
     return response.data;
 });
 
@@ -85,6 +85,10 @@ const recipesSlice = createSlice({
             .addCase(findFavRecipes.fulfilled, (state, action)=>{
                 state.loading = false;
                 state.favRecipes = action.payload;
+            })
+            .addCase(findFavRecipes.pending, (state)=>{
+                state.loading = true;
+                
             })
             .addCase(findFavRecipes.rejected, (state, action) => {
                 state.loading = false;
