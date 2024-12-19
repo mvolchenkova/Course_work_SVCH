@@ -44,7 +44,9 @@ export default function Footer(){
                     <div className="PixelFont footerLinks">
                         <Link to="/ask">Ask a question</Link>
                         <Link to="/review" onClick={handleWriteReviewClick}>Write a review</Link>
-                        <Link to="/becomecoach">Become a coach</Link>
+                        {!role == 'trainer' && (
+                            <Link to="/becomecoach">Become a coach</Link>
+                        )}
                         {role == 'admin' && (
                             <Link to="/adminpanel">Admin Panel</Link>
                         )}

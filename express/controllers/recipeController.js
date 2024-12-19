@@ -24,7 +24,7 @@ class RecipeController {
                     time,
                     ingredients: JSON.stringify(ingredients),
                     instructions: JSON.stringify(instructions),
-                    img: fileName // Save the generated filename
+                    img: fileName 
                 }).then(rec => {
                     res.status(201).json(rec);
                 }).catch(error => {

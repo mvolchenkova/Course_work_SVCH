@@ -7,10 +7,10 @@ const path = require('path');
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { body, validationResult } = require('express-validator');
+const uuid = require('uuid')
 
 const dotenv = require('dotenv');
 dotenv.config();
-
 
 // Настройка multer для загрузки файлов
 const storage = multer.diskStorage({
@@ -18,7 +18,7 @@ const storage = multer.diskStorage({
         cb(null, path.join(__dirname, '..', 'static', 'diplomas'));
     },
     filename: (req, file, cb) => {
-        cb(null, uuidv4() + path.extname(file.originalname)); // Генерация уникального имени файла
+        cb(null, uuidv4() + path.extname(file.originalname)); 
     }
 });
 
@@ -263,35 +263,25 @@ class UserController {
     }
 
     // Метод для изменения роли пользователя и загрузки диплома
-    async  becomeCoach(req, res) {
+    async becomeCoach(req, res) {
         try {
-            const diplomaFile = req.file; // Получаем загруженный файл
-            console.log('Полученный файл:', diplomaFile);
-            console.log('Полученный userId:', req.body.userId);
-
-            if (!diplomaFile) {
-                return res.status(400).json({ message: 'Файл диплома не загружен.' });
-            }
-
-            // Убедимся, что файл уже перемещен multer
-            const fileName = diplomaFile.filename; // Используем имя файла, сгенерированное multer
-
-            const userId = req.body.userId;
-            const user = await User.findByPk(userId);
-
+            const { id } = req.params;
+            const { diploma } = req.body;
+    
+            console.log('User ID:', id);
+    
+            const user = await User.findByPk(id);
             if (!user) {
-                return res.status(404).json({ message: 'Пользователь не найден.' });
+                return res.status(404).json({ error: "User not found." });
             }
-
-            // Обновляем пользователя
-            user.role = 'trainer';
-            user.diploma = fileName; // Сохраняем имя файла
-
+    
+            user.role = "trainer"; 
+            user.diploma = diploma
             await user.save();
-            return res.status(200).json(user);
+    
+            res.json({ message: "File uploaded successfully and role updated.", user: user });
         } catch (error) {
-            console.error('Ошибка при обработке запроса:', error);
-            return res.status(500).json({ message: 'Ошибка при изменении роли.', details: error.message });
+            console.error("Error in becomeCoach:", error);
         }
     }
 

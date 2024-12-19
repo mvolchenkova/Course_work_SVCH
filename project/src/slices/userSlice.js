@@ -45,10 +45,16 @@ export const updateUserThunk = createAsyncThunk('api/users/:id', async ( current
     return response.data; 
 });
 
-export const becomeCoachThunk = createAsyncThunk('api/users/becomecoach/:id', async ({ currentUser }) => {
-    const response = await axios.put(`${process.env.REACT_APP_API_URL}/users/becomecoach/${currentUser.userId}`, { currentUser });
+export const becomeCoachThunk = createAsyncThunk('api/users/becomeCoach/:id', async ({ userId, diploma }) => {
+    const response = await axios.put(`${process.env.REACT_APP_API_URL}/users/becomeCoach/${userId}`, {diploma});
     return response.data; 
 });
+   // const formData = new FormData();
+    // formData.append('file', selectedFile);
+
+// headers: {
+        //     'Content-Type': 'multipart/form-data'
+        // }
 
 export const deleteUserThunk = createAsyncThunk(
     'user/deleteUser',

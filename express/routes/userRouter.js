@@ -2,7 +2,7 @@ const Router = require('express')
 const router = new Router()
 const multer = require('multer');
 const userController = require('../controllers/userController')
-const upload = multer({ dest: 'diplomas/' });
+const upload = multer({ dest: '/data/diplomas' });
 
 router.post('/', userController.create)
 router.get('/', userController.getAll)
@@ -18,10 +18,10 @@ router.delete('/:userId', (req, res, next) => {
 router.get('/exists/:id', userController.exists);
 router.post('/check', userController.getChecked);
 router.post('/logout', userController.logoutUser);
-router.put('/becomecoach', upload.single('file'), userController.becomeCoach)
+router.put('/becomeCoach/:id', userController.becomeCoach)
 router.patch('/:id/block', userController.block)
 router.put('/:id/addFavoritePlan', userController.addFavoritePlan)
 router.put('/:id/addFavoriteRecipe', userController.addFavoriteRecipe)
 
-
+// , upload.single('file')
 module.exports = router

@@ -7,6 +7,20 @@ const router = require('./routes/index');
 const fileUpload = require('express-fileupload');
 const path = require('path')
 const fs = require('fs');
+const multer = require('multer')
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, path.resolve(__dirname, '..', 'static', 'diplomas'));
+    },
+    filename: (req, file, cb) => {
+        const fileName = uuid.v4() + ".pdf";
+        cb(null, fileName);
+    }
+});
+
+const upload = multer({ storage });
+
 
 const PORT = process.env.PORT;
 
@@ -24,7 +38,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.resolve(__dirname,'static')))
-app.use(fileUpload({}))
+app.use(fileUpload())
 app.use('/api/tplans', tplanRouter); 
 app.use('/api/users', userRouter); 
 app.use('/api/favtplans', favtplanRouter); 
@@ -79,5 +93,9 @@ app.get('/api/recipeImages', (req, res) => {
         res.json(imageUrls); // Return the URLs as a JSON response
     });
 });
+
+
+
+
 
 start();
