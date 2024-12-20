@@ -29,6 +29,11 @@ export const fetchUsers = createAsyncThunk('api/users', async ({ page = 1, limit
     return response.data.users; 
 });
 
+export const getAllUsersThunk = createAsyncThunk('api/users/search', async() => {
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/users/search`)
+    return response.data.users;
+})
+
 // Async thunk для регистрации пользователя
 export const registerUser = createAsyncThunk('api/users/register', async (userData) => {
     const response = await axios.post(`${process.env.REACT_APP_API_URL}/users`, userData);

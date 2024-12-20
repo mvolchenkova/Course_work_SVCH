@@ -35,7 +35,7 @@ export default function Advices() {
                 {error && <p className="error">{error}</p>}
                 <div className='advicesDiv'>
                     {advices.map((advice) => (
-                        <div key={advice.id} className='advice'>
+                        <div key={advice.adviceId} className='advice'>
                             <p className='titleAdv'>{advice.title}</p>
                             <p className='advText'>{advice.text}</p>
                         </div>

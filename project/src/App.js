@@ -14,7 +14,7 @@ import PrivateRouteToBecomeCoach from './Components/privateRoutes/PrivateRouteTo
 import BecomeCoachPage from './Pages/BecomeCoachPage'
 import AllUsersPage from './Pages/AllUsersPage/AllUsersPage';
 import AccountPage from './Pages/AccountPage'
-import ArticlesPage from './Pages/ArticlesPage';
+import ArticlesPage from './Pages/ArticlesPage/ArticlesPage';
 import PlanPage from './Pages/PlanPage/PlanPage'
 import RecipePage from './Pages/RecipePage/RecipePage'
 import Ask from './Pages/Ask/Ask';

@@ -15,7 +15,7 @@
 .advice{
     display: flex;
     flex-direction: column;
-    border:1px solid black;
+    border:1.5px solid black;
     border-radius: 20px;
     width: 90%;
     padding: 20px;

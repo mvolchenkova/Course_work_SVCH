@@ -2,7 +2,7 @@ import '../ReviewsFromUsers/ReviewsFromUsers.css';
 import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchReviews } from '../../slices/reviewSlice';
-import { fetchUsers } from '../../slices/userSlice';
+import { getAllUsersThunk } from '../../slices/userSlice';
 import { Link, useNavigate } from 'react-router-dom';
 import Star from '../Star/Star'; 
 
@@ -15,7 +15,7 @@ export default function ReviewsFromUsers() {
     const [isLoading, setIsLoading] = useState(true); 
     const navigate = useNavigate();
     const user = localStorage.getItem('user');
-    const reviewsRef = useRef(null); // Create a ref for the reviews container
+    const reviewsRef = useRef(null); 
 
     const handleWriteReviewClick = (event) => {
         if (!user) {
@@ -34,7 +34,7 @@ export default function ReviewsFromUsers() {
     useEffect(() => {
         const fetchAllData = async () => {
           try {
-            await Promise.all([dispatch(fetchReviews()), dispatch(fetchUsers())]);
+            await Promise.all([dispatch(fetchReviews()), dispatch(getAllUsersThunk())]);
             console.log(users);
           } catch (error) {
             console.error("Error fetching data:", error);

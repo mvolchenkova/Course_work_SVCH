@@ -55,6 +55,7 @@ export default function Registration() {
             localStorage.setItem('userId', result.idUser);
             localStorage.setItem('favPlans', [])
             localStorage.setItem('favRecipes', [])
+            localStorage.setItem('user', JSON.stringify(userData))
             navigate('/homePage')
         } catch (error) {
             console.error('Ошибка при регистрации:', error);

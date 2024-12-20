@@ -2,8 +2,8 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 // Асинхронное действие для добавления статьи
-export const addArticle = createAsyncThunk('api/articles', async (articleData) => {
-    const response = await axios.post(`${process.env.REACT_APP_API_URL}/articles`, articleData);
+export const addArticle = createAsyncThunk('api/articles', async ({title, author, content}) => {
+    const response = await axios.post(`${process.env.REACT_APP_API_URL}/articles`, {title, author, content});
     return response.data;
 });
 export const fetchArticles = createAsyncThunk(

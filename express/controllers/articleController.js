@@ -21,11 +21,7 @@ class ArticleController {
     // Создание новой записи
     async create(req, res) {
         try {
-            const { title, author } = req.body;
-            if (!req.file) {
-                return res.status(400).json({ message: 'No file uploaded' });
-            }
-            const content = req.file.path;
+            const { title, author, content } = req.body;
             const article = await Article.create({ title, content, author });
             res.status(201).json(article);
         } catch (error) {

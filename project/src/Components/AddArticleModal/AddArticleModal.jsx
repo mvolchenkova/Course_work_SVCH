@@ -6,24 +6,13 @@ import '../AddArticleModal/AddArticleModal.css'
 export default function AddArticleModal({ onClose }) {
     const [title, setTitle] = useState('');
     const [author, setAuthor] = useState('');
-    const [file, setFile] = useState(null);
+    const [content, setContent] = useState(null);
     const dispatch = useDispatch();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const formData = new FormData();
-        formData.append('title', title);
-        formData.append('author', author);
-        formData.append('file', file);
-        for (const pair of formData.entries()) {
-            console.log(pair[0]+ ', ' + pair[1]); 
-        }
-        
-    
-        console.log([...formData]); // Логируем содержимое FormData
-    
         try {
-            await dispatch(addArticle(formData));
+            await dispatch(addArticle({title, author, content}));
         } catch (error) {
             console.error('Ошибка при добавлении статьи:', error);
         }
@@ -47,8 +36,9 @@ export default function AddArticleModal({ onClose }) {
                     required
                 />
                 <input
-                    type="file"
-                    onChange={(e) => setFile(e.target.files[0])}
+                    type="text"
+                    placeholder='Link'
+                    onChange={(e) => setContent(e.target.value)}
                     required
                 />
                 <button type="submit">ADD ARTICLE</button>
