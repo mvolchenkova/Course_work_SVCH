@@ -14,9 +14,14 @@ export const adminAddRecipe = createAsyncThunk(
     'recipes/addRecipe',
     async (formData) => {
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/recipes`, formData, {
+            console.log(formData)
+            console.log(formData.img)
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/recipes`, {
                 headers: {
-                    'Content-Type': 'multipart/form-data'
+                    'Content-Type': 'application/json'
+                },
+                body:{
+                    formData
                 }
             });
             return response.data;

@@ -53,19 +53,34 @@ const AddRecipeModal = ({ isOpen, onClose }) => {
             return alert('Title should have between 10 and 50 characters.');
         }
 
-        const formData = new FormData();
-        formData.append("title", recipeData.title);
-        formData.append("time", recipeData.time);
-        if (selectedImageFile) {
-            formData.append("img", selectedImageFile);
+        // const formData = new FormData();
+        // formData.set("title", recipeData.title);
+        // formData.set("time", recipeData.time);
+        // if (selectedImageFile) {
+        //     formData.set("img", selectedImageFile);
+        // }
+        // formData.set("ingredients", JSON.stringify(recipeData.ingredients));
+        // formData.set("instructions", JSON.stringify(recipeData.instructions));
+        const data = {
+            'title': recipeData.title,
+            'time': recipeData.time,
+            'ingredients': JSON.stringify(recipeData.ingredients),
+            'instructions': JSON.stringify(recipeData.instructions)
         }
-        formData.append("ingredients", JSON.stringify(recipeData.ingredients));
-        formData.append("instructions", JSON.stringify(recipeData.instructions));
+        var formData = {}
+        if(selectedImageFile){
+        
+            formData = {...data,
+                'img': selectedImageFile}
+        }
+        else{
+            formData = {...data}
+        }
 
-        console.log("formadata", formData.ingredients)
+        console.log("formdata", formData)
 
         try {
-            await dispatch(adminAddRecipe({formData}));
+            await dispatch(adminAddRecipe(formData));
             onClose(); 
         } catch (error) {
             console.error("Error creating recipe:", error);

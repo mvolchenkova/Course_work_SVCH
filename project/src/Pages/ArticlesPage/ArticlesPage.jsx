@@ -29,7 +29,7 @@ export default function ArticlesPage() {
             <main className="articlesMain">
                 <h1>ARTICLES</h1>
                 {( role == 'trainer' || role == 'admin' ) && (
-                        <button onClick={toggleModal}>Добавить статью</button> 
+                        <button onClick={toggleModal}>ADD ARTICLE</button> 
                     )}
                 <div className='articlesDiv'>
                     {articles.map(article => (

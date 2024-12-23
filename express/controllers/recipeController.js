@@ -6,13 +6,13 @@ const fs = require('fs');
 class RecipeController {
     async create(req, res) {
         try {
-            console.log("req.files:", req.files);
+          
             console.log("req.body:", req.body);
             const { title, time, ingredients, instructions, img } = req.body;
 
             const fileName = uuid.v4() + ".jpg";
-    
-            imageFile.mv(path.resolve(__dirname, '..', 'static', fileName), (err) => {
+            
+            img.name.mv(path.resolve(__dirname, '..', 'static', fileName), (err) => {
                 if (err) {
                     console.error("Error moving file:", err);
                     return res.status(500).json({ message: 'Error uploading image' });
@@ -29,12 +29,12 @@ class RecipeController {
                     res.status(201).json(rec);
                 }).catch(error => {
                     console.error('Error creating recipe (database):', error);
-                    return res.status(500).json({ message: 'Error creating recipe' });
+                    return res.status(500).json({ message: 'Error creating recipe' + error });
                 });
             });
         } catch (error) {
             console.error('Error creating recipe (general):', error);
-            return res.status(500).json({ message: 'Error creating recipe' });
+            return res.status(500).json({ message: 'Error creating recipe'+error });
         }
     }
     async getAll(req, res) {

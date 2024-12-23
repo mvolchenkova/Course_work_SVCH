@@ -37,10 +37,10 @@ export default function Ask() {
         <main>
             <HeaderLog />
             <div className="ask-container">
-                <h2>Задайте ваш вопрос</h2>
+                <h2>Ask us a question</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
-                        <label htmlFor="email">Ваша электронная почта:</label>
+                        <label htmlFor="email">Your email:</label>
                         <input
                             type="email"
                             id="email"
@@ -50,7 +50,7 @@ export default function Ask() {
                         />
                     </div>
                     <div className="form-group">
-                        <label htmlFor="question">Ваш вопрос:</label>
+                        <label htmlFor="question">Your question:</label>
                         <textarea
                             id="question"
                             value={question}
@@ -61,7 +61,7 @@ export default function Ask() {
                     </div>
                     {error && <p className="error">{error}</p>}
                     {successMessage && <p className="success">{successMessage}</p>}
-                    <button type="submit">Отправить вопрос</button>
+                    <button type="submit">Send</button>
                 </form>
             </div>
             <Footer />

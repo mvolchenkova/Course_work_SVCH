@@ -42,10 +42,10 @@ export default function WritingReviewPage() {
         <main>
             <HeaderLog />
             <div className="ask-container">
-                <h2>Напишите свой отзыв здесь. Ваше мнение важно для нас.</h2>
+                <h2>Write a review here</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
-                        <label htmlFor="email">Ваша электронная почта:</label>
+                        <label htmlFor="email">Your email:</label>
                         <input
                             type="email"
                             id="email"
@@ -55,7 +55,7 @@ export default function WritingReviewPage() {
                         />
                     </div>
                     <div className="form-group">
-                        <label htmlFor="review">Ваш отзыв:</label>
+                        <label htmlFor="review">Your review:</label>
                         <textarea
                             id="review"
                             value={review}
@@ -67,7 +67,7 @@ export default function WritingReviewPage() {
                         <p>{review.length} / 120</p> {/* Display character count */}
                     </div>
                     <div className="form-group rating">
-                        <label htmlFor="rating">Ваша оценка:</label>
+                        <label htmlFor="rating">Your rating:</label>
                         <Box sx={{ '& > legend': { mt: 2 } }}>
                             <Rating
                                 name="rating"
@@ -80,7 +80,7 @@ export default function WritingReviewPage() {
                     </div>
                     {error && <p className="error">{error}</p>}
                     {successMessage && <p className="success">{successMessage}</p>}
-                    <button type="submit">Отправить отзыв</button>
+                    <button type="submit">Send</button>
                 </form>
             </div>
             <Footer />

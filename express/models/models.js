@@ -9,7 +9,7 @@ const TrainingPlan = sequelize.define('trainingplan', {
         validate: {
             notEmpty: { msg: 'Имя автора не может быть пустым' },
             len: {
-                args: [10, 50],
+                args: [2, 50],
                 msg: 'Имя автора должно содержать от 10 до 50 символов'
             }
         }

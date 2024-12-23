@@ -44,10 +44,10 @@ export default function Footer(){
                     <div className="PixelFont footerLinks">
                         <Link to="/ask">Ask a question</Link>
                         <Link to="/review" onClick={handleWriteReviewClick}>Write a review</Link>
-                        {!role == 'trainer' && (
+                        {role === 'user' && (
                             <Link to="/becomecoach">Become a coach</Link>
                         )}
-                        {role == 'admin' && (
+                        {role === 'admin' && (
                             <Link to="/adminpanel">Admin Panel</Link>
                         )}
                     </div>
