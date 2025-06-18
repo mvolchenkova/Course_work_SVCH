@@ -1,4 +1,4 @@
-const { DataTypes, DatabaseError } = require('sequelize');
+const { DataTypes, DatabaseError, STRING } = require('sequelize');
 const sequelize = require('../db');
 
 const TrainingPlan = sequelize.define('trainingplan', {
@@ -378,6 +378,40 @@ const Article = sequelize.define('article', {
     ingredientName: {type: DataTypes.TEXT, allowNull: false}
  })
 
+ const Exercise = sequelize.define('exercise', {
+    idExercise: {type: DataTypes.BIGINT, primaryKey: true, autoIncrement: true},
+    exName:{type: DataTypes.STRING, allowNull:false},
+    frontDelta: {type: DataTypes.BIGINT, allowNull:true},
+    middleDelta: {type: DataTypes.BIGINT, allowNull:true},
+    backDelta: {type: DataTypes.BIGINT, allowNull:true},
+    trapezoids: {type: DataTypes.BIGINT, allowNull:true},
+    diamondshaped: {type: DataTypes.BIGINT, allowNull:true},
+    biceps: {type: DataTypes.BIGINT, allowNull:true},
+    triceps: {type: DataTypes.BIGINT, allowNull:true},
+    bigChest: {type: DataTypes.BIGINT, allowNull:true},
+    middleChest: {type: DataTypes.BIGINT, allowNull:true},
+    smallChest: {type: DataTypes.BIGINT, allowNull:true},
+    forearm: {type: DataTypes.BIGINT, allowNull:true},
+    latissimus: {type: DataTypes.BIGINT, allowNull:true},
+    straightBelly: {type: DataTypes.BIGINT, allowNull:true},
+    externalOblique: {type: DataTypes.BIGINT, allowNull:true},
+    internalOblique: {type: DataTypes.BIGINT, allowNull:true},
+    transverse: {type: DataTypes.BIGINT, allowNull:true},
+    straightHips: {type: DataTypes.BIGINT, allowNull:true},
+    quadriceps: {type: DataTypes.BIGINT, allowNull:true},
+    bicepsHips: {type: DataTypes.BIGINT, allowNull:true},
+    bigGluteal: {type: DataTypes.BIGINT, allowNull:true},
+    middleGluteal: {type: DataTypes.BIGINT, allowNull:true},
+    smallGluteal: {type: DataTypes.BIGINT, allowNull:true},
+    gastrocnemius: {type: DataTypes.BIGINT, allowNull:true},
+    soleus: {type: DataTypes.BIGINT, allowNull:true},
+    experience: {type: DataTypes.STRING, allowNull:false},
+    predominantMuscleGroup: {type: DataTypes.STRING, allowNull:false},
+    baseIsolation: {type: DataTypes.STRING, allowNull:false},
+    type: {type: DataTypes.STRING, allowNull:true},
+    restrictions: {type: DataTypes.STRING, allowNull: true}
+ })
+
  const Instruction = sequelize.define('instruction', {
     instructionId: {type: DataTypes.BIGINT, primaryKey: true, autoIncrement: true},
     instructionName: {type: DataTypes.TEXT, allowNull: false}
@@ -395,4 +429,15 @@ Review.belongsTo(User, { foreignKey: 'userIdUser', sourceKey: 'idUser' })
 User.hasMany(Task, { foreignKey: 'userIdUser', sourceKey: 'idUser' });
 Task.belongsTo(User, { foreignKey: 'userIdUser', targetKey: 'idUser' });
 
-module.exports = { User, TrainingPlan, Recipe, Review, Article, Question, Advice, Ingredient, Instruction};
+module.exports = { 
+    User, 
+    TrainingPlan, 
+    Recipe, 
+    Review, 
+    Article, 
+    Question, 
+    Advice, 
+    Ingredient, 
+    Instruction,
+    Exercise
+};
