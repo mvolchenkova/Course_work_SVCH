@@ -5,6 +5,9 @@ import { updateUserThunk } from '../../slices/userSlice';
 import * as d3 from "d3";
 import { Bar } from 'react-chartjs-2';
 
+import ProgressBar from "@ramonak/react-progress-bar";
+import AddActivityModal from '../AddActivityModal/AddActivityModal';
+
 export default function Progress() {
     const dispatch = useDispatch();
     
@@ -15,6 +18,8 @@ export default function Progress() {
     const [showAddAim, setShowAddAim] = useState(trainingAim === 0); 
     const [showModal, setShowModal] = useState(false); 
     const [error, setError] = useState(null);
+
+    const [isModalOpen, setModalOpen] = useState(false);
 
     // Загрузка данных из localStorage
     useEffect(() => {
@@ -121,39 +126,104 @@ export default function Progress() {
             addWorkoutToHistory(new Date().toLocaleDateString(), trainingAim, newFinishedTr);
     };
 
+
+
+    const [progress, setProgress] = useState(0);
+
+    const handleButtonClick = () => {
+        setProgress((prevProgress) => {
+            if (prevProgress < 100) {
+                return prevProgress + 10; // Увеличиваем прогресс на 10%
+            }
+            return 100; // Максимальное значение
+        });
+    };
+
+    const handleAddActivity = () => {
+        setModalOpen(true); // Open the modal
+    };
+    const closeModal = () => {
+        setModalOpen(false); // Close the modal
+    };
+
     return (
         <div className="progressDiv">
-            {error && <p className="error">{error}</p>}
-            <p className="PixelFont yourProgress">YOUR PROGRESS</p>
+            <div className='heartNbar'>
+                <img className='heartIcon' src="/data/images/heart.png" alt="" />
+                <div className='bar'>
+                    <ProgressBar 
+                        completed={progress} 
+                        bgColor="#ba1c29" 
+                        height="30px" 
+                        isLabelVisible={true}
+                    />
+                    
+                </div>
+                
+            </div>
+
+
+            
+             {/* выпитая вода */}
+
+            {/* <div className='glassNbar'>
+                <img className='waterIcon' src="/data/images/waterGlass.png" alt="" />
+                <div className='bar'>
+                    <ProgressBar 
+                        completed={progress} 
+                        bgColor="#ba1c29" 
+                        height="30px" 
+                        isLabelVisible={true}
+                    />
+                </div>
+            </div> */}
+
+
+            {/* кнопка добавления в сердце */}
+            {/* <button onClick={handleButtonClick} className='removeButton'>
+                +
+            </button> */}
+
+
+            <button className='addActivityButton' onClick={handleAddActivity}>ADD ACTIVITY</button>
+            <AddActivityModal isOpen={isModalOpen} onClose={closeModal} /> 
+
+
+
+
+
+
+            {/* {error && <p className="error">{error}</p>}
+            <p className="smalle yourProgress">YOUR PROGRESS</p>
 
             {showAddAim && ( 
                 <div className="addAim">
-                    <button onClick={() => setShowModal(true)} className='PixelFont'>ADD YOUR TRAINING AIM</button>
+                    <button onClick={() => setShowModal(true)} className='smalle'>ADD YOUR TRAINING AIM</button>
                 </div>
-            )}
+            )} */}
 
-            {!showAddAim && (
+            {/* {!showAddAim && (
                 <div className="aimAndProgressDiv">
                     <div className="aimdiv">
                         <p className='trAim'>Your training aim: {trainingAim}</p>
-                        <button className='PixelFont' onClick={() => setShowModal(true)}>CHANGE AIM</button>
+                        <button className='smalle' onClick={() => setShowModal(true)}>CHANGE AIM</button>
                     </div>
                     <div>
                         <p className='complTr'>Completed trainings: {finishedTr}</p>
                         <div className='chart'>
                             <svg id="progressChart"></svg>
-                            <button className="PixelFont addTrButton" onClick={handleAddTraining}>+</button>
+                            <button className="smalle addTrButton" onClick={handleAddTraining}>+</button>
                         </div>
                     </div>
                 </div>
-            )}
+            )} */}
 
-            {showModal && (
+            {/* {showModal && (
                 <div className="modal">
                     <div className="modal-content">
                         <h2>Select your training aim</h2>
                         <select 
-                            className='selectAim PixelFont'
+                            className='selectAim smalle'
                             value={trainingAim} 
                             onChange={(e) => setTrainingAim(Number(e.target.value))}
                         >
@@ -162,11 +232,11 @@ export default function Progress() {
                                 <option key={num} value={num}>{num}</option>
                             ))}
                         </select>
-                        <button className='PixelFont' onClick={handleAimSubmit}>Submit</button>
-                        <button className='PixelFont' onClick={() => setShowModal(false)}>Cancel</button>
+                        <button className='smalle' onClick={handleAimSubmit}>Submit</button>
+                        <button className='smalle' onClick={() => setShowModal(false)}>Cancel</button>
                     </div>
                 </div>
-            )}
+            )} */}
         </div>
     );
 }

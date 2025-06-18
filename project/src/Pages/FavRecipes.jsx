@@ -1,5 +1,4 @@
-import HeaderLog from '../Components/HeaderLog/HeaderLog';
-import Footer from '../Components/Footer/Footer';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { findFavRecipes, setCurrentRecipe } from '../slices/recipeSlice';
@@ -57,14 +56,13 @@ export default function FavRecipes() {
 
     return (
         <>
-            <HeaderLog />
             <div className="planDiv">
                     {isLoading ? (
                         <p>Loading recipes...</p>
                     ) : (
                         recipes ? (
                             recipes.map(recipe => (
-                                <div key={recipe.idRecipe} className="planData PixelFont">
+                                <div key={recipe.idRecipe} className="planData smalle">
                                     <Link to='/recipe' key={recipe.idRecipe} onClick={() => handleRecipeClick(recipe)} style={{ textDecoration: 'none' }}>
                                         <img src={`http://localhost:5000/${recipe.img}`} alt={recipe.title} className="planImg" />
                                         <div className="planText">
@@ -89,7 +87,6 @@ export default function FavRecipes() {
                         )
                     )}
                 </div>
-            <Footer />
         </>
     );
 }

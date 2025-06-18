@@ -1,0 +1,43 @@
+.wcrTitle{
+    text-align: center;
+    font-size: 2em;
+}
+.miniTitle{
+    font-size: 1.3em;
+}
+.wcrTextBlock{
+    padding-left: 30px;
+}
+.WCRcalcDiv{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.chooseSexDiv{
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+    width: 100%;
+}
+.weightInputWCR, .activityInputWCR{
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+    width: 100%;
+}
+.sexSelect{
+    background-color: transparent;
+    border: 1px solid black;
+    border-radius: 6px;
+    padding: 10px 20px;
+}
+input::placeholder{
+    color: black;
+    font-family: smalle;
+}
+.buttonWCR{
+    margin-top: 30px;
+}
+.waterResult{
+    padding-left: 30px;
+}

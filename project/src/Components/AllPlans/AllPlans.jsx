@@ -79,7 +79,7 @@ export default function AllPlans() {
 
     return (
         <main className="allPlansMain">
-            <p className="PixelFont allPlansTitle">
+            <p className="smalle allPlansTitle">
                 Lose weight, gain weight or always stay in shape - choose what's right for you!
             </p>
             
@@ -94,13 +94,13 @@ export default function AllPlans() {
                     />
                     <button onClick={handleSearch} className="searchButton">Search</button>
                 </div>
-                <div className="planDiv">
+                <div className="planDiv smalle">
                     
                     {isLoading ? (
                         <p>Loading plans...</p>
                     ) : filteredPlans ? (
                         filteredPlans.map(plan => (
-                            <div key={plan.idTplan} className="planData PixelFont">
+                            <div key={plan.idTplan} className="planData smalle">
                                 <Link to='/plan' key={plan.idTplan} onClick={() => handlePlanClick(plan)} style={{ textDecoration: 'none' }}>
                                     <img src={`http://localhost:5000/${plan.img}`} alt={plan.title} className="planImg" />
                                     <div className="planText">
@@ -127,7 +127,7 @@ export default function AllPlans() {
                 </div>
             </div>
             { ( role == 'admin' || role == 'trainer' ) &&(
-                <div className=''>
+                <div className='smalle'>
                     <button onClick={handleAddPlan}>ADD PLAN</button>
                 </div>
             )}

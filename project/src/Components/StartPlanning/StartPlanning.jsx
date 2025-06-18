@@ -14,8 +14,8 @@ export default function StartPlanning() {
         <div className="startPlanningDiv">
             {currentUser ? (
                 <>
-                <p className="changeTitle PixelFont">CHANGE YOUR LIFESTYLE NOW</p>
-                <p className="changeText PixelFont">
+                <p className="changeTitle smalle">CHANGE YOUR LIFESTYLE NOW</p>
+                <p className="changeText smalle">
                     You deserve to be the best version of yourself. Let's create this miracle together! Keep moving forward, never stop, and one day you'll look in the mirror and see your proudest victory staring back at you – the victory over yourself.
                 </p>
                 </>
@@ -23,8 +23,8 @@ export default function StartPlanning() {
             ):
             (
                 <>
-                    <p className="changeTitle PixelFont">CHANGE YOUR LIFESTYLE NOW</p>
-                <p className="changeText PixelFont">
+                    <p className="changeTitle smalle">CHANGE YOUR LIFESTYLE NOW</p>
+                <p className="changeText smalle">
                     You deserve to be the best version of yourself. Let's create this miracle together! Keep moving forward, never stop, and one day you'll look in the mirror and see your proudest victory staring back at you – the victory over yourself.
                 </p>
                 <Button text="START PLANNING" link="/authorization"/>

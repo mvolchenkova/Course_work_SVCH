@@ -220,7 +220,7 @@ class UserController {
             const isPassValid = bcrypt.compareSync(password, user.password)
             
             if(!isPassValid){
-                return res.status(400).json({message: "User not found"})
+                return res.status(400).json({message: "Invalid password"})
             }
             
             const token = jwt.sign({ id: user.idUser }, process.env.SECRETKEY, { expiresIn: "1h" });

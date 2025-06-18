@@ -1,5 +1,4 @@
-import Footer from '../../Components/Footer/Footer';
-import HeaderLog from '../../Components/HeaderLog/HeaderLog';
+
 import '../Ask/Ask.css';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -40,7 +39,6 @@ export default function WritingReviewPage() {
 
     return (
         <main>
-            <HeaderLog />
             <div className="ask-container">
                 <h2>Write a review here</h2>
                 <form onSubmit={handleSubmit}>
@@ -83,7 +81,6 @@ export default function WritingReviewPage() {
                     <button type="submit">Send</button>
                 </form>
             </div>
-            <Footer />
         </main>
     );
 }

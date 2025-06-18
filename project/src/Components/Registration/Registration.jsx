@@ -64,7 +64,7 @@ export default function Registration() {
     };
 
     return (
-        <div className="regAuthDiv PixelFont">
+        <div className="regAuthDiv smalle">
             <img src="data/images/regBoy.png" alt="Registration" className="regImg" />
             <form className="regAuthForm" onSubmit={handleSubmit}>
                 <h2>Registration</h2>
@@ -103,7 +103,7 @@ export default function Registration() {
                     <input type="text" id="sex" value={formData.sex} onChange={handleChange} required />
                 </div>
 
-                <button type="submit" className="btnReg PixelFont">Registration</button>
+                <button type="submit" className="btnReg smalle">Registration</button>
                 <div className='checkboxDiv'>
                     <Checkbox {...label} />
                     <p>I agree to the terms of <Link to="/userAgreement"><span className="yellowText">USER AGREEMENT</span></Link></p>

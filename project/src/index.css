@@ -3,7 +3,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-image: url('../public/data/images/layoutBody.png'); 
-  font-family: "Pixelify Sans", sans-serif;
+  font-family: "smalle";
+  font-weight: 600;
+
   
 }
 .yellowText{
@@ -25,4 +27,24 @@ code {
 a{
   text-decoration: none;
   color:black;
+}
+/* p{
+  color:white;
+  -webkit-text-stroke: 1px;
+  -webkit-text-stroke-color: black;
+  font-weight: bolder;
+} */
+@font-face {
+  font-family: 'computer_pixel-7'; /* Имя шрифта, которое вы будете использовать */
+  src: url('fonts/computer_pixel-7.ttf') format('opentype'); /* Путь к файлу шрифта */
+  font-size:larger;
+  font-weight: normal; /* Укажите, если шрифт жирный или обычный */
+  font-style: normal; /* Укажите стиль шрифта (normal, italic и т.д.) */
+}
+@font-face {
+  font-family: 'smalle'; /* Имя шрифта, которое вы будете использовать */
+  src: url('fonts/smalle.ttf') format('opentype'); /* Путь к файлу шрифта */
+  font-weight: bold;
+  font-weight: normal; /* Укажите, если шрифт жирный или обычный */
+  font-style: normal; /* Укажите стиль шрифта (normal, italic и т.д.) */
 }

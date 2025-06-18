@@ -15,31 +15,35 @@ export default function RegAuth() {
     
         try {
             const resultAction = await dispatch(loginUser({ phone, password })).unwrap();
-        console.log('Login response:', resultAction);
-
-        const userData = resultAction.user; 
-
-        localStorage.setItem('user', JSON.stringify(userData));
-        localStorage.setItem('userId', userData.userId); 
-        localStorage.setItem('trAim', userData.trAim);
-        localStorage.setItem('finishedTr', userData.finishedTr);
-        localStorage.setItem('name', userData.name);
-        localStorage.setItem('role', userData.role);
-        localStorage.setItem('favPlans', JSON.stringify(userData.favPlans))
-        localStorage.setItem('favRecipes', JSON.stringify(userData.favRecipes))
-        // localStorage.setItem('token', userData.)
-
-        navigate('/homePage');
+            console.log('Login response:', resultAction);
+        
+            const userData = resultAction.user; 
+        
+            localStorage.setItem('user', JSON.stringify(userData));
+            localStorage.setItem('userId', userData.userId); 
+            localStorage.setItem('trAim', userData.trAim);
+            localStorage.setItem('finishedTr', userData.finishedTr);
+            localStorage.setItem('name', userData.name);
+            localStorage.setItem('role', userData.role);
+            localStorage.setItem('favPlans', JSON.stringify(userData.favPlans));
+            localStorage.setItem('favRecipes', JSON.stringify(userData.favRecipes));
+        
+            navigate('/homePage');
         } catch (error) {
-            if (error.response && error.response.status === 400) {
-                const validationErrors = error.response.data.errors;
-                validationErrors.forEach(err => {
-                    alert(err.msg); // Or display the errors in a more user-friendly way
-                });
+            if (error.response) {
+                if (error.response.status === 400) {
+                    const validationErrors = error.response.data.errors;
+                    validationErrors.forEach(err => {
+                        alert(err.msg); // Сообщение о конкретной ошибке валидации
+                    });
+                } else if (error.response.status === 401) {
+                    // Если статус 401, значит, неверный телефон или пароль
+                    alert('Неверный номер телефона или пароль. Пожалуйста, попробуйте снова.'); 
+                } else {
+                    alert('Произошла ошибка. Пожалуйста, попробуйте позже.'); // Другие ошибки
+                }
             }
-        }
-    };
-
+        }}
     
     return (
         <div className="regAuthDiv PixelFont">

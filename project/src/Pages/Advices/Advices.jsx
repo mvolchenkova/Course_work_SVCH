@@ -1,5 +1,4 @@
-import Footer from '../../Components/Footer/Footer';
-import HeaderLog from '../../Components/HeaderLog/HeaderLog';
+
 import '../Advices/Advices.css';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -25,7 +24,6 @@ export default function Advices() {
 
     return (
         <>
-            <HeaderLog />
             <main className='advicesMain'>
                 <h1>Advices</h1>
                 
@@ -45,7 +43,6 @@ export default function Advices() {
                     <button onClick={handleOpenModal}>ADD ADVICE</button>
                 )}
             </main>
-            <Footer />
         </>
     );
 }

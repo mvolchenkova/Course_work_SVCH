@@ -1,7 +1,5 @@
 import Calendar from 'react-calendar';
 import { useState, useEffect } from 'react';
-import HeaderLog from '../../Components/HeaderLog/HeaderLog';
-import Footer from '../../Components/Footer/Footer';
 import axios from 'axios';
 import '../CalendarPage/CalendarPage.css'
 
@@ -40,7 +38,6 @@ export default function CalendarPage() {
 
     return (
         <>
-            <HeaderLog />
             <div className="calMain ">
             
                 <div className="calendar PixelFont">
@@ -60,7 +57,6 @@ export default function CalendarPage() {
                     <button className="PixelFont addDel">ADD</button>
                     <button className="PixelFont addDel">DELETE</button>
                 </div>
-                <Footer />
             </div>
         </>
         

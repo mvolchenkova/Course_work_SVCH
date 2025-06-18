@@ -6,6 +6,7 @@ import reviewReducer from '../slices/reviewSlice'
 import questionReducer from '../slices/questionSlice'
 import adviceReducer from '../slices/adviceSlice'
 import articleReducer from '../slices/articleSlice'
+import chatReducer from '../slices/chatSlice';
 
 const store = configureStore({
     reducer: {
@@ -16,6 +17,7 @@ const store = configureStore({
         questions: questionReducer,
         advices: adviceReducer,
         articles: articleReducer,
+        chat: chatReducer
     },
 });
 

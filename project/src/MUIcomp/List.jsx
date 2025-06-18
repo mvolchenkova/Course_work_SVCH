@@ -15,11 +15,13 @@ export default function NestedList() {
   const [openList2, setOpenList2] = React.useState(false);
   const [openList3, setOpenList3] = React.useState(false);
   const [openList4, setOpenList4] = React.useState(false);
+  const [openList5, setOpenList5] = React.useState(false);
 
   const handleClick1 = () => setOpenList1(!openList1);
   const handleClick2 = () => setOpenList2(!openList2);
   const handleClick3 = () => setOpenList3(!openList3);
   const handleClick4 = () => setOpenList4(!openList4);
+  const handleClick5 = () => setOpenList5(!openList5);
 
   return (
     <div className="listDiv">
@@ -32,7 +34,7 @@ export default function NestedList() {
       >
         <ListItemButton onClick={handleClick1}>
           <ListItemText 
-            style={{ fontFamily: 'Pixelify Sans', margin: 0 }}
+            style={{ fontFamily: 'smalle', margin: 0 }}
             disableTypography={true}
             primary="PLANS" 
           />
@@ -52,7 +54,7 @@ export default function NestedList() {
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemText 
                 primary="All training plans" 
-                style={{ fontFamily: 'Pixelify Sans' }}
+                style={{ fontFamily: 'smalle' }}
                 disableTypography={true}
               />
             </ListItemButton>
@@ -63,7 +65,7 @@ export default function NestedList() {
               <ListItemButton sx={{ pl: 4 }}>
                 <ListItemText 
                   primary="Favourite plans" 
-                  style={{ fontFamily: 'Pixelify Sans' }}
+                  style={{ fontFamily: 'smalle' }}
                   disableTypography={true}
                 />
               </ListItemButton>
@@ -82,7 +84,7 @@ export default function NestedList() {
       >
         <ListItemButton onClick={handleClick2}>
           <ListItemText 
-            style={{ fontFamily: 'Pixelify Sans', margin: 0 }}
+            style={{ fontFamily: 'smalle', margin: 0 }}
             disableTypography={true}
             primary="NUTRITION" 
           />
@@ -102,7 +104,7 @@ export default function NestedList() {
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemText 
                 primary="All recipes" 
-                style={{ fontFamily: 'Pixelify Sans' }}
+                style={{ fontFamily: 'smalle' }}
                 disableTypography={true}
               />
             </ListItemButton>
@@ -113,7 +115,7 @@ export default function NestedList() {
               <ListItemButton sx={{ pl: 4 }}>
                 <ListItemText 
                   primary="Favourite recipes" 
-                  style={{ fontFamily: 'Pixelify Sans' }}
+                  style={{ fontFamily: 'smalle' }}
                   disableTypography={true}
                 />
               </ListItemButton>
@@ -133,7 +135,7 @@ export default function NestedList() {
         
           <ListItemButton onClick={handleClick3}>
             <ListItemText 
-              style={{ fontFamily: 'Pixelify Sans', margin: 0 }}
+              style={{ fontFamily: 'smalle', margin: 0 }}
               disableTypography={true}
               primary="ACCOUNT" 
             />
@@ -150,14 +152,26 @@ export default function NestedList() {
         
         <Collapse in={openList3} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-          <Link to="/account">
-            <ListItemButton sx={{ pl: 4 }}>
-              <ListItemText 
-                primary="Account info" 
-                style={{ fontFamily: 'Pixelify Sans' }}
-                disableTypography={true}
-              />
-            </ListItemButton>
+            <Link to="/account">
+              <ListItemButton sx={{ pl: 4 }}>
+                <ListItemText 
+                  primary="Account info" 
+                  style={{ fontFamily: 'smalle' }}
+                  disableTypography={true}
+                />
+              </ListItemButton>
+            </Link>
+          </List>
+
+          <List component="div" disablePadding>
+            <Link to="/achievements">
+              <ListItemButton sx={{ pl: 4 }}>
+                <ListItemText 
+                  primary="Achievements" 
+                  style={{ fontFamily: 'smalle' }}
+                  disableTypography={true}
+                />
+              </ListItemButton>
             </Link>
           </List>
           
@@ -173,7 +187,7 @@ export default function NestedList() {
       >
         <ListItemButton onClick={handleClick4}>
           <ListItemText 
-            style={{ fontFamily: 'Pixelify Sans', margin: 0 }}
+            style={{ fontFamily: 'smalle', margin: 0 }}
             disableTypography={true}
             primary="RESOURCES" 
           />
@@ -194,7 +208,7 @@ export default function NestedList() {
               <ListItemButton sx={{ pl: 4 }}>
                 <ListItemText 
                   primary="Articles" 
-                  style={{ fontFamily: 'Pixelify Sans' }}
+                  style={{ fontFamily: 'smalle' }}
                   disableTypography={true}
                 />
               </ListItemButton>
@@ -206,12 +220,88 @@ export default function NestedList() {
               <ListItemButton sx={{ pl: 4 }}>
                 <ListItemText 
                   primary="Advices" 
-                  style={{ fontFamily: 'Pixelify Sans' }}
+                  style={{ fontFamily: 'smalle' }}
                   disableTypography={true}
                 />
               </ListItemButton>
           </List>
           </Link>
+
+          <Link to="/technique">
+            <List component="div" disablePadding>
+              <ListItemButton sx={{ pl: 4 }}>
+                <ListItemText 
+                  primary="Exercise technique" 
+                  style={{ fontFamily: 'smalle' }}
+                  disableTypography={true}
+                />
+              </ListItemButton>
+          </List>
+          </Link>
+          
+        </Collapse>
+      </List>
+
+      {/*пятый список*/}
+      <List
+        sx={{ width: '100%', maxWidth: 360, bgcolor: 'rgb(0, 200, 220)', borderRadius: '30px', marginTop: '10px',
+         margin: 0 }}
+        component="nav"
+        aria-labelledby="nested-list-subheader"
+      >
+        <ListItemButton onClick={handleClick5}>
+          <ListItemText 
+            style={{ fontFamily: 'smalle', margin: 0 }}
+            disableTypography={true}
+            primary="CALCULATORS" 
+          />
+          <IconButton edge="end" aria-label="expand" size="small">
+            <ExpandMoreIcon 
+              sx={{ 
+                transform: openList5 ? 'rotate(180deg)' : 'rotate(0deg)', 
+                transition: 'transform 0.2s ease',
+                color: '#000000', // Цвет стрелки
+              }} 
+            />
+          </IconButton>
+        </ListItemButton>
+        <Collapse in={openList5} timeout="auto" unmountOnExit>
+          
+          <List component="div" disablePadding>
+            <Link to="/calories">
+              <ListItemButton sx={{ pl: 4 }}>
+                <ListItemText 
+                  primary="Basal metabolic rate" 
+                  style={{ fontFamily: 'smalle' }}
+                  disableTypography={true}
+                />
+              </ListItemButton>
+            </Link>
+          </List>
+
+          <List component="div" disablePadding>
+            <Link to="/bodyMassIndex">
+              <ListItemButton sx={{ pl: 4 }}>
+                <ListItemText 
+                  primary="Body mass index" 
+                  style={{ fontFamily: 'smalle' }}
+                  disableTypography={true}
+                />
+              </ListItemButton>
+            </Link>
+          </List>
+
+          <List component="div" disablePadding>
+            <Link to="/waterCalc">
+              <ListItemButton sx={{ pl: 4 }}>
+                <ListItemText 
+                  primary="Water consumption rate" 
+                  style={{ fontFamily: 'smalle' }}
+                  disableTypography={true}
+                />
+              </ListItemButton>
+            </Link>
+          </List>
           
         </Collapse>
       </List>

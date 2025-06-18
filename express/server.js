@@ -33,6 +33,7 @@ const articleRouter = require('./routes/acrticleRouter');
 const questionRouter = require('./routes/questionRouter')
 const reviewRouter = require('./routes/reviewRouter')
 const adviceRouter = require('./routes/adviceRouter')
+const chatRouter = require('./routes/chatRouter')
 
 const app = express();
 app.use(cors());
@@ -48,6 +49,8 @@ app.use('/api/articles', articleRouter)
 app.use('/api/questions', questionRouter)
 app.use('/api/reviews', reviewRouter)
 app.use('/api/advices', adviceRouter)
+app.use('/api/chat', chatRouter )
+
 app.use('/api', router);
 app.use(express.json({ limit: '50mb' })); 
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));

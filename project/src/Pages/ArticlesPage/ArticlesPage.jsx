@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchArticles } from '../../slices/articleSlice';
-import Footer from "../../Components/Footer/Footer";
-import HeaderLog from "../../Components/HeaderLog/HeaderLog";
 import AddArticleModal from '../../Components/AddArticleModal/AddArticleModal'; 
 import '../ArticlesPage/ArticlesPage.css'
 
@@ -25,7 +23,6 @@ export default function ArticlesPage() {
 
     return (
         <>
-            <HeaderLog />
             <main className="articlesMain">
                 <h1>ARTICLES</h1>
                 {( role == 'trainer' || role == 'admin' ) && (
@@ -34,14 +31,13 @@ export default function ArticlesPage() {
                 <div className='articlesDiv'>
                     {articles.map(article => (
                         <div key={article.idArticle} className='articleDiv'>
-                            <b>{article.author}</b>
-                            <p>{article.title}</p>
+                            <h3>{article.title}</h3>
+                            <p>{article.author}</p>
                             <a href={article.content} id="articleLink">Go to article</a>
                         </div>
                     ))}
                 </div>
             </main>
-            <Footer />
             {isModalOpen && <AddArticleModal onClose={toggleModal} />} 
         </>
     );

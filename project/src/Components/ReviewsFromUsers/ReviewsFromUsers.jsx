@@ -60,7 +60,7 @@ export default function ReviewsFromUsers() {
 
     return (
         <div className="ReviewsFromUsers">
-            <p className="reviewsTitle PixelFont">REVIEWS FROM OUR USERS</p>
+            <p className="reviewsTitle smalle">REVIEWS FROM OUR USERS</p>
             <div className="reviewsDiv">
                 <div>
                     <img 

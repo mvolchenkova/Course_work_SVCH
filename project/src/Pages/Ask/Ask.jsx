@@ -1,5 +1,4 @@
-import Footer from '../../Components/Footer/Footer';
-import HeaderLog from '../../Components/HeaderLog/HeaderLog';
+
 import '../Ask/Ask.css';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -35,7 +34,6 @@ export default function Ask() {
 
     return (
         <main>
-            <HeaderLog />
             <div className="ask-container">
                 <h2>Ask us a question</h2>
                 <form onSubmit={handleSubmit}>
@@ -64,7 +62,6 @@ export default function Ask() {
                     <button type="submit">Send</button>
                 </form>
             </div>
-            <Footer />
         </main>
     );
 }

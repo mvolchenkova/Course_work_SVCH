@@ -19,6 +19,8 @@ header {
     border-width: 3px;
     border: none;
     background-color: rgb(0, 200, 220);
+    font-family: "smalle";
+    font-weight: 600;
 }
 
 .options {

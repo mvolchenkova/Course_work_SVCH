@@ -1,0 +1,101 @@
+.titlecal{
+    text-align: center;
+    font-size: 2.4em;
+    font-weight: bold;
+    padding: 0 50px 0 50px;
+}
+.weightImgs{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap:20px;
+}
+.weightImgs>img{
+    width: 300px;
+    height: 350px;
+}
+.chooseFat{
+    text-align: center;
+    font-size: 2em;
+    font-weight: bold;
+    padding: 0 50px 0 50px;
+    align-items:center;
+}
+.percentageSelect{
+    width: 70%;
+    height: 37px;
+    text-align: center;
+    background-color: transparent;
+    border: 1px solid black;
+    border-radius: 6px;
+    font-size: 1.3em;
+
+}
+.chooseFatDiv{
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+}
+.weightInput{
+    display: flex;
+    align-items:center;
+    flex-direction: column;
+}
+.weightInput>p{
+    font-size: 1.6em;
+}
+.caloriesCalculatorMain{
+    display: flex;
+    align-items:center;
+    flex-direction: column;
+    gap:20px;
+}
+.weightInput>input{
+    text-align: center;
+    font-size: 1.3em;
+    padding: 6px;
+}
+.results{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.leanMass{
+    font-size: 1.5em;
+}
+.titleFor{
+    font-size: 1.5em;
+    font-weight: bold;
+}
+.resultsFor{
+    display: flex;
+    flex-direction: row;
+    align-items:center;
+    gap: 70px;
+    flex-wrap: wrap;
+    
+}
+.forDiv{
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+    justify-content: center;
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 20px;
+}
+.comment{
+    font-size: 1.3em;
+    text-align: center;
+    padding: 20px;
+}
+.recommFor{
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+    text-align: center;
+    padding: 0 30px;
+    font-size: 1.3em;
+}

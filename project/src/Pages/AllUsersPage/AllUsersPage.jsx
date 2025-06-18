@@ -3,8 +3,6 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUsers, toggleUserBlock  } from '../../slices/userSlice';
 import { fetchQuestions } from '../../slices/questionSlice';
-import HeaderLog from '../../Components/HeaderLog/HeaderLog';
-import Footer from '../../Components/Footer/Footer';
 import AddUserModal from '../../Components/AddUserModal/AddUserModal';
 import * as React from 'react';
 import Table from '@mui/material/Table';
@@ -117,7 +115,6 @@ export default function AllUsersPage() {
 
     return (
         <>
-            <HeaderLog />
             <div className='feature'>
                 <p className='title'>USERS INFORMATION</p>
                 {loadingUsers && <p>Loading users...</p>}
@@ -208,7 +205,6 @@ export default function AllUsersPage() {
                     <button onClick={generateQuestionReport}>Generate Question Report</button>
                 </div>
             </div>
-            <Footer />
             <AddUserModal isOpen={isModalOpen} onClose={closeModal} /> 
         </>
     );

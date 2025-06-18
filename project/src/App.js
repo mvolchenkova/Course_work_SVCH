@@ -22,6 +22,14 @@ import WriteReviewPage from './Pages/WriteReviewPage/WriteReviewPage';
 import Advices from './Pages/Advices/Advices';
 import FavPlans from './Pages/FavPlans';
 import FavRecipes from './Pages/FavRecipes'
+import BotPage from './Pages/BotPage';
+import CaloriesPage from './Pages/CaloriesPage/CaloriesPage';
+import BodyMassIndex from './Pages/BodyMassIndex/BodyMassIndex';
+import HeaderLog from './Components/HeaderLog/HeaderLog';
+import Footer from './Components/Footer/Footer';
+import WaterCalculator from './Pages/WaterCalculator/WaterCalculator';
+import Achievements from './Pages/Achievements/Achievements';
+import Exercises from './Pages/Exercises/Exercises';
 
 function App() {
 
@@ -37,6 +45,7 @@ function App() {
 
   return (
       <BrowserRouter>
+      <HeaderLog/>
       <Routes>
         <Route path="/" element={<StartPage />} />
         <Route path="/homePage" element={<HomePage />} />
@@ -45,9 +54,7 @@ function App() {
         <Route path="/registr" element={<RegistrationPage/>} />
         <Route path="/shedule" element={<CalendarPage/>}/>
         <Route path="/allNutrition" element={<AllNutritionPage/>}/>
-        <Route path="/becomecoach" element={
-            <BecomeCoachPage />
-        }></Route>
+        <Route path="/becomecoach" element={<BecomeCoachPage/>}/>
         <Route path="adminpanel" element={<AllUsersPage />}/>
         <Route path="/account" element={<AccountPage/>}/>
         <Route path="/articles" element={<ArticlesPage/>}/>
@@ -58,7 +65,14 @@ function App() {
         <Route path="/advices" element={<Advices/>}/>
         <Route path="/favPlans" element={<FavPlans/>}/>
         <Route path="/favRecipes" element={<FavRecipes/>}/>
+        <Route path="/bot" element={<BotPage/>}/>
+        <Route path="/calories" element={<CaloriesPage/>} />
+        <Route path="/bodyMassIndex" element={<BodyMassIndex/>}/>
+        <Route path='/waterCalc' element={<WaterCalculator/>}/>
+        <Route path='/achievements' element={<Achievements/>}/>
+        <Route path='/technique' element={<Exercises/>}/>
       </Routes>
+      <Footer/>
    </BrowserRouter>
    
   );

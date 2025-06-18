@@ -38,7 +38,7 @@ export default function Account() {
     };
 
     return (
-        <main className="accMain PixelFont">
+        <main className="accMain smalle">
             <div className="accDiv">
                 <div>
                     {currentUser ? (
@@ -52,15 +52,15 @@ export default function Account() {
                                     )
                                 )}
                                 <div className="nameSurname">
-                                    <p className="userName PixelFont">{currentUser.name}</p>
-                                    <p className='userName PixelFont'>{currentUser.surname}</p>
+                                    <p className="userName smalle">{currentUser.name}</p>
+                                    <p className='userName smalle'>{currentUser.surname}</p>
                                 </div>
                             </div>
                             <div className='otherInfo'>
                                 <p>PHONE: {currentUser.phone}</p>
                                 <p>BIRTH DATE: {currentUser.birthdate}</p>
                             </div>
-                            <div className='accButtons PixelFont'>
+                            <div className='accButtons smalle'>
                                 <button onClick={openChangePasswordModal}>CHANGE PASSWORD</button>
                             </div>
                         </div>

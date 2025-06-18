@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import HeaderLog from '../../Components/HeaderLog/HeaderLog';
-import Footer from '../../Components/Footer/Footer';
 import { useSelector, useDispatch } from 'react-redux';
 import { deleteTrainingPlan, updateTrainingPlan } from '../../slices/tplanSlice';
 import UpdatePlanModal from '../../Components/UpdatePlanModal/UpdatePlanModal'; 
@@ -33,7 +31,6 @@ export default function PlanPage() {
 
     return (
         <>
-            <HeaderLog />
             <main className='planMain'>
                 <div className='imgDescrPlan'>
                     <img src={`http://localhost:5000/${currentPlan.img}`} alt="" />
@@ -67,7 +64,6 @@ export default function PlanPage() {
             </main>
             
             
-            <Footer />
             <UpdatePlanModal 
                 isOpen={isModalOpen} 
                 onClose={() => setIsModalOpen(false)} 

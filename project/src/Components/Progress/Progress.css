@@ -1,5 +1,8 @@
 .progressDiv{
     width: inherit;
+    display: flex;
+    flex-direction: column;
+    align-items:center;
 }
 .yourProgress{
     font-size: 2em;
@@ -61,6 +64,40 @@ button{
     font-weight: bold;
     border-radius: 10px;
     border: none;
+}
+.heartNbar{
+    display: flex;
+    flex-direction: row;
+    align-items:center;
+    justify-content: center;
+    width: 60%;
+    gap: 30px;
+}
+.glassNbar{
+    display: flex;
+    flex-direction: row;
+    align-items:center;
+    justify-content: center;
+    width: 60%;
+    gap: 30px;
+}
+.heartIcon{
+    width: 50px;
+}
+.waterIcon{
+    width: 50px;
+}
+.bar{
+    width: 100%;
+}
+.removeButton{
+    padding: 4px 18px;
+}
+.addButton{
+    padding: 4px 18px;
+}
+.addActivityButton{
+    width: fit-content;
 }
 
 @media(max-width: 500px) {

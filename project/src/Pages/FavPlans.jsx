@@ -1,5 +1,4 @@
-import HeaderLog from '../Components/HeaderLog/HeaderLog';
-import Footer from '../Components/Footer/Footer';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { findFavPlans, setCurrentPlan } from '../slices/tplanSlice';
@@ -57,14 +56,13 @@ export default function FavPlans() {
 
     return (
         <>
-            <HeaderLog />
             <div className="planDiv">
                     
                     {isLoading ? (
                         <p>Loading plans...</p>
                     ) : plans ? (
                         plans.map(plan => (
-                            <div key={plan.idTplan} className="planData PixelFont">
+                            <div key={plan.idTplan} className="planData smalle">
                                 <Link to='/plan' key={plan.idTplan} onClick={() => handlePlanClick(plan)} style={{ textDecoration: 'none' }}>
                                     <img src={`http://localhost:5000/${plan.img}`} alt={plan.title} className="planImg" />
                                     <div className="planText">
@@ -89,7 +87,6 @@ export default function FavPlans() {
                         <p>No plans found.</p>
                     )}
                 </div>
-            <Footer />
         </>
     );
 }

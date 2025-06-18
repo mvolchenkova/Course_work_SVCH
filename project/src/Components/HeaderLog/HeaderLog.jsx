@@ -34,6 +34,7 @@ export default function HeaderLog() {
             
                 {currentUser ? (
                     <>
+                        <Link to='/assistant' className="homelink">AI assistant</Link>
                         <Link to = "/homePage" className="homelink">HOME</Link>
                         {currentUser.sex === 'male' ? (
                             <img src="/data/images/boyProfile.png" alt="Boy Profile" className="profileImage" />
@@ -43,10 +44,10 @@ export default function HeaderLog() {
                             )
                         )}
                         <Link to='/account'>
-                            <span className="userName PixelFont">{currentUser.name}</span>
+                            <span className="userName smalle">{currentUser.name}</span>
                         </Link>
                         
-                        <button className="logoutButton PixelFont" onClick={handleLogout}>
+                        <button className="logoutButton smalle" onClick={handleLogout}>
                             LOG OUT
                         </button>
                     </>

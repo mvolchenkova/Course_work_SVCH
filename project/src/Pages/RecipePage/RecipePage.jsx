@@ -1,5 +1,4 @@
-import HeaderLog from '../../Components/HeaderLog/HeaderLog';
-import Footer from '../../Components/Footer/Footer';
+
 import { useSelector } from 'react-redux';
 import '../RecipePage/RecipePage.css';
 
@@ -8,7 +7,6 @@ export default function RecipePage() {
 
     return (
         <>
-            <HeaderLog />
             <main className='recMain'>
                 <div className='imgDescrRecipe'>
                     <img src={`http://localhost:5000/${currentRecipe.img}`} alt="" />
@@ -42,7 +40,6 @@ export default function RecipePage() {
                         )}
                     </div>
             </main>
-            <Footer />
         </>
     );
 }
