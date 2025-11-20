@@ -8,13 +8,6 @@ export default function Footer(){
     const navigate = useNavigate();
     const user = localStorage.getItem('user')
     const role = localStorage.getItem('role')
-    const handleWriteReviewClick = (event) => {
-        if (!user) {
-            event.preventDefault(); 
-            navigate('/authorization')
-        }
-    };
-
         return(
             <footer>
                 <div className="footerLogo">
@@ -43,7 +36,6 @@ export default function Footer(){
                     </div>
                     <div className="smalle footerLinks">
                         <Link to="/ask">Ask a question</Link>
-                        <Link to="/review" onClick={handleWriteReviewClick}>Write a review</Link>
                         {role === 'user' && (
                             <Link to="/becomecoach">Become a coach</Link>
                         )}

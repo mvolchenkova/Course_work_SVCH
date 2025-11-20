@@ -2,20 +2,31 @@
     import axios from 'axios';
 
     export const createExercise = createAsyncThunk('api/exercises', async (payload) => {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/exercises`, payload);
+        const response = await axios.post(`http://localhost:5000/api/exercises`, payload);
         return response.data;
     });
 
     export const fetchExercises = createAsyncThunk('api/exercises/fetchEx', async ({ page = 1, limit = 10 }) => {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/exercises?page=${page}&limit=${limit}`);
+        const response = await axios.get(`http://localhost:5000/api/exercises?page=${page}&limit=${limit}`);
         return response.data; 
     });
 
+    export const getRandom = createAsyncThunk('api/exercises/getRandomExercises', async(amount, {rejectWithValue})=>{
+        try{
+            const response = await axios.get(`http://localhost:5000/api/exercises/getRandomExercises`,   { params: { amount } })
+            return response.data;
+        }
+        catch(error){
+            return rejectWithValue(error.response.data); 
+        }
+        
+    })
     const exerciseSlice = createSlice({
         name: 'exercises',
         initialState: {
             exercises: [],
             // currentExercise: null,
+            randomExercises: [],
             status: 'idle', 
             error: null,
         },
@@ -54,7 +65,17 @@
                     state.status = 'failed';
                     state.error = action.error.message;
                 })
-                
+                .addCase(getRandom.pending, (state) => {
+                    state.status = 'loading';
+                })
+                .addCase(getRandom.fulfilled, (state, action) => {
+                    state.status = 'succeeded';
+                    state.randomExercises = action.payload; 
+                })
+                .addCase(getRandom.rejected, (state, action) => {
+                    state.status = 'failed';
+                    state.error = action.error.message;
+                })
         },
     });
 

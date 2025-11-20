@@ -1,0 +1,61 @@
+version: '3.9'
+
+services:
+  frontend:
+    build: 
+      context: ./project
+      args:
+        REACT_APP_API_URL: http://server:5000/api
+    container_name: frontend
+    ports:
+      - "3000:80"
+    environment:
+      - REACT_APP_API_URL=http://localhost:5000/api
+      - WDS_SOCKET_PORT=0
+    depends_on:
+      - server
+    # tty: true
+    # Для production образа нет необходимости монтировать исходники.
+    # Если хочешь dev-сборку — убери COPY build в Dockerfile и включи volume.
+    # В production лучше не монтировать проект внутрь контейнера.
+    volumes:
+      - ./project:/app
+      - /app/node_modules
+
+  server:
+    build: ./express
+    container_name: server
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    volumes:
+      - ./express:/server
+      - /server/node_modules
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    command: node server.js
+
+  db:
+    image: postgres:17
+    container_name: db
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - db_data:/var/lib/postgresql/  
+      - ./init-db:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  db_data:

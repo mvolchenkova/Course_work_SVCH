@@ -48,3 +48,37 @@ a{
   font-weight: normal; /* Укажите, если шрифт жирный или обычный */
   font-style: normal; /* Укажите стиль шрифта (normal, italic и т.д.) */
 }
+
+.displayflex{
+  display: flex;
+}
+.flexrow{
+  flex-direction: row;
+}
+.flexcolumn{
+  flex-direction: column;
+}
+.aligncenter{
+  align-items: center;
+}
+.justifycenter{
+  justify-content: center;
+}
+.gap20{
+  gap: 20px;
+}
+.fontSize2em{
+  font-size: 2em;
+}
+.marginBottom0{
+  margin-bottom:0;
+}
+.marginLeft5{
+  margin-left: 5px;
+}
+.select{
+  background-color: transparent;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid black;
+}

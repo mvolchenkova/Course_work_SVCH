@@ -31,13 +31,19 @@ const taskRouter = require('./routes/taskRouter');
 const recipeRouter = require('./routes/recipeRouter');
 const articleRouter = require('./routes/acrticleRouter');
 const questionRouter = require('./routes/questionRouter')
-const reviewRouter = require('./routes/reviewRouter')
 const adviceRouter = require('./routes/adviceRouter')
 const chatRouter = require('./routes/chatRouter')
 const exerciseRouter = require('./routes/exerciseRouter')
 
 const app = express();
-app.use(cors());
+// app.use(cors());
+
+// Разрешаем CORS для фронтенда
+app.use(cors({
+  origin: process.env.CLIENT_URL,
+  credentials: true,
+}));
+
 app.use(express.json());
 app.use(express.static(path.resolve(__dirname,'static')))
 app.use(fileUpload())
@@ -48,7 +54,6 @@ app.use('/api/tasks', taskRouter)
 app.use('/api/recipes', recipeRouter)
 app.use('/api/articles', articleRouter)
 app.use('/api/questions', questionRouter)
-app.use('/api/reviews', reviewRouter)
 app.use('/api/advices', adviceRouter)
 app.use('/api/chat', chatRouter )
 app.use('/api/exercises', exerciseRouter)

@@ -57,6 +57,7 @@ const AddExerciseModal = () => {
     baseIsolation: '',
     type: '',
     restrictions: '',
+    equipment: '',
     ...initialMuscleStates
   });
 
@@ -120,6 +121,11 @@ const AddExerciseModal = () => {
       alert('Введите ограничения');
       return;
     }
+    if (!formData.equipment.trim()) {
+      alert('Введите оборудование');
+      return;
+    }
+
 
     const selectedMusclesWithRatings = {};
     muscleGroups.forEach(group => {
@@ -140,10 +146,9 @@ const AddExerciseModal = () => {
       baseIsolation: formData.baseIsolation,
       type: formData.type,
       restrictions: formData.restrictions,
+      equipment: formData.equipment,
       muscles: selectedMusclesWithRatings
     };
-
-    console.log('Отправляем payload:', payload);
 
     dispatch(createExercise(payload));
   };
@@ -152,7 +157,8 @@ const AddExerciseModal = () => {
     <Paper elevation={3} sx={{ padding: 3, maxWidth: 800, margin: 'auto' }}>
       <Typography variant="h5" gutterBottom>Добавить упражнение</Typography>
       <form onSubmit={handleSubmit}>
-        <TextField
+        <div>
+          <TextField
           fullWidth
           label="Название упражнения"
           name="exName"
@@ -237,7 +243,20 @@ const AddExerciseModal = () => {
           sx={{ mb: 3 }}
         />
 
-        <Typography variant="subtitle1" sx={{ mb: 1 }}>
+        <TextField
+          fullWidth
+          label="Оборудование"
+          name="equipment"
+          value={formData.equipment}
+          onChange={handleChange}
+          multiline
+          rows={2}
+          required
+          sx={{ mb: 3 }}
+        />
+        </div>
+        <div>
+            <Typography variant="subtitle1" sx={{ mb: 1 }}>
           Задействованные группы мышц:
         </Typography>
 
@@ -276,7 +295,13 @@ const AddExerciseModal = () => {
           })}
         </div>
 
-        <Button
+        
+        </div>
+
+
+        
+      </form>
+      <Button
           type="submit"
           variant="contained"
           fullWidth
@@ -284,7 +309,6 @@ const AddExerciseModal = () => {
         >
           Добавить упражнение
         </Button>
-      </form>
     </Paper>
   );
 };

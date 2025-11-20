@@ -12,46 +12,46 @@ const initialState = {
 
 // Async thunk для логина пользователя
 export const loginUser = createAsyncThunk('api/users/check', async ({phone, password}) => {
-    const response = await axios.post(`${process.env.REACT_APP_API_URL}/users/check`, {phone, password});
+    const response = await axios.post(`http://localhost:5000/api/users/check`, {phone, password});
     return response.data;
 });
 
 // Async thunk для логаута пользователя
 export const logoutUser = createAsyncThunk('api/users/logoutUser', async () => {
-    const response = await axios.post(`${process.env.REACT_APP_API_URL}/users/logout`); // Убедитесь, что путь правильный
+    const response = await axios.post(`http://localhost:5000/api/users/logout`); // Убедитесь, что путь правильный
     return response.data;
 });
 
 // Async thunk для получения пользователей
 export const fetchUsers = createAsyncThunk('api/users', async ({ page = 1, limit = 10 }) => {
     console.log(process.env.REACT_APP_API_URL);
-    const response = await axios.get(`${process.env.REACT_APP_API_URL}/users?page=${page}&limit=${limit}`);
+    const response = await axios.get(`http://localhost:5000/api/users?page=${page}&limit=${limit}`);
     return response.data.users; 
 });
 
 export const getAllUsersThunk = createAsyncThunk('api/users/search', async() => {
-    const response = await axios.get(`${process.env.REACT_APP_API_URL}/users/search`)
+    const response = await axios.get(`http://localhost:5000/api/users/search`)
     return response.data.users;
 })
 
 // Async thunk для регистрации пользователя
 export const registerUser = createAsyncThunk('api/users/register', async (userData) => {
-    const response = await axios.post(`${process.env.REACT_APP_API_URL}/users`, userData);
+    const response = await axios.post(`http://localhost:5000/api/users`, userData);
     return response.data; 
 });
 
 export const adminAddUser = createAsyncThunk('api/users/register/admin', async (userData) => {
-    const response = await axios.post(`${process.env.REACT_APP_API_URL}/users`, userData);
+    const response = await axios.post(`http://localhost:5000/api/users`, userData);
     return response.data; 
 });
 
 export const updateUserThunk = createAsyncThunk('api/users/:id', async ( currentUser ) => {
-    const response = await axios.put(`${process.env.REACT_APP_API_URL}/users/${currentUser.userId}`, currentUser );
+    const response = await axios.put(`http://localhost:5000/api/users/${currentUser.userId}`, currentUser );
     return response.data; 
 });
 
 export const becomeCoachThunk = createAsyncThunk('api/users/becomeCoach/:id', async ({ userId, diploma }) => {
-    const response = await axios.put(`${process.env.REACT_APP_API_URL}/users/becomeCoach/${userId}`, {diploma});
+    const response = await axios.put(`http://localhost:5000/api/users/becomeCoach/${userId}`, {diploma});
     return response.data; 
 });
    // const formData = new FormData();
@@ -62,9 +62,9 @@ export const becomeCoachThunk = createAsyncThunk('api/users/becomeCoach/:id', as
         // }
 
 export const deleteUserThunk = createAsyncThunk(
-    'user/deleteUser',
+    'api/user/deleteUser',
     async (userId) => {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/users/${userId}`, {
+        const response = await fetch(`http://localhost:5000/api/users/${userId}`, {
             method: 'DELETE',
         });
         if (!response.ok) {
@@ -75,7 +75,7 @@ export const deleteUserThunk = createAsyncThunk(
 );
 
 export const toggleUserBlock = createAsyncThunk('api/users/:id/block', async (userId) => {
-    const response = await axios.patch(`${process.env.REACT_APP_API_URL}/users/${userId}/block`);
+    const response = await axios.patch(`http://localhost:5000/api/users/${userId}/block`);
     return response.data; 
 });
 

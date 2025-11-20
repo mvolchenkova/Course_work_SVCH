@@ -16,4 +16,13 @@ router.use('/recipes', recipeRouter)
 router.use('/articles', articleRouter)
 router.use('/exercises', exerciseRouter)
 
+router.get('/health', (req, res) => {
+    res.status(200).json({
+        status: 'ok',
+        uptime: process.uptime(), 
+        timestamp: new Date().toISOString()
+    });
+});
+
+
 module.exports = router

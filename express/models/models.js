@@ -287,10 +287,6 @@ const Review = sequelize.define('review', {
     idUser:{
         type: DataTypes.BIGINT,
         allowNull: false,
-        references: {
-            model: User,
-            key: 'idUser',
-        },
     },
     text: {
         type: DataTypes.STRING,
@@ -409,7 +405,9 @@ const Article = sequelize.define('article', {
     predominantMuscleGroup: {type: DataTypes.STRING, allowNull:false},
     baseIsolation: {type: DataTypes.STRING, allowNull:false},
     type: {type: DataTypes.STRING, allowNull:true},
-    restrictions: {type: DataTypes.STRING, allowNull: true}
+    restrictions: {type: DataTypes.STRING, allowNull: true},
+    equipment: {type: DataTypes.STRING}
+
  })
 
  const Instruction = sequelize.define('instruction', {
@@ -420,10 +418,6 @@ const Article = sequelize.define('article', {
 //user-favtplans
 User.hasMany(FavTplan, { foreignKey: 'userIdUser', sourceKey: 'idUser' });
 FavTplan.belongsTo(User, { foreignKey: 'userIdUser', targetKey: 'idUser' });
-
-//user-review
-User.hasMany(Review, { foreignKey: 'userIdUser', sourceKey: 'idUser' })
-Review.belongsTo(User, { foreignKey: 'userIdUser', sourceKey: 'idUser' })
 
 //user-tasks
 User.hasMany(Task, { foreignKey: 'userIdUser', sourceKey: 'idUser' });

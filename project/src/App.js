@@ -18,7 +18,6 @@ import ArticlesPage from './Pages/ArticlesPage/ArticlesPage';
 import PlanPage from './Pages/PlanPage/PlanPage'
 import RecipePage from './Pages/RecipePage/RecipePage'
 import Ask from './Pages/Ask/Ask';
-import WriteReviewPage from './Pages/WriteReviewPage/WriteReviewPage';
 import Advices from './Pages/Advices/Advices';
 import FavPlans from './Pages/FavPlans';
 import FavRecipes from './Pages/FavRecipes'
@@ -30,7 +29,7 @@ import Footer from './Components/Footer/Footer';
 import WaterCalculator from './Pages/WaterCalculator/WaterCalculator';
 import Achievements from './Pages/Achievements/Achievements';
 import Exercises from './Pages/Exercises/Exercises';
-
+import AssistantPage from './Pages/AssistantPage/AssistantPage'
 function App() {
 
   const dispatch = useDispatch();
@@ -61,7 +60,6 @@ function App() {
         <Route path="/plan" element={<PlanPage />} />
         <Route path="/recipe" element={<RecipePage/>}/>
         <Route path="/ask" element={<Ask/>}/>
-        <Route path="/review" element={<WriteReviewPage/>}/>
         <Route path="/advices" element={<Advices/>}/>
         <Route path="/favPlans" element={<FavPlans/>}/>
         <Route path="/favRecipes" element={<FavRecipes/>}/>
@@ -71,6 +69,7 @@ function App() {
         <Route path='/waterCalc' element={<WaterCalculator/>}/>
         <Route path='/achievements' element={<Achievements/>}/>
         <Route path='/technique' element={<Exercises/>}/>
+        <Route path='/assistant' element={<AssistantPage/>}/>
       </Routes>
       <Footer/>
    </BrowserRouter>

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUsers, toggleUserBlock  } from '../../slices/userSlice';
 import { fetchQuestions } from '../../slices/questionSlice';
-import { fetchExercises } from '../../slices/exerciseSlice';
+import { fetchExercises, getRandom } from '../../slices/exerciseSlice';
 import AddUserModal from '../../Components/AddUserModal/AddUserModal';
 import * as React from 'react';
 import Table from '@mui/material/Table';
@@ -17,7 +17,6 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import AddExerciseModal from '../../Components/AddExerciseModal/AddExerciseModal';
 
-
 function createData(idUser, surname, name, phone, birthdate, role, isBlocked) {
     return { idUser, surname, name, phone, birthdate, role, isBlocked };
 }
@@ -29,18 +28,19 @@ function createQuestionData(userId, question, email) {
 function createExerciseData(idExercise, exName, frontDelta, middleDelta, backDelta, trapezoids, diamondshaped,
     biceps, triceps, bigChest, middleChest, smallChest, forearm, latissimus, straightBelly, externalOblique,
     internalOblique, transeverse, straightHips, quadriceps, bicepsHips, bigGluteal, middleGluteal,
-    smallGluteal, gastrocnemius, soleus, experience, predominantMuscleGroup, baseIsolation, type, restrictions) {
+    smallGluteal, gastrocnemius, soleus, experience, predominantMuscleGroup, baseIsolation, type, restrictions, equipment) {
     return { idExercise, exName, frontDelta, middleDelta, backDelta, trapezoids, diamondshaped,
     biceps, triceps, bigChest, middleChest, smallChest, forearm, latissimus, straightBelly, externalOblique,
     internalOblique, transeverse, straightHips, quadriceps, bicepsHips, bigGluteal, middleGluteal,
-    smallGluteal, gastrocnemius, soleus, experience, predominantMuscleGroup, baseIsolation, type, restrictions };
+    smallGluteal, gastrocnemius, soleus, experience, predominantMuscleGroup, baseIsolation, type, restrictions, equipment };
 }
 
 export default function AllUsersPage() {
     const dispatch = useDispatch();
     const { users, loading: loadingUsers, error: errorUsers } = useSelector(state => state.users);  
     const { questions, loading: loadingQuestions, error: errorQuestions } = useSelector(state => state.questions);
-    const { exercises, loading: loadingExercises, error: errorExercises } = useSelector(state => state.exercises)
+    const { exercises, loading: loadingExercises, error: errorExercises, randomExercises } = useSelector(state => state.exercises);
+
 
     const [pageUsers, setPageUsers] = useState(1);
     const [pageQuestions, setPageQuestions] = useState(1);
@@ -65,8 +65,10 @@ export default function AllUsersPage() {
         exercise.straightBelly, exercise.externalOblique, exercise.internalOblique, exercise.transeverse, 
         exercise.straightHips, exercise.quadriceps, exercise.bicepsHips, exercise.bigGluteal,
         exercise.middleGluteal, exercise.smallGluteal, exercise.gastrocnemius, exercise.soleus, exercise.experience, 
-        exercise.predominantMuscleGroup, exercise.baseIsolation, exercise.type, exercise.restrictions)
+        exercise.predominantMuscleGroup, exercise.baseIsolation, exercise.type, exercise.restrictions, exercise.equipment)
     ));
+
+   
 
     useEffect(() => {
         dispatch(fetchUsers({ page: pageUsers, limit }));
@@ -76,7 +78,7 @@ export default function AllUsersPage() {
         dispatch(fetchQuestions({ page: pageQuestions, limit }));
     }, [dispatch, pageQuestions, limit]);
 
-     useEffect(() => {
+    useEffect(() => {
         dispatch(fetchExercises({ page: pageExercises, limit }));
     }, [dispatch, pageExercises, limit]);
 
@@ -112,10 +114,6 @@ export default function AllUsersPage() {
         setModalOpen(false); // Close the modal
     };
 
-    const handleAddExercise = () => {
-        setExModalOpen(true); // Open the modal
-    };
-
     const closeExModal = () => {
         setModalOpen(false); // Close the modal
     };
@@ -123,7 +121,6 @@ export default function AllUsersPage() {
     const handleBlock = (id) => {
         dispatch(toggleUserBlock(id)); // Dispatch the thunk to toggle the block status
     };
-
 
     const generateUserReport = () => {
         const doc = new jsPDF();
@@ -157,7 +154,7 @@ export default function AllUsersPage() {
     
         doc.save('question_report.pdf');
     };
-
+    
     return (
         <>
             <div className='feature'>
@@ -328,6 +325,8 @@ export default function AllUsersPage() {
                                 <TableCell align="center" sx={{ width: '100px', fontWeight: 'bold' }}>Base/isolation</TableCell>
                                 <TableCell align="center" sx={{ width: '100px', fontWeight: 'bold' }}>Type</TableCell>
                                 <TableCell align="center" sx={{ width: '120px', fontWeight: 'bold' }}>Restrictions</TableCell>
+                                <TableCell align="center" sx={{ width: '120px', fontWeight: 'bold' }}>Equipment</TableCell>
+
                             </TableRow>
                             </TableHead>
                             
@@ -394,6 +393,7 @@ export default function AllUsersPage() {
                                 <TableCell align="center">{exercise.baseIsolation || '-'}</TableCell>
                                 <TableCell align="center">{exercise.type || '-'}</TableCell>
                                 <TableCell align="center">{exercise.restrictions || '-'}</TableCell>
+                                <TableCell align="center">{exercise.equipment || '-'}</TableCell>
                                 </TableRow>
                             ))}
                             </TableBody>
@@ -407,9 +407,15 @@ export default function AllUsersPage() {
                     <button onClick={handleNextPageExercises}>Next</button>
                 </div>
             </div>
+
+          
+
             <AddUserModal isOpen={isModalOpen} onClose={closeModal} /> 
             <p></p>
             <AddExerciseModal isOpen={isExModalOpen} onClose={closeExModal}/>
+
+            
+            
         </>
     );
 }
