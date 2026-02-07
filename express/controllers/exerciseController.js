@@ -1,4 +1,5 @@
 const { Exercise } = require('../models/models');
+const { Op } = require("sequelize");
 
 class exerciseController {
   async create(req, res) {
@@ -58,56 +59,242 @@ class exerciseController {
     }
   }
 
-  async getRandomExercises(req, res) {
-    try {
-      const trAmount = parseInt(req.query.amount, 10);
-      const n = 5; // сколько упражнений в наборе
-      const possibleReps = [8, 10, 12, 15, 20];
+ async getRandomExercises(req, res) {
+  try {
+    const TR_WORKOUTS = Number(req.query.amount) || 3;
+    const EXERCISES_PER_WORKOUT = 5;
+    const POPULATION_SIZE = Number(req.query.pop) || 20;
+    const GENERATIONS = Number(req.query.gens) || 10;
+    const MUTATION_RATE = Number(req.query.mutRate) || 0.03;
+    const possibleReps = [8, 10, 12, 15, 20];
 
-      if (!trAmount || trAmount <= 0) {
-        return res.status(400).json({ error: 'Некорректное значение trAmount' });
+    const experience = req.query.exp ?? '0-6';
+
+    const allExercises = await Exercise.findAll({ raw: true });
+
+    if (!allExercises || allExercises.length < EXERCISES_PER_WORKOUT) {
+      return res.status(400).json({ error: 'Недостаточно упражнений в базе' });
+    }
+
+    const allIds = allExercises.map(e => e.idExercise);
+    const idToExercise = {};
+    allExercises.forEach(e => (idToExercise[e.idExercise] = e));
+
+    const expLevels = { "0-6": 0, "6-18": 1, "18+": 2 };
+    const userExpIndex = expLevels[experience] ?? 0;
+
+    function sampleIds(n) {
+      const arr = allIds.slice();
+      for (let i = arr.length - 1; i > arr.length - 1 - n; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
       }
+      return arr.slice(arr.length - n);
+    }
 
-      // Получаем все id
-      const allIdsResult = await Exercise.findAll({
-        attributes: ['idExercise'],
-        raw: true,
+    function buildWorkoutFromIds(ids) {
+      return ids.map(id => {
+        const ex = idToExercise[id];
+        return {
+          ...ex,
+          reps: possibleReps[Math.floor(Math.random() * possibleReps.length)]
+        };
+      });
+    }
+
+    function extractFeatures(workout) {
+      if (!workout || workout.length === 0) return [0, 0, 0, 0];
+
+      const numExercises = workout.length / 10;
+
+      const names = workout.map(ex => ex.exName);
+      const diversity = new Set(names).size / workout.length;
+
+      const expMatches = workout.filter(ex => {
+        const exLevel = typeof ex.experience === 'string'
+          ? (expLevels[ex.experience] ?? 0)
+          : 0;
+        return exLevel <= userExpIndex;
+      }).length;
+      const expScore = expMatches / workout.length;
+
+      const setsPerGroup = {};
+      const setsPerExercise = 4;
+      workout.forEach(ex => {
+        const groups = (ex.predominantMuscleGroup || 'Other').split(',')
+          .map(g => g.trim());
+        groups.forEach(g => {
+          setsPerGroup[g] = (setsPerGroup[g] || 0) + setsPerExercise;
+        });
       });
 
-      const allIds = allIdsResult.map(row => row.idExercise);
-
-      if (allIds.length < n) {
-        return res.status(400).json({ error: 'Недостаточно упражнений в базе данных' });
+      function getExpRange(expKey) {
+        switch (experience) {
+          case '0-6': return { min: 7, max: 9 };
+          case '6-18': return { min: 9, max: 12 };
+          case '18+': return { min: 12, max: 20 };
+          default: return { min: 0, max: Infinity };
+        }
       }
+      const range = getExpRange(experience);
 
-      const result = [];
+      let okGroups = 0;
+      const totalGroups = Object.keys(setsPerGroup).length;
+      Object.values(setsPerGroup).forEach(sets => {
+        if (sets >= range.min && sets <= range.max) okGroups++;
+      });
 
-      for (let i = 0; i < trAmount; i++) {
-        // Перемешиваем и берём n случайных ID
-        const shuffled = [...allIds].sort(() => Math.random() - 0.5);
-        const selectedIds = shuffled.slice(0, n);
+      const setsScore = totalGroups > 0 ? okGroups / totalGroups : 0;
 
-        const set = await Exercise.findAll({
-          where: { idExercise: selectedIds },
-          raw: true,
-        });
+      let difficultyMatches = 0;
 
-        // 👇 добавляем reps каждому упражнению
-        const setWithReps = set.map(exercise => ({
-          ...exercise,
-          reps: possibleReps[Math.floor(Math.random() * possibleReps.length)],
-        }));
+      workout.forEach(ex => {
+        const exLevel = typeof ex.experience === 'string'
+          ? (expLevels[ex.experience] ?? 0)
+          : 0;
 
-        result.push(setWithReps);
-        // console.log("Workout set with reps:", setWithReps);
-      }
+        if (exLevel <= userExpIndex) difficultyMatches++;
+      });
 
-      return res.status(200).json(result);
-    } catch (error) {
-      console.error('Ошибка при получении случайных упражнений:', error);
-      return res.status(500).json({ error: 'Ошибка сервера при получении данных' });
+      // Доля подходящих упражнений
+      const difficultyScore = difficultyMatches / workout.length;
+
+
+      const baseCount = workout.filter(ex => {
+      const t = (ex.type || "").toString().toLowerCase();
+      return t === "base";
+        }).length;
+        const baseScore = baseCount / workout.length;
+
+      // возвращаем все признаки в одном массиве
+      return [
+        numExercises,
+        diversity,
+        expScore,
+        setsScore,
+        difficultyScore,
+        baseScore
+      ];
     }
+    
+    function fitness(week) {
+      if (!week || week.length === 0) return 0;
+      const W = { num: 1.0, div: 1.2, exp: 1.5, sets: 2.0 };
+      let total = 0;
+      for (let workout of week) {
+        const [n, d, e, s] = extractFeatures(workout);
+        total += n * W.num + d * W.div + e * W.exp + s * W.sets;
+      }
+
+
+      return total / week.length;
+    }
+
+    function createRandomWorkoutFast() {
+      const ids = sampleIds(EXERCISES_PER_WORKOUT);
+      return buildWorkoutFromIds(ids);
+    }
+
+    function createWeekFast() {
+      const w = [];
+      for (let i = 0; i < TR_WORKOUTS; i++) {
+        w.push(createRandomWorkoutFast());
+      }
+      return w;
+    }
+
+    // 👉 INITIAL POPULATION (добавляем fitness!)
+    const initialPopulation = [];
+    for (let i = 0; i < POPULATION_SIZE; i++) {
+      const week = createWeekFast();
+      week.fitness = fitness(week);
+      initialPopulation.push(week);
+    }
+
+    function selectParents(pop) {
+      const sorted = pop.slice().sort((a,b) => fitness(b) - fitness(a));
+      const count = Math.max(2, Math.floor(sorted.length * 0.3));
+      return sorted.slice(0, count);
+    }
+
+    function crossover(a, b) {
+      const child = [];
+      for (let i = 0; i < TR_WORKOUTS; i++) {
+        child.push(Math.random() < 0.5 ? a[i] : b[i]);
+      }
+      return child;
+    }
+
+    function mutate(week) {
+      return week.map(workout =>
+        workout.map(ex => {
+          if (Math.random() < MUTATION_RATE) {
+            const randIdx = Math.floor(Math.random() * allExercises.length);
+            const randEx = allExercises[randIdx];
+            return {
+              ...randEx,
+              reps: possibleReps[Math.floor(Math.random() * possibleReps.length)]
+            };
+          }
+          return { ...ex };
+        })
+      );
+    }
+
+    let population = initialPopulation;
+    const generations = [];
+
+    for (let gen = 0; gen < GENERATIONS; gen++) {
+      const parents = selectParents(population);
+      while (parents.length < 2) parents.push(createWeekFast());
+
+      const children = [];
+      while (children.length < POPULATION_SIZE) {
+        const p1 = parents[Math.floor(Math.random() * parents.length)];
+        const p2 = parents[Math.floor(Math.random() * parents.length)];
+        let child = crossover(p1, p2);
+        child = mutate(child);
+        child.fitness = fitness(child); // 👉 важно!
+        children.push(child);
+      }
+
+      population = children;
+
+      const best = population.slice().sort((a,b) => a.fitness < b.fitness ? 1 : -1)[0];
+
+      generations.push({
+        gen,
+        best,
+        bestFitness: best.fitness
+      });
+    }
+
+    // 👉 FINAL POPULATION — тоже добавляем fitness
+    const finalPopulation = population.map(w => ({
+      ...w,
+      fitness: w.fitness ?? fitness(w)
+    }));
+
+    const bestWeek = finalPopulation.slice().sort((a,b) => b.fitness - a.fitness)[0];
+
+    return res.json({
+      initialPopulation,
+      generations,
+      finalPopulation,
+      bestWeek,
+      bestFitness: bestWeek.fitness
+    });
+
+  } catch (err) {
+    console.error('GA error:', err);
+    return res.status(500).json({ error: 'Server error' });
   }
+}
+
+
+
+
+
 
   async update(req, res) {
     try {
@@ -145,5 +332,4 @@ class exerciseController {
     }
   }
 }
-
 module.exports = new exerciseController();

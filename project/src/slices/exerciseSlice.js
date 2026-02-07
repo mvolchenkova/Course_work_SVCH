@@ -11,16 +11,20 @@
         return response.data; 
     });
 
-    export const getRandom = createAsyncThunk('api/exercises/getRandomExercises', async(amount, {rejectWithValue})=>{
-        try{
-            const response = await axios.get(`http://localhost:5000/api/exercises/getRandomExercises`,   { params: { amount } })
-            return response.data;
-        }
-        catch(error){
-            return rejectWithValue(error.response.data); 
-        }
-        
-    })
+  export const getRandom = createAsyncThunk(
+  'api/exercises/getRandomExercises',
+  async ({ amount, exp }, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        'http://localhost:5000/api/exercises/getRandomExercises',
+        { params: { amount, exp } }
+      );
+      return response.data; // { initialPopulation, generations, finalPopulation }
+    } catch (error) {
+      return rejectWithValue(error.response?.data || { error: "Network error" });
+    }
+  }
+);
     const exerciseSlice = createSlice({
         name: 'exercises',
         initialState: {
@@ -68,9 +72,17 @@
                 .addCase(getRandom.pending, (state) => {
                     state.status = 'loading';
                 })
-                .addCase(getRandom.fulfilled, (state, action) => {
-                    state.status = 'succeeded';
-                    state.randomExercises = action.payload; 
+                 .addCase(getRandom.fulfilled, (state, action) => {
+                    state.loading = false;
+
+                    // гарантированно есть ga
+                    state.ga = {
+                    initialPopulation: action.payload.initialPopulation,
+                    generations: action.payload.generations,
+                    finalPopulation: action.payload.finalPopulation,
+                    bestWeek: action.payload.bestWeek,
+                    bestFitness: action.payload.bestFitness
+                    };
                 })
                 .addCase(getRandom.rejected, (state, action) => {
                     state.status = 'failed';

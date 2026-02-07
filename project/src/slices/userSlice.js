@@ -80,12 +80,12 @@ export const toggleUserBlock = createAsyncThunk('api/users/:id/block', async (us
 });
 
 export const addFavoritePlan = createAsyncThunk('api/users/:id/addFavoritePlan', async ({userId, idTplan}) => {
-    const response = await axios.put(`${process.env.REACT_APP_API_URL}/users/${userId}/addFavoritePlan`, {idTplan});
+    const response = await axios.put(`http://localhost:5000/api/users/${userId}/addFavoritePlan`, {idTplan});
     return response.data;
 }
 );
 export const addFavoriteRecipe = createAsyncThunk('api/users/:id/addFavoriteRecipe', async ({userId, idRecipe}) => {
-    const response = await axios.put(`${process.env.REACT_APP_API_URL}/users/${userId}/addFavoriteRecipe`, {idRecipe});
+    const response = await axios.put(`http://localhost:5000/api/users/${userId}/addFavoriteRecipe`, {idRecipe});
     return response.data;
 }
 );

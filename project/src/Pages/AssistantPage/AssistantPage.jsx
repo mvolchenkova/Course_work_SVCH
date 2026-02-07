@@ -1,179 +1,122 @@
-import { getRandom } from '../../slices/exerciseSlice';
-import { useState } from 'react';
+// pages/AssistantPage.jsx
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import * as tf from "@tensorflow/tfjs";
-
+import { getRandom } from '../../slices/exerciseSlice';
+import WeekBlock from '../../Components/WeekBlock/WeekBlock';
 import {
-  Table, TableBody, TableCell, TableContainer,
-  TableHead, TableRow, Paper, Box,
-  InputLabel, MenuItem, FormControl, Select
+  Box, FormControl, InputLabel, MenuItem, Select, Button,
+  Accordion, AccordionSummary, AccordionDetails,
+  Typography
 } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export default function AssistantPage() {
   const dispatch = useDispatch();
-  const { randomExercises } = useSelector(state => state.exercises);    
-  const [amount, setAmount] = useState('');
-  const [nnScore, setNnScore] = useState(null);
+  const [amount, setAmount] = useState(3);
+  const { ga = {}, loading, error } = useSelector(state => state.exercises);
 
-  const handleGetRandom = () => {
-    dispatch(getRandom(Number(amount)));
-  };
-
-  const handleChangeAmount = (event) => {
-    setAmount(event.target.value);
-  };
-
-  // Загружаем experience из локалки
   const trainingPlan = JSON.parse(localStorage.getItem('trainingPlan')) || {};
-  const experience = trainingPlan.experience; 
-  const expLevels = { "0-6": 0, "6-18": 1, "18+": 2 };
+  const experience = trainingPlan.experience ?? '0-6';
 
-  // 🔹 Хелперы для признаков
-  const extractFeatures = (workout) => {
-    if (!workout || workout.length === 0) return [0, 0, 0, 0];
-
-    // 1. Количество упражнений (нормируем /10)
-    const numExercises = workout.length / 10;
-
-    // 2. Уникальность упражнений (0-1)
-    const names = workout.map(ex => ex.exName);
-    const uniqueExerciseCount = new Set(names).size;
-    const diversity = uniqueExerciseCount / workout.length; // от 0 до 1
-
-    // 3. Соответствие опыта (доля упражнений, доступных пользователю)
-    const userExpIndex = expLevels[experience] ?? 0;
-    const expMatches = workout.filter(ex => expLevels[ex.experience] <= userExpIndex).length;
-    const expScore = expMatches / workout.length;
-
-    // 4. Соответствие подходов на группу
-    const setsPerGroup = {};
-    const setsPerExercise = 4;
-    workout.forEach(ex => {
-      const groups = (ex.predominantMuscleGroup || "Other").split(",").map(g => g.trim());
-      groups.forEach(g => {
-        if (!setsPerGroup[g]) setsPerGroup[g] = 0;
-        setsPerGroup[g] += setsPerExercise;
-      });
-    });
-
-    // Нормы по опыту
-    const getExpRange = (exp) => {
-      switch(exp) {
-        case "beginner": return { min: 7, max: 9 };
-        case "intermediate": return { min: 9, max: 12 };
-        case "advanced": return { min: 12, max: 20 };
-        default: return { min: 0, max: Infinity };
-      }
-    };
-    const range = getExpRange(experience);
-
-    let okGroups = 0;
-    let totalGroups = Object.keys(setsPerGroup).length;
-    Object.values(setsPerGroup).forEach(sets => {
-      if (sets >= range.min && sets <= range.max) okGroups++;
-    });
-    const setsScore = totalGroups > 0 ? okGroups / totalGroups : 0;
-
-    return [numExercises, diversity, expScore, setsScore];
+  const onGenerate = () => {
+    dispatch(getRandom({ amount, exp: experience }));
   };
 
-  // --- tf.js модель
-  const trainAndPredict = async () => {
-    if (!randomExercises.length) return;
-
-    // ⚡ Собираем признаки для каждой тренировки
-    const features = randomExercises.map(workout => extractFeatures(workout));
-    const xs = tf.tensor2d(features);
-
-    // Фейковые "оценки качества" (в реальном приложении тут нужны данные)
-    const ys = tf.tensor2d(features.map(f => [
-      (0.3*f[0] + 0.2*f[1] + 0.3*f[2] + 0.2*f[3])  // линейная комбинация как пример
-    ]));
-
-    // Создаём модель
-    const model = tf.sequential();
-    model.add(tf.layers.dense({ units: 8, inputShape: [4], activation: "relu" }));
-    model.add(tf.layers.dense({ units: 1, activation: "sigmoid" }));
-    model.compile({ optimizer: "adam", loss: "meanSquaredError" });
-
-    await model.fit(xs, ys, { epochs: 50 });
-
-    // Предсказываем качество по первой тренировке
-    const firstFeatures = extractFeatures(randomExercises[0]);
-    const pred = model.predict(tf.tensor2d([firstFeatures]));
-    const score = (await pred.data())[0];
-    setNnScore(score.toFixed(2));
+  // нормализует неделю, убирая лишние поля типа fitness
+  const normalizeWeek = (week) => {
+    if (Array.isArray(week)) return week;
+    return Object.values(week).filter(v => Array.isArray(v));
   };
+
+  const renderWeeks = (weeks = [], titlePrefix = "Week") => (
+    weeks.map((week, i) => (
+      <Accordion key={i} sx={{ mb: 1 }}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography>
+            {titlePrefix} {i + 1} — Score: {(week.fitness ?? 0).toFixed(3)}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <WeekBlock week={normalizeWeek(week)} title={`${titlePrefix} ${i + 1}`} />
+        </AccordionDetails>
+      </Accordion>
+    ))
+  );
 
   return (
-    <>
-      <div className="displayflex aligncenter justifycenter flexcolumn gap20">
-        <p className='fontSize2em marginBottom0'>How many workouts per week do you need?</p>
+    <div style={{ padding: 20 }}>
+      <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginBottom: 20 }}>
         <Box sx={{ minWidth: 120 }}>
           <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Amount</InputLabel>
+            <InputLabel>Workouts / week</InputLabel>
             <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
               value={amount}
-              label="Amount"
-              onChange={handleChangeAmount}
+              label="Workouts / week"
+              onChange={(e) => setAmount(Number(e.target.value))}
             >
-              {[1,2,3,4,5,6,7].map(num => (
-                <MenuItem key={num} value={num}>{num}</MenuItem>
-              ))}
+              {[1,2,3,4,5,6,7].map(n => <MenuItem key={n} value={n}>{n}</MenuItem>)}
             </Select>
           </FormControl>
         </Box>
-        <button onClick={handleGetRandom}>GET RANDOM</button>
-        <button onClick={trainAndPredict}>🤖 Evaluate NN</button>
+        <Button variant="contained" onClick={onGenerate} disabled={loading}>
+          Generate (20 weeks)
+        </Button>
       </div>
 
-      {randomExercises.length > 0 && (
-        <div className='feature'>
-          <p className='title'>RANDOM EXERCISES</p>
+      {loading && <p>Loading...</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
 
-          {randomExercises.map((workout, index) => (
-            <div key={index} style={{ marginBottom: '2rem' }}>
-              <h3>Workout {index + 1} — {workout.length} exercises</h3>
-              <TableContainer component={Paper} sx={{ width: '90%' }}>
-                <Table sx={{ minWidth: 650 }}>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Exercise</TableCell>
-                      <TableCell>Reps</TableCell>
-                      <TableCell align="center">Muscle Groups</TableCell>
-                      <TableCell align="center">Type</TableCell>
-                      <TableCell align="center">Difficulty</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {workout.map(ex => (
-                      <TableRow key={ex.idExercise}>
-                        <TableCell>{ex.exName}</TableCell>
-                        <TableCell>4×{ex.reps}</TableCell>
-                        <TableCell align="center">{ex.predominantMuscleGroup}</TableCell>
-                        <TableCell align="center">{ex.type}</TableCell>
-                        <TableCell align="center">
-                            {expLevels[experience] >= expLevels[ex.experience] ? "✅ OK" : "⚠️ Hard"}
-                        </TableCell>
-
-                        <TableCell>{ex.experience}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </div>
-          ))}
-
-          {nnScore && (
-            <div style={{ marginTop: "1rem", fontWeight: "bold" }}>
-              <p>🤖 Neural Net Score: {nnScore}</p>
-            </div>
-          )}
-        </div>
+      {/* Initial population */}
+      {ga.initialPopulation?.length > 0 && (
+        <>
+          <h2>Initial population (20 weeks)</h2>
+          {renderWeeks(ga.initialPopulation, "Initial week")}
+        </>
       )}
-    </>
+
+      {/* Generations */}
+      {ga.generations?.length > 0 && (
+        <>
+          <h2>Evolution steps</h2>
+          {ga.generations.map((g) => (
+            <Accordion key={g.gen} sx={{ mb: 2 }}>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography>
+                  Generation {g.gen} — Best fitness: {g.bestFitness.toFixed(3)}
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <WeekBlock week={normalizeWeek(g.best)} title={`Best of generation ${g.gen}`} />
+              </AccordionDetails>
+            </Accordion>
+          ))}
+        </>
+      )}
+
+      {/* Final population */}
+      {ga.finalPopulation?.length > 0 && (
+        <>
+          <h2>Final population (20 weeks)</h2>
+          {renderWeeks(ga.finalPopulation, "Final week")}
+        </>
+      )}
+
+      {/* Best week */}
+      {ga.bestWeek && (
+        <>
+          <h2>Your optimized training plan</h2>
+          <Accordion sx={{ mb: 2 }}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography>
+                Best week — Score: {ga.bestFitness?.toFixed(3)}
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <WeekBlock week={normalizeWeek(ga.bestWeek)} title="Best week" />
+            </AccordionDetails>
+          </Accordion>
+        </>
+      )}
+    </div>
   );
 }
