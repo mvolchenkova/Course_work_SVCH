@@ -82,3 +82,6 @@ a{
   border-radius: 5px;
   border: 1px solid black;
 }
+header{
+  color: #000000 !important; 
+}

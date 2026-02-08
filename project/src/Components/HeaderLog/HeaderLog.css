@@ -8,8 +8,14 @@ header {
     -webkit-backdrop-filter: blur(15px);
     z-index: 1000; 
     align-items:center;
+    
 }
-
+header .options .homelink, 
+header .options .userName,
+header .options .langSwitcher,
+header .options .logoutButton {
+    color: #000000 !important;
+}
 .logoutButton, .themeButton, .langButton {
     background-color: transparent;
     border-radius: 10px;
@@ -41,7 +47,25 @@ header {
 .homelink{
     font-size: 1.4em;
 }
+.langSwitcher {
+    background: transparent;
+    background-color: #00c8dc;
+    padding: 4px 10px;
+    cursor: pointer;
+    margin-right: 15px;
+    transition: all 0.3s ease;
+    border-radius: 6px;
+}
 
+.langSwitcher:hover {
+    color: #000;
+}
+
+.homelink {
+    margin-right: 20px;
+    text-decoration: none;
+    color: white;
+}
 @media(max-width: 650px) {
     .options{
         font-size: 0.8em;

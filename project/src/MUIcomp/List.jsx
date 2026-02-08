@@ -6,6 +6,7 @@ import Collapse from '@mui/material/Collapse';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { IconButton } from '@mui/material';
 import {Link} from 'react-router-dom'
+import i18n from '../i18n';
 
 import '../MUIcomp/List.css';
 
@@ -23,288 +24,168 @@ export default function NestedList() {
   const handleClick4 = () => setOpenList4(!openList4);
   const handleClick5 = () => setOpenList5(!openList5);
 
+  const t = (key) => i18n.t(key);
+  
   return (
     <div className="listDiv">
-      {/* Первый список */}
-      <List
-        sx={{ width: '100%', maxWidth: 360, bgcolor: 'rgb(0, 200, 220)', borderRadius: '30px',
-       margin: 0}}
-        component="nav"
-        aria-labelledby="nested-list-subheader"
-      >
+      {/* Список 1: PLANS */}
+      <List sx={listStyle} component="nav">
         <ListItemButton onClick={handleClick1}>
-          <ListItemText 
-            style={{ fontFamily: 'smalle', margin: 0 }}
-            disableTypography={true}
-            primary="PLANS" 
-          />
+          <ListItemText style={textStyle} disableTypography={true} primary={t('PLANS')} />
           <IconButton edge="end" aria-label="expand" size="small">
             <ExpandMoreIcon 
               sx={{ 
                 transform: openList1 ? 'rotate(180deg)' : 'rotate(0deg)', 
                 transition: 'transform 0.2s ease',
-                color: '#000000', // Цвет стрелки
+                color: '#000000', // Если фон голубой, черный будет виден. Если стал белым — поменяй на 'white'
               }} 
             />
           </IconButton>
         </ListItemButton>
         <Collapse in={openList1} timeout="auto" unmountOnExit>
           <Link to="/allPlans">
-            <List component="div" disablePadding>
             <ListItemButton sx={{ pl: 4 }}>
-              <ListItemText 
-                primary="All training plans" 
-                style={{ fontFamily: 'smalle' }}
-                disableTypography={true}
-              />
+              <ListItemText primary={t('All_training_plans')} style={textStyle} disableTypography={true} />
             </ListItemButton>
-          </List>
           </Link>
           <Link to="/favPlans">
-            <List component="div" disablePadding>
-              <ListItemButton sx={{ pl: 4 }}>
-                <ListItemText 
-                  primary="Favourite plans" 
-                  style={{ fontFamily: 'smalle' }}
-                  disableTypography={true}
-                />
-              </ListItemButton>
-            </List>
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemText primary={t('Favourite_plans')} style={textStyle} disableTypography={true} />
+            </ListItemButton>
           </Link>
-          
         </Collapse>
       </List>
 
-      {/* Второй список */}
-      <List
-        sx={{ width: '100%', maxWidth: 360, bgcolor: 'rgb(0, 200, 220)', borderRadius: '30px', marginTop: '10px',
-        margin: 0 }}
-        component="nav"
-        aria-labelledby="nested-list-subheader"
-      >
+      {/* Список 2: NUTRITION */}
+      <List sx={listStyle} component="nav">
         <ListItemButton onClick={handleClick2}>
-          <ListItemText 
-            style={{ fontFamily: 'smalle', margin: 0 }}
-            disableTypography={true}
-            primary="NUTRITION" 
-          />
+          <ListItemText style={textStyle} disableTypography={true} primary={t('NUTRITION')} />
           <IconButton edge="end" aria-label="expand" size="small">
             <ExpandMoreIcon 
               sx={{ 
-                transform: openList2 ? 'rotate(180deg)' : 'rotate(0deg)', 
+                transform: openList1 ? 'rotate(180deg)' : 'rotate(0deg)', 
                 transition: 'transform 0.2s ease',
-                color: '#000000', // Цвет стрелки
+                color: '#000000', // Если фон голубой, черный будет виден. Если стал белым — поменяй на 'white'
               }} 
             />
           </IconButton>
         </ListItemButton>
         <Collapse in={openList2} timeout="auto" unmountOnExit>
-        <Link to="/allNutrition">
-          <List component="div" disablePadding>
+          <Link to="/allNutrition">
             <ListItemButton sx={{ pl: 4 }}>
-              <ListItemText 
-                primary="All recipes" 
-                style={{ fontFamily: 'smalle' }}
-                disableTypography={true}
-              />
+              <ListItemText primary={t('All_recipes')} style={textStyle} disableTypography={true} />
             </ListItemButton>
-          </List>
           </Link>
           <Link to="/favRecipes">
-            <List component="div" disablePadding>
-              <ListItemButton sx={{ pl: 4 }}>
-                <ListItemText 
-                  primary="Favourite recipes" 
-                  style={{ fontFamily: 'smalle' }}
-                  disableTypography={true}
-                />
-              </ListItemButton>
-            </List>
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemText primary={t('Favouriterecipes')} style={textStyle} disableTypography={true} />
+            </ListItemButton>
           </Link>
-          
+           <Link to="/fatsecret">
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemText primary={t('Calories_calc')} style={textStyle} disableTypography={true} />
+            </ListItemButton>
+          </Link>
         </Collapse>
       </List>
 
-      {/* Третий список */}
-      <List
-        sx={{ width: '100%', maxWidth: 360, bgcolor: 'rgb(0, 200, 220)', borderRadius: '30px', marginTop: '10px',
-         margin: 0 }}
-        component="nav"
-        aria-labelledby="nested-list-subheader"
-      >
-        
-          <ListItemButton onClick={handleClick3}>
-            <ListItemText 
-              style={{ fontFamily: 'smalle', margin: 0 }}
-              disableTypography={true}
-              primary="ACCOUNT" 
-            />
-            <IconButton edge="end" aria-label="expand" size="small">
-              <ExpandMoreIcon 
-                sx={{ 
-                  transform: openList3 ? 'rotate(180deg)' : 'rotate(0deg)', 
-                  transition: 'transform 0.2s ease',
-                  color: '#000000', // Цвет стрелки
-                }} 
-              />
-            </IconButton>
-          </ListItemButton>
-        
-        <Collapse in={openList3} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            <Link to="/account">
-              <ListItemButton sx={{ pl: 4 }}>
-                <ListItemText 
-                  primary="Account info" 
-                  style={{ fontFamily: 'smalle' }}
-                  disableTypography={true}
-                />
-              </ListItemButton>
-            </Link>
-          </List>
-
-          <List component="div" disablePadding>
-            <Link to="/achievements">
-              <ListItemButton sx={{ pl: 4 }}>
-                <ListItemText 
-                  primary="Achievements" 
-                  style={{ fontFamily: 'smalle' }}
-                  disableTypography={true}
-                />
-              </ListItemButton>
-            </Link>
-          </List>
-          
-        </Collapse>
-      </List>
-
-      {/* Четвертый список */}
-      <List
-        sx={{ width: '100%', maxWidth: 360, bgcolor: 'rgb(0, 200, 220)', borderRadius: '30px', marginTop: '10px',
-         margin: 0 }}
-        component="nav"
-        aria-labelledby="nested-list-subheader"
-      >
-        <ListItemButton onClick={handleClick4}>
-          <ListItemText 
-            style={{ fontFamily: 'smalle', margin: 0 }}
-            disableTypography={true}
-            primary="RESOURCES" 
-          />
+      {/* Список 3: ACCOUNT */}
+      <List sx={listStyle} component="nav">
+        <ListItemButton onClick={handleClick3}>
+          <ListItemText style={textStyle} disableTypography={true} primary={t('ACCOUNT')} />
           <IconButton edge="end" aria-label="expand" size="small">
             <ExpandMoreIcon 
               sx={{ 
-                transform: openList4 ? 'rotate(180deg)' : 'rotate(0deg)', 
+                transform: openList1 ? 'rotate(180deg)' : 'rotate(0deg)', 
                 transition: 'transform 0.2s ease',
-                color: '#000000', // Цвет стрелки
+                color: '#000000', // Если фон голубой, черный будет виден. Если стал белым — поменяй на 'white'
+              }} 
+            />
+          </IconButton>
+        </ListItemButton>
+        <Collapse in={openList3} timeout="auto" unmountOnExit>
+          <Link to="/account">
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemText primary={t('Account_info')} style={textStyle} disableTypography={true} />
+            </ListItemButton>
+          </Link>
+          <Link to="/achievements">
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemText primary={t('Achievements')} style={textStyle} disableTypography={true} />
+            </ListItemButton>
+          </Link>
+        </Collapse>
+      </List>
+
+      {/* Список 4: RESOURCES */}
+      <List sx={listStyle} component="nav">
+        <ListItemButton onClick={handleClick4}>
+          <ListItemText style={textStyle} disableTypography={true} primary={t('RESOURCES')} />
+          <IconButton edge="end" aria-label="expand" size="small">
+            <ExpandMoreIcon 
+              sx={{ 
+                transform: openList1 ? 'rotate(180deg)' : 'rotate(0deg)', 
+                transition: 'transform 0.2s ease',
+                color: '#000000', // Если фон голубой, черный будет виден. Если стал белым — поменяй на 'white'
               }} 
             />
           </IconButton>
         </ListItemButton>
         <Collapse in={openList4} timeout="auto" unmountOnExit>
-          
-          <List component="div" disablePadding>
-            <Link to="/articles">
-              <ListItemButton sx={{ pl: 4 }}>
-                <ListItemText 
-                  primary="Articles" 
-                  style={{ fontFamily: 'smalle' }}
-                  disableTypography={true}
-                />
-              </ListItemButton>
-            </Link>
-            
-          </List>
+          <Link to="/articles">
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemText primary={t('Articles')} style={textStyle} disableTypography={true} />
+            </ListItemButton>
+          </Link>
           <Link to="/advices">
-            <List component="div" disablePadding>
-              <ListItemButton sx={{ pl: 4 }}>
-                <ListItemText 
-                  primary="Advices" 
-                  style={{ fontFamily: 'smalle' }}
-                  disableTypography={true}
-                />
-              </ListItemButton>
-          </List>
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemText primary={t('Advices')} style={textStyle} disableTypography={true} />
+            </ListItemButton>
           </Link>
-
           <Link to="/technique">
-            <List component="div" disablePadding>
-              <ListItemButton sx={{ pl: 4 }}>
-                <ListItemText 
-                  primary="Exercise technique" 
-                  style={{ fontFamily: 'smalle' }}
-                  disableTypography={true}
-                />
-              </ListItemButton>
-          </List>
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemText primary={t('Exercise_technique')} style={textStyle} disableTypography={true} />
+            </ListItemButton>
           </Link>
-          
         </Collapse>
       </List>
 
-      {/*пятый список*/}
-      <List
-        sx={{ width: '100%', maxWidth: 360, bgcolor: 'rgb(0, 200, 220)', borderRadius: '30px', marginTop: '10px',
-         margin: 0 }}
-        component="nav"
-        aria-labelledby="nested-list-subheader"
-      >
+      {/* Список 5: CALCULATORS */}
+      <List sx={listStyle} component="nav">
         <ListItemButton onClick={handleClick5}>
-          <ListItemText 
-            style={{ fontFamily: 'smalle', margin: 0 }}
-            disableTypography={true}
-            primary="CALCULATORS" 
-          />
+          <ListItemText style={textStyle} disableTypography={true} primary={t('CALCULATORS')} />
           <IconButton edge="end" aria-label="expand" size="small">
             <ExpandMoreIcon 
               sx={{ 
-                transform: openList5 ? 'rotate(180deg)' : 'rotate(0deg)', 
+                transform: openList1 ? 'rotate(180deg)' : 'rotate(0deg)', 
                 transition: 'transform 0.2s ease',
-                color: '#000000', // Цвет стрелки
+                color: '#000000', // Если фон голубой, черный будет виден. Если стал белым — поменяй на 'white'
               }} 
             />
           </IconButton>
         </ListItemButton>
         <Collapse in={openList5} timeout="auto" unmountOnExit>
-          
-          <List component="div" disablePadding>
-            <Link to="/calories">
-              <ListItemButton sx={{ pl: 4 }}>
-                <ListItemText 
-                  primary="Basal metabolic rate" 
-                  style={{ fontFamily: 'smalle' }}
-                  disableTypography={true}
-                />
-              </ListItemButton>
-            </Link>
-          </List>
-
-          <List component="div" disablePadding>
-            <Link to="/bodyMassIndex">
-              <ListItemButton sx={{ pl: 4 }}>
-                <ListItemText 
-                  primary="Body mass index" 
-                  style={{ fontFamily: 'smalle' }}
-                  disableTypography={true}
-                />
-              </ListItemButton>
-            </Link>
-          </List>
-
-          <List component="div" disablePadding>
-            <Link to="/waterCalc">
-              <ListItemButton sx={{ pl: 4 }}>
-                <ListItemText 
-                  primary="Water consumption rate" 
-                  style={{ fontFamily: 'smalle' }}
-                  disableTypography={true}
-                />
-              </ListItemButton>
-            </Link>
-          </List>
-          
+          <Link to="/calories">
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemText primary={t('Basal_metabolic_rate')} style={textStyle} disableTypography={true} />
+            </ListItemButton>
+          </Link>
+          <Link to="/bodyMassIndex">
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemText primary={t('Body_mass_index')} style={textStyle} disableTypography={true} />
+            </ListItemButton>
+          </Link>
+          <Link to="/waterCalc">
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemText primary={t('Water_consumption_rate')} style={textStyle} disableTypography={true} />
+            </ListItemButton>
+          </Link>
         </Collapse>
       </List>
     </div>
   );
 }
+
+// Вынес стили для чистоты кода
+const listStyle = { width: '100%', maxWidth: 360, bgcolor: 'rgb(0, 200, 220)', borderRadius: '30px', marginTop: '10px', margin: '10px 0' };
+const textStyle = { fontFamily: 'smalle', margin: 0 };

@@ -1,4 +1,8 @@
 import './App.css';
+import './i18n';
+import i18n from './i18n';
+import { useTranslation } from 'react-i18next';
+import { useState } from 'react';
 import StartPage from './Pages/StartPage'
 import HomePage from './Pages/HomePage/HomePage'
 import AllPlansPage from './Pages/AllPlansPage'
@@ -30,10 +34,28 @@ import WaterCalculator from './Pages/WaterCalculator/WaterCalculator';
 import Achievements from './Pages/Achievements/Achievements';
 import Exercises from './Pages/Exercises/Exercises';
 import AssistantPage from './Pages/AssistantPage/AssistantPage'
+import FatsecretPage from './Pages/FatsecretPage/FatsecretPage';
 function App() {
 
-  const dispatch = useDispatch();
+    const dispatch = useDispatch();
+    const [currentLang, setCurrentLang] = useState(i18n.language);
+    useEffect(() => {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+            dispatch(setCurrentUser(JSON.parse(storedUser))); 
+        }
 
+        const handleLanguageChange = (lng) => {
+            setCurrentLang(lng); 
+        };
+
+        i18n.on('languageChanged', handleLanguageChange);
+
+        return () => {
+            i18n.off('languageChanged', handleLanguageChange);
+        };
+    }, [dispatch]);
+    
     useEffect(() => {
         const storedUser = localStorage.getItem('user');
         if (storedUser) {
@@ -43,6 +65,7 @@ function App() {
     
 
   return (
+    <div key={currentLang} className="app-wrapper">
       <BrowserRouter>
       <HeaderLog/>
       <Routes>
@@ -70,10 +93,11 @@ function App() {
         <Route path='/achievements' element={<Achievements/>}/>
         <Route path='/technique' element={<Exercises/>}/>
         <Route path='/assistant' element={<AssistantPage/>}/>
+        <Route path='/fatsecret' element={<FatsecretPage/>}/>
       </Routes>
       <Footer/>
    </BrowserRouter>
-   
+   </div>
   );
 }
 

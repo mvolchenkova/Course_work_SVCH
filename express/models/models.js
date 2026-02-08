@@ -415,6 +415,31 @@ const Article = sequelize.define('article', {
     instructionName: {type: DataTypes.TEXT, allowNull: false}
  })
 
+// Справочник продуктов (общая база)
+const Product = sequelize.define('product', {
+    productId: { type: DataTypes.BIGINT, primaryKey: true, autoIncrement: true },
+    productName: { type: DataTypes.TEXT, allowNull: false },
+    calories: { type: DataTypes.DOUBLE, defaultValue: 0 }, 
+    protein: { type: DataTypes.DOUBLE, defaultValue: 0 },
+    fat: { type: DataTypes.DOUBLE, defaultValue: 0 },
+    carbs: { type: DataTypes.DOUBLE, defaultValue: 0 }
+});
+
+// Дневник питания (записи пользователя)
+const MealLog = sequelize.define('meal_log', {
+    id: { type: DataTypes.BIGINT, primaryKey: true, autoIncrement: true },
+    userId: { type: DataTypes.INTEGER, allowNull: false },
+    mealType: { type: DataTypes.ENUM('breakfast', 'lunch', 'dinner', 'snack'), allowNull: false },
+    grams: { type: DataTypes.DOUBLE, allowNull: false },
+    date: { type: DataTypes.DATEONLY, defaultValue: DataTypes.NOW },
+    
+    recordedProductName: { type: DataTypes.TEXT }, 
+    recordedCalories: { type: DataTypes.DOUBLE }, // Калории на 100г в момент записи
+    recordedProtein: { type: DataTypes.DOUBLE },
+    recordedFat: { type: DataTypes.DOUBLE },
+    recordedCarbs: { type: DataTypes.DOUBLE }
+});
+
 //user-favtplans
 User.hasMany(FavTplan, { foreignKey: 'userIdUser', sourceKey: 'idUser' });
 FavTplan.belongsTo(User, { foreignKey: 'userIdUser', targetKey: 'idUser' });

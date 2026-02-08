@@ -34,6 +34,7 @@ const questionRouter = require('./routes/questionRouter')
 const adviceRouter = require('./routes/adviceRouter')
 const chatRouter = require('./routes/chatRouter')
 const exerciseRouter = require('./routes/exerciseRouter')
+const calorieRouter = require('./routes/calorieRouter')
 
 const app = express();
 // app.use(cors());
@@ -57,6 +58,8 @@ app.use('/api/questions', questionRouter)
 app.use('/api/advices', adviceRouter)
 app.use('/api/chat', chatRouter )
 app.use('/api/exercises', exerciseRouter)
+app.use('/api/calories', calorieRouter)
+
 
 app.use('/api', router);
 app.use(express.json({ limit: '50mb' })); 

@@ -2,241 +2,235 @@ import '../Progress/Progress.css';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { updateUserThunk } from '../../slices/userSlice'; 
-import * as d3 from "d3";
-import { Bar } from 'react-chartjs-2';
-
 import ProgressBar from "@ramonak/react-progress-bar";
 import AddActivityModal from '../AddActivityModal/AddActivityModal';
+import i18n from '../../i18n';
 
 export default function Progress() {
+   const t = (key) => i18n.t(key);
     const dispatch = useDispatch();
-    
-    const [trainingAim, setTrainingAim] = useState(0);
-    const [finishedTr, setFinishedTr] = useState(0);
     const userId = localStorage.getItem('userId');
-    
-    const [showAddAim, setShowAddAim] = useState(trainingAim === 0); 
-    const [showModal, setShowModal] = useState(false); 
-    const [error, setError] = useState(null);
 
+    // --- СОСТОЯНИЕ ---
+    const [activities, setActivities] = useState([]); // Список блоков (занятий)
+    const [totalPoints, setTotalPoints] = useState(0); // Общие баллы (опыт)
+    const [achievements, setAchievements] = useState([]); // Разблокированные ачивки
     const [isModalOpen, setModalOpen] = useState(false);
 
-    // Загрузка данных из localStorage
-    useEffect(() => {
-        const storedAim = Number(localStorage.getItem('trAim')) || 0;
-        const storedFinishedTr = Number(localStorage.getItem('finishedTr')) || 0;
-        
-        setTrainingAim(storedAim);
-        setFinishedTr(storedFinishedTr);
-        setShowAddAim(storedAim === 0);
+    // Константы наград
+    const POINTS_PER_STEP = 10;
+    const BONUS_FULL_WEEK = 50;
 
-        // Проверка на сброс выполненных тренировок
-        resetFinishedTrIfMonday(storedFinishedTr);
+    // --- ЗАГРУЗКА ДАННЫХ ---
+    useEffect(() => {
+        const savedActivities = JSON.parse(localStorage.getItem('userActivities')) || [];
+        const savedPoints = Number(localStorage.getItem('totalPoints')) || 0;
+        const savedAchievements = JSON.parse(localStorage.getItem('achievements')) || [];
+
+        setActivities(savedActivities);
+        setTotalPoints(savedPoints);
+        setAchievements(savedAchievements);
+
+        checkWeeklyReset();
     }, []);
 
-    const resetFinishedTrIfMonday = (storedFinishedTr) => {
-        const lastReset = localStorage.getItem('lastReset') ? new Date(localStorage.getItem('lastReset')) : null;
+    // --- ЛОГИКА ЕЖЕНЕДЕЛЬНОГО СБРОСА ---
+    const checkWeeklyReset = () => {
+        const lastReset = localStorage.getItem('lastReset');
         const today = new Date();
-        
-        if (today.getDay() === 1) { //сброс каждый понедельник
-            if (!lastReset || lastReset.getDate() !== today.getDate() || lastReset.getMonth() !== today.getMonth() || lastReset.getFullYear() !== today.getFullYear()) {
-                localStorage.setItem('finishedTr', 0);
-                setFinishedTr(0);
-                localStorage.setItem('lastReset', today.toISOString()); 
-            }
+        const isMonday = today.getDay() === 1;
+
+        if (isMonday && lastReset !== today.toLocaleDateString()) {
+            const currentActivities = JSON.parse(localStorage.getItem('userActivities')) || [];
+            
+            // При сбросе обнуляем только прогресс (current), но оставляем цели (aim)
+            const resetActivities = currentActivities.map(act => ({ ...act, current: 0 }));
+            
+            setActivities(resetActivities);
+            localStorage.setItem('userActivities', JSON.stringify(resetActivities));
+            localStorage.setItem('lastReset', today.toLocaleDateString());
         }
     };
-    const [workoutHistory, setWorkoutHistory] = useState([]);
 
-    const addWorkoutToHistory = (date, aim, completed) => {
-        setWorkoutHistory(prev => [...prev, { date, aim, completed }]);
-        localStorage.setItem('workoutHistory', JSON.stringify([...workoutHistory, { date, aim, completed }]));
+    // --- ДОБАВЛЕНИЕ НОВОЙ АКТИВНОСТИ (вызывается из модалки) ---
+    const addNewActivity = (title, aim) => {
+        const newAct = {
+            id: Date.now(),
+            title: title,
+            aim: aim,
+            current: 0,
+            isCompleted: false
+        };
+        const updated = [...activities, newAct];
+        saveData(updated, totalPoints);
+    };
+
+    // --- КЛИК ПО ПЛЮСУ (Выполнение шага) ---
+    const handleIncrement = (id) => {
+        let bonus = 0;
+        const updated = activities.map(act => {
+            if (act.id === id && act.current < act.aim) {
+                const nextCurrent = act.current + 1;
+                // Проверка на завершение блока (бонус за неделю)
+                if (nextCurrent === act.aim) {
+                    bonus = BONUS_FULL_WEEK;
+                }
+                return { ...act, current: nextCurrent };
+            }
+            return act;
+        });
+
+        const newPoints = totalPoints + POINTS_PER_STEP + bonus;
+        saveData(updated, newPoints);
+        checkAchievements(newPoints);
+    };
+
+    // --- СИСТЕМА ДОСТИЖЕНИЙ ---
+    const checkAchievements = (points) => {
+        const newAchievements = [...achievements];
+        let changed = false;
+
+        const rules = [
+            { id: 'first_step', title: 'First Step', desc: 'Earn your first points!', cond: points >= 10 },
+            { id: 'champion', title: 'Champion', desc: 'Reach 500 total points', cond: points >= 500 },
+            { id: 'legend', title: 'Fitness Legend', desc: 'Reach 1000 total points', cond: points >= 1000 },
+        ];
+
+        rules.forEach(rule => {
+            if (rule.cond && !newAchievements.find(a => a.id === rule.id)) {
+                newAchievements.push(rule);
+                changed = true;
+                alert(`Achievement Unlocked: ${rule.title}!`);
+            }
+        });
+
+        if (changed) {
+            setAchievements(newAchievements);
+            localStorage.setItem('achievements', JSON.stringify(newAchievements));
+        }
+    };
+
+    // --- СОХРАНЕНИЕ ---
+    const saveData = (newActivities, newPoints) => {
+        setActivities(newActivities);
+        setTotalPoints(newPoints);
+        localStorage.setItem('userActivities', JSON.stringify(newActivities));
+        localStorage.setItem('totalPoints', newPoints);
+
+        // Синхронизация с сервером через Thunk
+        if (userId) {
+            dispatch(updateUserThunk({ userId, totalPoints: newPoints, activities: newActivities }));
+        }
+    };
+
+    // --- УДАЛЕНИЕ АКТИВНОСТИ ---
+    const deleteActivity = (id) => {
+        // Оставляем только те активности, id которых не совпадает с удаляемым
+        const updated = activities.filter(act => act.id !== id);
+        
+        // Сохраняем обновленный список в стейт и localStorage
+        setActivities(updated);
+        localStorage.setItem('userActivities', JSON.stringify(updated));
+
+        // Синхронизируем с сервером (опционально)
+        if (userId) {
+            dispatch(updateUserThunk({ userId, totalPoints, activities: updated }));
+        }
     };
     
-    useEffect(() => {
-        const svg = d3.select("#progressChart");
-        svg.selectAll("*").remove(); // Очищаем предыдущий график
-
-        const width = 300, height = 25;
-        const progress = trainingAim > 0 ? finishedTr / trainingAim : 0;
-
-        svg.attr("width", width).attr("height", height);
-
-        // Создание линии прогресса
-        svg.append("rect")
-            .attr("width", width)
-            .attr("height", height)
-            .attr("fill", "#e0e0e0");
-
-        svg.append("rect")
-            .attr("width", width * progress)
-            .attr("height", height)
-            .attr("fill", "rgb(0,200,220)");
-    }, [finishedTr, trainingAim]);
-
-    const handleAimSubmit = () => {
-        if (trainingAim < 1 || trainingAim > 7) {
-            console.error('Invalid training aim:', trainingAim);
-            return;
-        }
-
-        localStorage.setItem('trAim', trainingAim);
-        setShowAddAim(false);
-
-        // Обновляем пользователя с новой целью
-        const userData = {
-            userId,
-            trAim: trainingAim,
-            finishedTr // Сохраняем текущее количество завершенных тренировок
-        };
-
-        dispatch(updateUserThunk(userData))
-            .unwrap()
-            .catch(error => {
-                console.error('Ошибка при обновлении тренировки:', error);
-            });
-    };
-
-    const handleAddTraining = async () => {
-        if (!userId) {
-            console.error('User ID is missing');
-            return;
-        }
-
-        const newFinishedTr = finishedTr + 1;
-        localStorage.setItem('finishedTr', newFinishedTr);
-        setFinishedTr(newFinishedTr);
-
-        // Обновляем пользователя с новым количеством завершенных тренировок
-        const userData = {
-            userId,
-            trAim: trainingAim,
-            finishedTr: newFinishedTr
-        };
-
-        dispatch(updateUserThunk(userData))
-            .unwrap()
-            .then(() => {
-                localStorage.setItem('trAim', trainingAim);
-                localStorage.setItem('finishedTr', newFinishedTr);
-            })
-            .catch(error => {
-                console.error('Ошибка при добавлении выполненной тренировки:', error);
-            });
-            addWorkoutToHistory(new Date().toLocaleDateString(), trainingAim, newFinishedTr);
-    };
-
-
-
-    const [progress, setProgress] = useState(0);
-
-    const handleButtonClick = () => {
-        setProgress((prevProgress) => {
-            if (prevProgress < 100) {
-                return prevProgress + 10; // Увеличиваем прогресс на 10%
-            }
-            return 100; // Максимальное значение
-        });
-    };
-
-    const handleAddActivity = () => {
-        setModalOpen(true); // Open the modal
-    };
-    const closeModal = () => {
-        setModalOpen(false); // Close the modal
+    const changeLanguage = (lng) => {
+        i18n.changeLanguage(lng);
     };
 
     return (
         <div className="progressDiv">
-            <div className='heartNbar'>
-                <img className='heartIcon' src="/data/images/heart.png" alt="" />
-                <div className='bar'>
-                    <ProgressBar 
-                        completed={progress} 
-                        bgColor="#ba1c29" 
-                        height="30px" 
-                        isLabelVisible={true}
-                    />
-                    
+            {/* Header: Общий уровень и очки */}
+            <div className="xp-header">
+                <div className="points-display">
+                    <span className="points-value">{totalPoints}</span>
+                    <span className="points-label">{t('total_xp')}</span>
                 </div>
-                
+                <ProgressBar 
+                    completed={(totalPoints % 100)} // Прогресс до следующей "сотни"
+                    maxCompleted={100}
+                    bgColor="rgb(0, 200, 220)" 
+                    labelColor="black"
+                    height="15px"
+                    labelSize="10px"
+                />
             </div>
 
-
-            
-             {/* выпитая вода */}
-
-            {/* <div className='glassNbar'>
-                <img className='waterIcon' src="/data/images/waterGlass.png" alt="" />
-                <div className='bar'>
-                    <ProgressBar 
-                        completed={progress} 
-                        bgColor="#ba1c29" 
-                        height="30px" 
-                        isLabelVisible={true}
-                    />
-                </div>
+            {/* Секция достижений */}
+            {/* <div className="achievements-mini-list">
+                {achievements.map(ach => (
+                    <div key={ach.id} className="ach-badge" title={ach.desc}>
+                        🏆 {ach.title}
+                    </div>
+                ))}
             </div> */}
 
-
-            {/* кнопка добавления в сердце */}
-            {/* <button onClick={handleButtonClick} className='removeButton'>
-                +
-            </button> */}
-
-
-            <button className='addActivityButton' onClick={handleAddActivity}>ADD ACTIVITY</button>
-            <AddActivityModal isOpen={isModalOpen} onClose={closeModal} /> 
-
-
-
-
-
-
-            {/* {error && <p className="error">{error}</p>}
-            <p className="smalle yourProgress">YOUR PROGRESS</p>
-
-            {showAddAim && ( 
-                <div className="addAim">
-                    <button onClick={() => setShowModal(true)} className='smalle'>ADD YOUR TRAINING AIM</button>
-                </div>
-            )} */}
-
-            {/* {!showAddAim && (
-                <div className="aimAndProgressDiv">
-                    <div className="aimdiv">
-                        <p className='trAim'>Your training aim: {trainingAim}</p>
-                        <button className='smalle' onClick={() => setShowModal(true)}>CHANGE AIM</button>
+            {/* Список блоков активностей */}
+            <div className="activities-grid">
+                {activities.map(act => (
+                    <div key={act.id} className={`activity-card ${act.current >= act.aim ? 'is-completed' : ''}`}>
+                      
+                       <div className="card-top">
+                        <div className="card-header">
+                            <div className="icon-box">
+                                {act.current >= act.aim ? '🔥' : '⚡'}
+                            </div>
+                            <h3 className="smalle">{t(`activity_${act.title.replace(/\s+/g, '_')}`)}</h3>
+                        </div>
+                        
+                        <button 
+                            className="delete-btn-styled" 
+                            onClick={() => window.confirm(t('delete_confirm')) && deleteActivity(act.id)}
+                        >
+                            ×
+                        </button>
                     </div>
-                    <div>
-                        <p className='complTr'>Completed trainings: {finishedTr}</p>
-                        <div className='chart'>
-                            <svg id="progressChart"></svg>
-                            <button className="smalle addTrButton" onClick={handleAddTraining}>+</button>
+
+                        <div className="card-body">
+                            <div className="stats-row">
+                                <span className="current-num">{act.current}</span>
+                                <span className="divider">/</span>
+                                <span className="aim-num">{act.aim}</span>
+                            </div>
+                            <p className="unit-label">{t('this_week')}</p>
+                        </div>
+
+                        <div className="card-footer">
+                            <div className="progress-wrapper">
+                                <ProgressBar 
+                                    completed={(act.current / act.aim) * 100} 
+                                    bgColor={act.current >= act.aim ? "#FFD700" : "linear-gradient(90deg, #00C8DC, #00FFCC)"}
+                                    height="12px"
+                                    borderRadius="20px"
+                                    isLabelVisible={false}
+                                    baseBgColor="#f0f0f0"
+                                />
+                            </div>
+                            <button 
+                                className="action-plus-btn" 
+                                onClick={() => handleIncrement(act.id)}
+                                disabled={act.current >= act.aim}
+                            >
+                                {act.current >= act.aim ? '✓' : '+'}
+                            </button>
                         </div>
                     </div>
-                </div>
-            )} */}
+                ))}
+            </div>
+            <button className='addActivityButton' onClick={() => setModalOpen(true)}>
+                 {t('add_new_goal')}
+            </button>
 
-            {/* {showModal && (
-                <div className="modal">
-                    <div className="modal-content">
-                        <h2>Select your training aim</h2>
-                        <select 
-                            className='selectAim smalle'
-                            value={trainingAim} 
-                            onChange={(e) => setTrainingAim(Number(e.target.value))}
-                        >
-                            <option value={0}>Select number of trainings</option>
-                            {[1, 2, 3, 4, 5, 6, 7].map(num => (
-                                <option key={num} value={num}>{num}</option>
-                            ))}
-                        </select>
-                        <button className='smalle' onClick={handleAimSubmit}>Submit</button>
-                        <button className='smalle' onClick={() => setShowModal(false)}>Cancel</button>
-                    </div>
-                </div>
-            )} */}
+            
+            <AddActivityModal 
+                isOpen={isModalOpen} 
+                onClose={() => setModalOpen(false)} 
+                onAdd={addNewActivity} 
+            /> 
         </div>
     );
 }

@@ -17,3 +17,59 @@
     flex-direction: column;
     align-items:center;
 }
+.activity-item{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 20px;
+}
+.activities-list{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.aim-buttons{
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+.aim-selector{
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+}
+/* Базовый стиль для кнопок (убедись, что он у тебя похож) */
+.aim-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #00c8dc;
+    background-color: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease; /* Плавность для всех изменений */
+    font-family: 'smalle', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Эффект при наведении (hover) */
+.aim-btn:hover {
+    background-color: rgba(0, 200, 220, 0.2); /* Легкий оттенок при наведении */
+    transform: translateY(-3px); /* Кнопка слегка "подпрыгивает" */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Мягкая тень */
+}
+
+/* Стиль для активной (выбранной) кнопки */
+.aim-btn.active {
+    background-color: #00c8dc;
+    color: white;
+    box-shadow: 0 0 10px rgba(0, 200, 220, 0.5);
+    transform: scale(1.1); /* Выбранная кнопка чуть больше остальных */
+}
+
+/* Если навести на уже выбранную кнопку */
+.aim-btn.active:hover {
+    background-color: #00b4c8; /* Чуть темнее при наведении на активную */
+    transform: scale(1.1) translateY(-2px);
+}

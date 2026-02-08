@@ -1,11 +1,13 @@
 import '../Account/Account.css';
-import { useSelector, useDispatch } from 'react-redux'; 
+import { useDispatch } from 'react-redux'; 
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { deleteUserThunk, logoutUser, updateUserThunk } from '../../slices/userSlice';
+import { updateUserThunk } from '../../slices/userSlice';
+import i18n from '../../i18n';
 
 export default function Account() {
     const dispatch = useDispatch();
+    const t = (key) => i18n.t(key);
+    
     const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
@@ -21,11 +23,9 @@ export default function Account() {
         sex: '',
         cyclePhase: ''
     });
-    const navigate = useNavigate();
     
     const currentUser = JSON.parse(localStorage.getItem('user'));
 
-    // Загружаем данные тренировочного плана из localStorage при монтировании
     useEffect(() => {
         const savedPlan = localStorage.getItem('trainingPlan');
         if (savedPlan) {
@@ -39,7 +39,7 @@ export default function Account() {
     const handleChangePassword = async () => {
         try {
             if(newPassword.length < 6){
-                alert('Password should be over 6 signs');
+                alert(t('alert_password_short'));
                 return;
             }
             const updatedUser = {
@@ -48,10 +48,10 @@ export default function Account() {
             };
             await dispatch(updateUserThunk(updatedUser));
             closeChangePasswordModal();
-            alert('Password changed successfully!');
+            alert(t('alert_password_success'));
         } catch (error) {
             console.error('Error changing password:', error);
-            alert('Failed to change password. Please try again.');
+            alert(t('alert_password_error'));
         }
     };
 
@@ -61,10 +61,8 @@ export default function Account() {
     };
 
     const handleCreatePlan = () => {
-        // Сохраняем данные в localStorage
         localStorage.setItem('trainingPlan', JSON.stringify(planData));
-        alert('Training plan saved!');
-        console.log('Saved data:', planData);
+        alert(t('alert_plan_saved'));
     };
 
     return (
@@ -74,122 +72,125 @@ export default function Account() {
                     {currentUser ? (
                         <div className='acc'>
                             <div className="accDiv1">
-                                {currentUser.sex === 'male' ? (
-                                    <img src="/data/images/boyProfile.png" alt="Boy Profile" className="profileImageAcc" />
-                                ) : (
-                                    currentUser.sex === 'female' && (
-                                        <img src="/data/images/girlProfile.png" alt="Girl Profile" className="profileImageAcc" />
-                                    )
-                                )}
+                                <img 
+                                    src={currentUser.sex === 'male' ? "/data/images/boyProfile.png" : "/data/images/girlProfile.png"} 
+                                    alt="Profile" 
+                                    className="profileImageAcc" 
+                                />
                                 <div className="nameSurname">
                                     <p className="userName smalle">{currentUser.name}</p>
                                     <p className='userName smalle'>{currentUser.surname}</p>
                                 </div>
                             </div>
                             <div className='otherInfo'>
-                                <p>PHONE: {currentUser.phone}</p>
-                                <p>BIRTH DATE: {currentUser.birthdate}</p>
+                                <p>{t('acc_phone')}: {currentUser.phone}</p>
+                                <p>{t('acc_birth')}: {currentUser.birthdate}</p>
                             </div>
                             <div className='accButtons smalle'>
-                                <button onClick={openChangePasswordModal}>CHANGE PASSWORD</button>
+                                <button onClick={openChangePasswordModal}>{t('btn_change_password')}</button>
                             </div>
                         </div>
                     ) : (
-                        <p>No user data available.</p>
+                        <p>{t('no_user_data')}</p>
                     )}
                 </div>
                 
                 {isChangePasswordOpen && (
-                    <div className="modal">
-                        <div className="modalContent">
-                            <h2>Change Password</h2>
+                    <div className="modal-overlay">
+                        <div className="modal-content">
+                            <h2 className='modal-title'>{t('title_change_password')}</h2>
                             <label>
-                                Current Password:
+                                {t('label_current_password')}:
                                 <input
                                     type="password"
+                                    className='select'
                                     value={currentPassword}
                                     onChange={(e) => setCurrentPassword(e.target.value)}
                                 />
                             </label>
                             <label>
-                                New Password:
+                                {t('label_new_password')}:
                                 <input
                                     type="password"
+                                    className='select'
                                     value={newPassword}
                                     onChange={(e) => setNewPassword(e.target.value)}
                                 />
                             </label>
-                            <button onClick={handleChangePassword}>Change Password</button>
-                            <button onClick={closeChangePasswordModal}>Cancel</button>
+                            <div className="modal-buttons">
+                                <button onClick={handleChangePassword}>{t('btn_save')}</button>
+                                <button className="cancel-btn" onClick={closeChangePasswordModal}>{t('cancel')}</button>
+                            </div>
                         </div>
                     </div>
                 )}
 
-                {/* Form for training plan */}
                 <div className="planForm">
-                    <h2>PREFERENCES</h2>
+                    <h2 className='modal-title'>{t('title_preferences')}</h2>
                     <label>
-                        Training Experience:
+                        {t('plan_experience')}:
                         <select className="select marginLeft5" name="experience" value={planData.experience} onChange={handlePlanInputChange}>
-                            <option value="">Select experience</option>
-                            <option value="0-6">0-6 months</option>
-                            <option value="6-18">6-18 months</option>
-                            <option value="18+">18+ months</option>
+                            <option value="">{t('opt_select')}</option>
+                            <option value="0-6">{t('exp_junior')}</option>
+                            <option value="6-18">{t('exp_middle')}</option>
+                            <option value="18+">{t('exp_senior')}</option>
                         </select>
                     </label>
                     <label>
-                        Diseases / Restrictions:
+                        {t('plan_diseases')}:
                         <input type="text" className="select marginLeft5" name="diseases" value={planData.diseases} onChange={handlePlanInputChange} />
                     </label>
                     <label>
-                        Workouts per Week:
+                        {t('plan_per_week')}:
                         <input type="number" className="select marginLeft5" name="workoutsPerWeek" value={planData.workoutsPerWeek} onChange={handlePlanInputChange} />
                     </label>
                     <label>
-                        Workouts per Group:
+                        {t('plan_per_group')}:
                         <input type="number" className="select marginLeft5" name="workoutsPerGroup" value={planData.workoutsPerGroup} onChange={handlePlanInputChange} />
                     </label>
                     <label>
-                        Period (weeks):
+                        {t('plan_period')}:
                         <input type="number" className="select marginLeft5" name="periodWeeks" value={planData.periodWeeks} onChange={handlePlanInputChange} />
                     </label>
                     <label>
-                        Training Preferences:
+                        {t('plan_pref_type')}:
                         <select className="select marginLeft5" name="preferences" value={planData.preferences} onChange={handlePlanInputChange}>
-                            <option value="">Select preference</option>
-                            <option value="strength">Strength</option>
-                            <option value="cardio">Cardio</option>
-                            <option value="mixed">Mixed</option>
+                            <option value="">{t('opt_select')}</option>
+                            <option value="strength">{t('pref_strength')}</option>
+                            <option value="cardio">{t('pref_cardio')}</option>
+                            <option value="mixed">{t('pref_mixed')}</option>
                         </select>
                     </label>
                     <label>
-                        Available Equipment:
+                        {t('plan_equipment')}:
                         <select className="select marginLeft5" name="equipment" value={planData.equipment} onChange={handlePlanInputChange}>
-                            <option value="">Select equipment</option>
-                            <option value="gym">Gym</option>
-                            <option value="dumbbells_home">Dumbbells at home</option>
-                            <option value="nothing_home">Nothing at home</option>
-                            <option value="pullup_bars">Pull-up bars</option>
+                            <option value="">{t('opt_select')}</option>
+                            <option value="gym">{t('eq_gym')}</option>
+                            <option value="dumbbells_home">{t('eq_dumbbells')}</option>
+                            <option value="nothing_home">{t('eq_nothing')}</option>
+                            <option value="pullup_bars">{t('eq_bars')}</option>
                         </select>
                     </label>
                     <label>
-                        Sex:
+                        {t('plan_sex')}:
                         <select className="select marginLeft5" name="sex" value={planData.sex} onChange={handlePlanInputChange}>
-                            <option value="">Select sex</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
+                            <option value="">{t('opt_select')}</option>
+                            <option value="male">{t('sex_male')}</option>
+                            <option value="female">{t('sex_female')}</option>
                         </select>
                     </label>
-                    <label>
-                        Cycle Phase (for women):
-                        <select className="select marginLeft5" name="cyclePhase" value={planData.cyclePhase} onChange={handlePlanInputChange}>
-                            <option value="">Select phase</option>
-                            <option value="menstruation">Menstruation</option>
-                            <option value="ovulation">Ovulation</option>
-                            <option value="luteal">Luteal</option>
-                        </select>
-                    </label>
-                    <button onClick={handleCreatePlan}>Save Training Plan</button>
+                    {planData.sex === 'female' && (
+                        <label>
+                            {t('plan_cycle')}:
+                            <select className="select marginLeft5" name="cyclePhase" value={planData.cyclePhase} onChange={handlePlanInputChange}>
+                                <option value="">{t('opt_select')}</option>
+                                <option value="menstruation">{t('cyc_menstruation')}</option>
+                                <option value="ovulation">{t('cyc_ovulation')}</option>
+                                <option value="luteal">{t('cyc_luteal')}</option>
+                            </select>
+                        </label>
+                    )}
+                    <button onClick={handleCreatePlan}>{t('btn_save_plan')}</button>
                 </div>
             </div>
         </main>
