@@ -1,4 +1,4 @@
-const { User, TrainingPlan } = require('../models/models');
+const { User, TrainingPlan, Note } = require('../models/models');
 const { Op } = require('sequelize');
 const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
@@ -30,7 +30,7 @@ class UserController {
         const validationRules = [
             body('name').notEmpty().withMessage('Name required').isLength({ min: 2 }).withMessage('The name must be at least 2 characters'),
             body('surname').notEmpty().withMessage('Surname required').isLength({ min: 2 }).withMessage('Last name must be at least 2 characters long'),
-            body('phone').notEmpty().withMessage('Phone required').isMobilePhone().withMessage('Invalid phone number format'),
+            body('phone').notEmpty().withMessage('Phone required').withMessage('Invalid phone number format'),
             body('password').notEmpty().withMessage('Password required').isLength({ min: 6 }).withMessage('The password must be at least 6 characters'),
             body('sex').isIn(['male', 'female']).withMessage('Sex should be male/female'), 
         ];
@@ -45,10 +45,19 @@ class UserController {
     
         try {
             const { surname, name, phone, password, birthdate, sex, role } = req.body;
-            const hashPassword = await bcrypt.hash(password, 15);
-            const user = await User.create({ surname, name, phone, password: hashPassword, birthdate, sex, role });
-            return res.status(201).json(user);
-        } catch (error) {
+    const hashPassword = await bcrypt.hash(password, 15);
+    
+    const user = await User.create({ surname, name, phone, password: hashPassword, birthdate, sex, role });
+    
+    // Вместо просто json(user), вернем объект явно, чтобы убедиться, что idUser там есть
+    return res.status(201).json({
+        idUser: user.idUser, // Вот этот ключ критически важен!
+        name: user.name,
+        surname: user.surname,
+        phone: user.phone,
+        role: user.role
+    });}
+     catch (error) {
             console.error('Ошибка при создании пользователя:', error);
             return res.status(500).json({ message: 'Ошибка при создании пользователя' });
         }
@@ -196,60 +205,52 @@ class UserController {
         }
     }
 
-    async getChecked(req, res) {
-        try {
-            const { phone, password } = req.body;
-            
-            const loginValidationRules = [
-                body('phone').notEmpty().withMessage('Phone required').isMobilePhone().withMessage('Invalid phone input'),
-                body('password').notEmpty().withMessage('Password required'),
-            ];
-        
-            await Promise.all(loginValidationRules.map(validation => validation.run(req)));
-            const errors = validationResult(req);
-        
-            if (!errors.isEmpty()) {
-                return res.status(400).json({ errors: errors.array() });
-            }
+   async getChecked(req, res) {
+  try {
+    const { phone, password } = req.body;
 
-            const user = await User.findOne({ where: { phone } });
-            if (!user) {
-                return res.status(404).json({ message: 'Пользователь не найден' });
-            }
-            
-            const isPassValid = bcrypt.compareSync(password, user.password)
-            
-            if(!isPassValid){
-                return res.status(400).json({message: "Invalid password"})
-            }
-            
-            const token = jwt.sign({ id: user.idUser }, process.env.SECRETKEY, { expiresIn: "1h" });
-
-
-            if (user.isBlocked) {
-                console.error('Пользователь заблокирован:', user.phone);
-                return res.status(401).json({ message: 'Вы заблокированы. Вход невозможен.' });
-            }
-           
-            res.status(200).json({
-                token,
-                    user: { phone: user.phone, 
-                    name: user.name, 
-                    surname: user.surname, 
-                    sex: user.sex,  
-                    userId: user.idUser, 
-                    trAim: user.trAim,
-                    birthdate: user.birthdate,
-                    role: user.role,
-                    finishedTr: user.finishedTr,
-                    favPlans: user.favPlans,
-                    favRecipes: user.favRecipes}
-        }); 
-        } catch (error) {
-            console.error('Ошибка при аутентификации:', error);
-            res.status(500).json({ message: 'Ошибка сервера' });
-        }
+    // временно без строгой проверки номера
+    if (!phone || !password) {
+      return res.status(400).json({ message: 'Phone and password required' });
     }
+
+    const user = await User.findOne({ where: { phone } });
+    if (!user) {
+      return res.status(404).json({ message: 'Пользователь не найден' });
+    }
+
+    const isPassValid = bcrypt.compareSync(password, user.password);
+    if (!isPassValid) {
+      return res.status(400).json({ message: 'Invalid password' });
+    }
+
+    if (user.isBlocked) {
+      return res.status(401).json({ message: 'Вы заблокированы. Вход невозможен.' });
+    }
+
+    const token = jwt.sign({ id: user.idUser }, process.env.SECRETKEY, { expiresIn: '1h' });
+
+    res.status(200).json({
+      token,
+      user: {
+        phone: user.phone,
+        name: user.name,
+        surname: user.surname,
+        sex: user.sex,
+        userId: user.idUser,
+        trAim: user.trAim,
+        birthdate: user.birthdate,
+        role: user.role,
+        finishedTr: user.finishedTr
+      }
+    });
+
+  } catch (error) {
+    console.error('Ошибка при аутентификации:', error);
+    res.status(500).json({ message: 'Ошибка сервера' });
+  }
+}
+
      
     async logoutUser(req, res) {
         try {
@@ -424,8 +425,62 @@ class UserController {
             return res.status(500).json({ message: 'Ошибка сервера' });
         }
     }
+    async getUserNotes(req, res) {
+        try {
+            const { userId } = req.params;
 
+            const notes = await Note.findAll({
+            where: { idUser: userId },
+            });
 
+            res.json(notes);
+        } catch (err) {
+            console.error("🔥 ERROR:", err);
+            res.status(500).json({ message: err.message });
+        }
+        }
+    async addUserNote(req, res) {
+        try {
+            const note = await Note.create({
+            text: req.body.text,
+            idUser: req.params.userId
+            });
+
+            res.status(201).json(note);
+        } catch (err) {
+            res.status(500).json({ message: 'Error adding note' });
+        }
+    }
+    async deleteUserNote(req, res){
+        try {
+            const {noteId} = req.params
+            await Note.destroy({
+            where: { id: noteId }
+            });
+
+            res.json({ message: 'Note deleted' });
+        } catch (err) {
+            console.error("🔥 ERROR:", err);
+            res.status(500).json({ message: 'Error deleting note' });
+        }
+    }
+    async updateUserNote(req, res) {
+        try {
+            const { noteId } = req.params;
+            const { text } = req.body;
+
+            const note = await Note.findByPk(noteId);
+            if (!note) return res.status(404).json({ message: 'Note not found' });
+
+            note.text = text;
+            await note.save();
+
+            res.json(note);
+        } catch (err) {
+            console.error("🔥 ERROR:", err);
+            res.status(500).json({ message: 'Error updating note' });
+        }
+    }
 }
 
 module.exports = new UserController();

@@ -1,88 +1,128 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../FatsecretPage/FatsecretPage.css';
 import CalorieCard from '../../Components/CalorieCard/CalorieCard';
 import CalorieSearch from '../../Components/CalorieSearch/CalorieSearch';
-import { useSelector } from 'react-redux';
+import AddProductForm from '../../Components/AddProductForm/AddProductForm';
+import { useDispatch, useSelector } from 'react-redux';
+import { addMealEntry, fetchTodayLogs } from '../../slices/calorieSlice';
 
 export default function FatsecretPage() {
-  const [meals, setMeals] = useState([
-    { id: 1, title: 'Завтрак', current: 450, target: 500, icon: '🍳' },
-    { id: 2, title: 'Обед', current: 0, target: 700, icon: '🍲' },
-    { id: 3, title: 'Ужин', current: 0, target: 600, icon: '🥗' },
-    { id: 4, title: 'Перекусы', current: 150, target: 300, icon: '🍎' },
+  const dispatch = useDispatch();
+  
+  // Состояние текущей выбранной даты
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+
+  const [meals] = useState([
+    { id: 1, title: 'Завтрак', icon: '🍳', eng: 'breakfast' },
+    { id: 2, title: 'Обед', icon: '🍲', eng: 'lunch' },
+    { id: 3, title: 'Ужин', icon: '🥗', eng: 'dinner' },
+    { id: 4, title: 'Перекусы', icon: '🍎', eng: 'snack' },
   ]);
 
-  const totalCalories = meals.reduce((sum, meal) => sum + meal.current, 0);
-  const dailyGoal = 2100;
+  const todayLogs = useSelector(state => state.calorie?.todayLogs || []);
 
-  const handleAddCalories = (id) => {
-    const amount = prompt("Сколько калорий добавить?", "100");
-    if (amount) {
-      setMeals(meals.map(meal => 
-        meal.id === id ? { ...meal, current: meal.current + parseInt(amount) } : meal
-      ));
+  useEffect(() => {
+    const rawUser = localStorage.getItem('user');
+    if (rawUser) {
+      const user = JSON.parse(rawUser);
+      const currentUserId = user?.idUser || user?.userId || user?.id;
+
+      if (currentUserId) {
+        // Важно: бэкенд должен уметь фильтровать по этой дате
+        dispatch(fetchTodayLogs({ userId: currentUserId, date: selectedDate }));
+      }
     }
+  }, [dispatch, selectedDate]);
+
+  const changeDate = (offset) => {
+    const d = new Date(selectedDate);
+    d.setDate(d.getDate() + offset);
+    setSelectedDate(d.toISOString().split('T')[0]);
   };
 
-  const handleDeleteMeal = (id) => {
-    if(window.confirm("Удалить этот прием пищи?")) {
-      setMeals(meals.filter(meal => meal.id !== id));
-    }
+  const handleAddProductToLog = (data) => {
+    // Добавляем текущую дату к отправляемым данным
+    dispatch(addMealEntry({ ...data, date: selectedDate })).then(() => {
+      const user = JSON.parse(localStorage.getItem('user'));
+      const idUser = user?.idUser || user?.userId || user?.id;
+      if (idUser) dispatch(fetchTodayLogs({ userId: idUser, date: selectedDate }));
+    });
   };
 
-    const todayLogs = useSelector(state => state.calorie.todayLogs);
-
-    // Функция для расчета калорий по типу приема пищи
-    const getSumForMeal = (type) => {
-        return todayLogs
-            .filter(log => log.mealType === type)
-            .reduce((sum, log) => sum + (log.recordedCalories * log.grams / 100), 0);
-    };
-
-    // Обновляем состояние карточек на лету
-    const updatedMeals = meals.map(meal => ({
-        ...meal,
-        current: Math.round(getSumForMeal(meal.title.toLowerCase())) // сопоставляем 'Завтрак' -> 'breakfast'
-    }));
+  // ФИЛЬТРУЕМ ЛОГИ ТОЛЬКО ЗА ВЫБРАННУЮ ДАТУ ДЛЯ ОБЩЕГО СЧЕТЧИКА
+  const filteredLogsByDate = todayLogs.filter(log => log.date === selectedDate);
+  
+  const totalCalories = filteredLogsByDate.reduce((sum, log) => sum + Number(log.recordedCalories || 0), 0);
 
   return (
     <div className="progressDiv">
-      {/* Шапка с общим прогрессом (используем ваши классы XP) */}
+      {/* Пагинация по дням */}
+      <div className="date-pagination-container">
+        <button onClick={() => changeDate(-1)} className="date-nav-btn prev">
+          <span>◀</span>
+        </button>
+        
+        <div className="date-display-card">
+          <div className="calendar-icon">📅</div>
+          <div className="date-info">
+            <span className="date-title">
+              {selectedDate === new Date().toISOString().split('T')[0] 
+                ? "Сегодня" 
+                : new Date(selectedDate).toLocaleDateString('ru-RU', { weekday: 'short', day: 'numeric', month: 'long' })}
+            </span>
+            <span className="date-subtitle">{selectedDate}</span>
+          </div>
+        </div>
+
+        <button onClick={() => changeDate(1)} className="date-nav-btn next">
+          <span>▶</span>
+        </button>
+      </div>
+
       <div className="xp-header">
         <div className="points-display">
-          <span className="points-value" style={{ color: '#00c8dc' }}>{totalCalories}</span>
-          <span className="divider">/</span>
-          <span className="aim-num">{dailyGoal} ккал сегодня</span>
+          <span className="points-value" style={{ color: '#00c8dc' }}>
+            {Math.round(totalCalories)}
+          </span>
+          <span className="aim-num">ккал за день</span>
         </div>
       </div>
 
       <div className="activities-grid">
-        {meals.map(meal => (
-          <div key={meal.id} style={{ flex: '1 1 300px' }}>
-            <CalorieCard 
-              title={meal.title}
-              current={meal.current}
-              target={meal.target}
-              icon={meal.icon}
-              onAdd={() => handleAddCalories(meal.id)}
-              onDelete={() => handleDeleteMeal(meal.id)}
-            />
-          </div>
-        ))}
+        {meals.map(meal => {
+          const mealTitleLower = meal.title.toLowerCase().trim();
+          
+          // Фильтруем логи конкретно для этой карточки и этой даты
+          const logsForMeal = filteredLogsByDate.filter(log => {
+            const dbType = log.mealType?.toLowerCase().trim();
+            return dbType === mealTitleLower || dbType === meal.eng;
+          });
+          
+          const calories = logsForMeal.reduce((sum, log) => sum + Number(log.recordedCalories || 0), 0);
 
-        {/* Карточка добавления новой категории */}
-        <div 
-            className="activity-card" 
-            style={{ border: '2px dashed #ccc', boxShadow: 'none', justifyContent: 'center', cursor: 'pointer' }}
-            onClick={() => alert('Тут можно открыть модалку создания приема пищи')}
-        >
-          <div className="card-body">
-            <span style={{ fontSize: '3rem', color: '#ccc' }}>+</span>
-            <p style={{ color: '#999', fontWeight: 'bold' }}>ДОБАВИТЬ ПРИЕМ</p>
-          </div>
-        </div>
+          return (
+            <div key={meal.id} style={{ marginBottom: '20px' }}>
+              <CalorieCard
+                title={meal.title}
+                icon={meal.icon}
+                current={Math.round(calories)}
+                logs={logsForMeal} 
+              />
+            </div>
+          );
+        })}
+      </div>
+      
+      <hr className="section-divider" />
+      <div className="search-section">
+        <h2 className="section-title">Найти и добавить продукт</h2>
+        <CalorieSearch availableMeals={meals} onAddProduct={handleAddProductToLog} />
+      </div>
 
-        <CalorieSearch/>
+      <hr className="section-divider" />
+      <div className="add-product-section">
+        <h2 className="section-title">Нет нужного продукта? Добавьте его</h2>
+        <AddProductForm />
       </div>
     </div>
   );

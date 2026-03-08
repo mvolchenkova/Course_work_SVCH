@@ -1,0 +1,123 @@
+/* --- Общий контейнер страницы заметок --- */
+.notes-page {
+    width: 100%;
+    max-width: 800px;
+    margin: 40px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    padding: 0 20px;
+}
+
+/* Заголовок страницы */
+.notes-page h2 {
+    text-align: center;
+    font-size: 2rem;
+    color: #1a1a1a;
+    text-transform: uppercase;
+}
+
+/* Карточка заметки */
+.note-card {
+    background: #ffffff;
+    border-radius: 25px;
+    padding: 20px;
+    box-shadow: 10px 10px 0px #00c8dc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    gap: 15px;
+}
+
+.note-card:hover {
+    transform: translate(-5px, -5px);
+    box-shadow: 15px 15px 0px #00b4c8;
+}
+
+/* Текст заметки */
+.note-card p {
+    margin: 0;
+    font-size: 1rem;
+    color: #1a1a1a;
+    flex-grow: 1;
+    word-break: break-word;
+}
+
+/* --- Редактируемая карточка --- */
+.note-card.editing {
+    background: linear-gradient(90deg, #00C8DC, #00FFCC);
+    box-shadow: 10px 10px 0px #FFD700;
+    color: #1a1a1a;
+}
+
+.note-card.editing textarea {
+    flex-grow: 1;
+    padding: 10px;
+    border-radius: 15px;
+    border: 2px solid #00c8dc;
+    font-size: 1rem;
+    resize: vertical;
+    min-height: 60px;
+    max-height: 150px;
+    outline: none;
+}
+
+/* Кнопки карточки заметки */
+.note-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.note-buttons button {
+    background: rgba(0,0,0,0.05);
+    border: none;
+    padding: 8px 15px;
+    border-radius: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.note-buttons button:hover {
+    transform: scale(1.05);
+}
+
+/* Стили для кнопки Save */
+.note-buttons button.save-btn {
+    color: #00c8dc;
+    background: black;
+}
+
+.note-buttons button.save-btn:hover {
+    color: black;
+    background: #00c8dc;
+}
+.note-buttons button.edit-btn {
+    background: black;
+    color: #00c8dc;
+}
+.note-buttons button.edit-btn:hover {
+    color: black;
+    background: #00c8dc;
+}
+
+/* Стили для кнопки Cancel */
+.note-buttons button.cancel-btn {
+    background: #ff4d4d;
+    color: white;
+}
+.note-buttons button.delete-btn {
+    background: #ff4d4d;
+    color: white;
+}
+ 
+.note-buttons button.cancel-btn:hover {
+    background: #e03e3e;
+}
+
+/* Адаптивный текст внутри карточки */
+.note-card textarea:focus {
+    border-color: #00ffd0;
+    box-shadow: 0 0 10px rgba(0, 200, 220, 0.5);
+}

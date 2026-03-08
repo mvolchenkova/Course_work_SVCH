@@ -3,8 +3,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-image: url('../public/data/images/layoutBody.png'); 
-  font-family: "smalle";
-  font-weight: 600;
+  font-family: 'artika';
+  font-weight: 100;
 
   
 }
@@ -15,7 +15,7 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-.ArchivoFont{
+/* .ArchivoFont{
   font-family: "Archivo", sans-serif;
 }
 .ArchivoBlackFont{
@@ -23,7 +23,7 @@ code {
 }
 .PixelFont{
   font-family: "Pixelify Sans", sans-serif;
-}
+} */
 a{
   text-decoration: none;
   color:black;
@@ -34,21 +34,14 @@ a{
   -webkit-text-stroke-color: black;
   font-weight: bolder;
 } */
+
 @font-face {
-  font-family: 'computer_pixel-7'; /* Имя шрифта, которое вы будете использовать */
-  src: url('fonts/computer_pixel-7.ttf') format('opentype'); /* Путь к файлу шрифта */
-  font-size:larger;
-  font-weight: normal; /* Укажите, если шрифт жирный или обычный */
-  font-style: normal; /* Укажите стиль шрифта (normal, italic и т.д.) */
-}
-@font-face {
-  font-family: 'smalle'; /* Имя шрифта, которое вы будете использовать */
-  src: url('fonts/smalle.ttf') format('opentype'); /* Путь к файлу шрифта */
+  font-family: 'artika'; /* Имя шрифта, которое вы будете использовать */
+  src: url('fonts/Artika.ttf') format('opentype'); /* Путь к файлу шрифта */
   font-weight: bold;
   font-weight: normal; /* Укажите, если шрифт жирный или обычный */
   font-style: normal; /* Укажите стиль шрифта (normal, italic и т.д.) */
 }
-
 .displayflex{
   display: flex;
 }
@@ -84,4 +77,7 @@ a{
 }
 header{
   color: #000000 !important; 
+}
+h2{
+   font-family: 'artika';
 }

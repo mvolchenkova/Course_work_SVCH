@@ -45,7 +45,7 @@ export default function CaloriesPage() {
     };
 
     return (
-        <div className='caloriesCalculatorMain smalle'>
+        <div className='caloriesCalculatorMain artika'>
             <p className="titlecal">
                 {t('cal_main_title')}
             </p>

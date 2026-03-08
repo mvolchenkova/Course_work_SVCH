@@ -4,7 +4,7 @@ import List from '../../MUIcomp/List'
 export default function Toolbar(){
         return(
             <div className="toolbarDiv">
-                <List className="smalle"></List>
+                <List className="artika"></List>
             </div>
             // <div className="toolbarDiv">
             //     <div className="toolbar ArchivoFont">

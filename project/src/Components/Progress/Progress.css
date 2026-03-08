@@ -4,7 +4,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px;
 }
 
 /* Сетка карточек */
@@ -13,7 +12,7 @@
     flex-wrap: wrap;
     gap: 25px;
     padding: 20px 0;
-    width: 100%;
+    max-width: 100%;
 }
 
 /* Базовая карточка */
@@ -26,8 +25,8 @@
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     display: flex;
     flex-direction: column;
-    min-height: 250px;
-    position: relative;
+    min-height: 150px;
+    width: 200px;
 }
 
 .activity-card:hover {
@@ -221,10 +220,108 @@ button:hover { opacity: 0.9; }
 
 .points-value { font-size: 3rem; font-weight: 900; }
 
-/* Адаптив */
-@media(max-width: 500px) {
-    .current-num { font-size: 2.5rem; }
-    .aim-num { font-size: 1.5rem; }
-    .activities-grid { grid-template-columns: 1fr; }
-    .activity-card { min-height: auto; }
+/* --- Блок заметок --- */
+.notes-preview {
+    width: 100%;
+    max-width: 600px;
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 25px;
+    box-shadow: 10px 10px 0px #00c8dc;
+}
+
+.notes-preview h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #1a1a1a;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.notes-preview textarea {
+    width: 100%;
+    min-height: 80px;
+    padding: 12px;
+    border-radius: 15px;
+    border: 1px solid #eee;
+    font-size: 1rem;
+    resize: vertical;
+    background: #f0faff;
+    outline: none;
+}
+
+.notes-preview textarea:focus {
+    border-color: #00c8dc;
+    box-shadow: 0 0 5px #00c8dc;
+}
+
+.notes-preview button {
+    align-self: flex-end;
+    background: #1a1a1a;
+    color: #00ffcc;
+    padding: 10px 20px;
+    font-weight: bold;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.notes-preview button:hover {
+    background: #00c8dc;
+    color: white;
+    transform: scale(1.05);
+}
+
+/* Список мини-заметок */
+.note-item {
+    background: #f0faff;
+    padding: 15px 20px;
+    border-radius: 20px;
+    font-size: 0.95rem;
+    color: #1a1a1a;
+    box-shadow: 5px 5px 0px #00c8dc;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.note-item:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 8px 8px 0px #00b4c8;
+}
+
+/* Ссылка "View All Notes" */
+.notes-preview a {
+    text-align: center;
+    color: #1a1a1a;
+    font-weight: bold;
+    text-decoration: none;
+    margin-top: 10px;
+    transition: all 0.2s ease;
+}
+
+.notes-preview a:hover {
+    color: #00c8dc;
+    text-decoration: underline;
+}
+/* Общий контейнер для всей страницы */
+.main-page-container {
+  display: flex;
+  flex-direction: column; /* Элементы встанут друг под друга */
+  align-items: center;    /* Центрирование по горизонтали */
+  width: 100%;
+  gap: 40px;             /* Отступ между прогрессом и дневником */
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Убедитесь, что progressDiv не ограничивает ширину слишком сильно */
+.progressDiv {
+  width: 100%;
+  max-width: 900px; /* Совпадать с max-width дневника для красоты */
+  margin: 0 auto;
 }

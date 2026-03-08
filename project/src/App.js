@@ -35,6 +35,7 @@ import Achievements from './Pages/Achievements/Achievements';
 import Exercises from './Pages/Exercises/Exercises';
 import AssistantPage from './Pages/AssistantPage/AssistantPage'
 import FatsecretPage from './Pages/FatsecretPage/FatsecretPage';
+import NotesPage from './Pages/NotesPage/NotesPage';
 function App() {
 
     const dispatch = useDispatch();
@@ -94,6 +95,7 @@ function App() {
         <Route path='/technique' element={<Exercises/>}/>
         <Route path='/assistant' element={<AssistantPage/>}/>
         <Route path='/fatsecret' element={<FatsecretPage/>}/>
+        <Route path="/notes" element={<NotesPage/>}/>
       </Routes>
       <Footer/>
    </BrowserRouter>

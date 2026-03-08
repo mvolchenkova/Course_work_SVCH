@@ -1,29 +1,390 @@
-.blockName{
-    font-size: 2.5em;
-    font-weight: bold;
-}
-.blockText{
-    font-size: 1.5em;
-}
-.AboutSiteBlock{
-    display: flex;
-    width: 80%;
-    align-items:center;
-    gap: 30px;
-}
-.AboutSiteDiv{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin-top: 100px;
-    margin-bottom: 100px;
-}
-.runGirlImg, .cookGirlImg{
-    width: 50%;
-    height:fit-content
+:root {
+    --accent-blue: #00c8dc;
+    --dark-main: #1a1a1a;
+    --gold: #ffd700;
+    --white: #ffffff;
+    --gray-bg: #f4f7f6;
 }
 
+/* Основная секция */
+.reviews-section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 60px 0;
+}
+
+/* Слайдер и навигация */
+.slider-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 95%;          /* Было 100% */
+    max-width: 1200px;   /* Увеличили с 800px, чтобы влезло 3 карточки */
+    gap: 10px;
+    position: relative;
+}
+
+.reviews-viewport {
+    width: 100%;
+    overflow: hidden;
+    padding: 20px 0 40px 0;
+}
+
+.reviews-track {
+    display: flex;
+    transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.review-slide {
+    padding: 0 15px; 
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+}
+
+/* Карточка в стиле Progress */
+.review-card-styled {
+    background: var(--white);
+    border: 3px solid var(--dark-main);
+    border-radius: 25px;
+    padding: 20px; /* Уменьшили для экономии места */
+    width: 100%;
+    max-width: 320px; 
+    box-shadow: 8px 8px 0px var(--accent-blue);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    min-height: 350px; /* Увеличили высоту, чтобы форма ответа влезла внутрь */
+    box-sizing: border-box;
+}
+
+.review-card-styled:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: 16px 16px 0px var(--accent-blue);
+}
+
+/* Звезды и текст */
+.review-rating {
+    font-size: 1.2rem;
+    letter-spacing: 5px;
+    user-select: none;
+}
+
+.review-text-content {
+    font-size: 1rem;     /* Было 1.2rem */
+    line-height: 1.4;
+    color: var(--dark-main);
+    font-weight: 500;
+    margin: 0;
+    word-break: break-all;
+}
+
+.review-author {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    flex-direction: row;
+}
+
+.author-avatar {
+    width: 45px;
+    height: 45px;
+    background: var(--gray-bg);
+    border: 2px solid var(--dark-main);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+}
+
+/* Кнопки навигации */
+.nav-btn {
+    flex-shrink: 0;
+    background: var(--dark-main);
+    color: var(--accent-blue);
+    border: none;
+    width: 45px;
+    height: 45px;
+    border-radius: 20px;
+    font-size: 2rem;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 0;
+}
+
+.nav-btn:hover {
+    background: var(--accent-blue);
+    color: var(--white);
+    transform: scale(1.1);
+}
+
+.nav-btn:active { transform: scale(0.95); }
+
+/* Индикаторы */
+.slider-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20px;
+    overflow: hidden;}
+
+.dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid var(--dark-main);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.dot.active {
+    background: var(--accent-blue);
+    width: 35px;
+    border-radius: 10px;
+}
+
+/* Форма добавления */
+.add-review-styled {
+    background: var(--white);
+    border: 3px solid var(--dark-main);
+    border-radius: 40px;
+    padding: 35px;
+    width: 100%;
+    max-width: 600px;
+    box-shadow: 15px 15px 0px var(--dark-main);
+}
+
+.review-input-styled {
+    width: stretch;
+    border: 3px solid var(--dark-main);
+    border-radius: 20px;
+    padding: 15px 20px;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 1rem;
+    outline: none;
+    transition: background 0.2s;
+}
+
+.review-input-styled:focus {
+    background: #f0faff;
+}
+
+.star-picker {
+    font-size: 2rem;
+    cursor: pointer;
+    color: #ddd;
+    transition: color 0.2s, transform 0.2s;
+    display: inline-block;
+}
+
+.star-picker:hover { transform: scale(1.2); }
+.star-picker.gold { color: var(--gold); }
+
+/* Кнопка как в Progress */
+.submit-review-btn {
+    background: var(--dark-main);
+    color: var(--accent-blue);
+    padding: 15px 35px !important;
+    border-radius: 20px !important;
+    font-weight: 900 !important;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 1rem !important;
+    border: none;
+    cursor: pointer;
+}
+
+.submit-review-btn:hover {
+    background: var(--accent-blue) !important;
+    color: var(--white) !important;
+}
+.admin-answer-box {
+    background: rgba(255, 255, 255, 0.1);
+    border-left: 3px solid #ffd700; /* Золотистая полоска */
+    margin: 15px 0;
+    padding: 10px;
+    border-radius: 4px;
+    text-align: left;
+}
+
+.admin-label {
+    font-size: 0.7rem;
+    font-weight: bold;
+    color: #ffd700;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.admin-answer-text {
+    font-style: italic;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.admin-reply-form {
+    display: flex;
+    flex-direction: column; /* Всегда в колонку внутри маленькой карточки */
+    gap: 8px;
+    margin-top: auto; /* Прижимаем к низу карточки */
+    padding-top: 10px;
+    border-top: 2px dashed var(--dark-main);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.admin-input {
+   width: 100%;
+    box-sizing: border-box;
+    font-size: 0.8rem;
+    padding: 8px;
+}
+
+.admin-send-btn {
+    background: #ffd700;
+    color: black;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.7rem;
+    font-weight: bold;
+}
+
+.admin-send-btn:hover {
+    background: #fff;
+}
+
+/* --- АДАПТИРОВАННЫЙ БЛОК ОТВЕТА АДМИНА --- */
+.admin-answer-box {
+    background: var(--gray-bg);
+    border: 3px solid var(--dark-main);
+    margin: 20px 0 10px 0;
+    padding: 20px;
+    border-radius: 20px;
+    text-align: left;
+    position: relative;
+    /* Сдвинутая тень, как у карточек, но чуть меньше */
+    box-shadow: 6px 6px 0px var(--accent-blue); 
+}
+
+/* Маленький декоративный хвостик, чтобы было похоже на бабл сообщения */
+.admin-answer-box::before {
+    content: '';
+    position: absolute;
+    top: -12px;
+    left: 20px;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid var(--dark-main);
+}
+
+.admin-label {
+    font-size: 0.8rem;
+    font-weight: 900;
+    color: var(--dark-main);
+    display: block;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: var(--accent-blue);
+    width: fit-content;
+    padding: 2px 8px;
+    border-radius: 5px;
+}
+
+.admin-answer-text {
+    font-style: normal; /* В брутализме лучше смотрится прямой жирный шрифт */
+    font-size: 1rem;
+    color: var(--dark-main);
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* --- АДАПТИРОВАННАЯ ФОРМА ОТВЕТА ДЛЯ АДМИНА --- */
+.admin-reply-form {
+    display: flex;
+    flex-direction: column; /* На узких карточках лучше в колонку */
+    gap: 12px;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 2px dashed var(--dark-main);
+}
+
+.admin-input {
+    flex: 1;
+    background: var(--white);
+    border: 3px solid var(--dark-main);
+    color: var(--dark-main);
+    padding: 12px 15px;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.admin-input:focus {
+    background: var(--gray-bg);
+    box-shadow: 4px 4px 0px var(--accent-blue);
+}
+
+.admin-send-btn {
+    background: var(--accent-blue);
+    color: var(--dark-main);
+    border: 3px solid var(--dark-main);
+    padding: 10px 20px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    align-self: flex-end; /* Кнопка справа */
+}
+
+.admin-send-btn:hover {
+    background: var(--white);
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0px var(--dark-main);
+}
+
+.admin-send-btn:active {
+    transform: translate(0, 0);
+    box-shadow: 0px 0px 0px var(--dark-main);
+}
+.rev{
+    position: relative;
+    padding: 15px;
+    width: 100%;
+    margin-bottom: 20px;
+
+}
+.rev__limit{
+    position: absolute;
+    right: 30px;
+    bottom: 25px;
+}
+
+/* Дополнительная правка для отзывчивости внутри карточки */
+@media (min-width: 600px) {
+    .admin-reply-form {
+        flex-direction: row; /* На широких экранах в один ряд */
+    }
+}
 @media (max-width: 1000px) {
     .blockName{
         font-size: 1.3em;
@@ -57,5 +418,16 @@
     }
     .AboutSiteDiv{
         margin-top: 0px;
+    }
+}
+@media (max-width: 1000px) {
+    .slider-container {
+        max-width: 800px;
+    }
+}
+
+@media (max-width: 650px) {
+    .slider-container {
+        max-width: 400px;
     }
 }

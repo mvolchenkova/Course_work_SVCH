@@ -35,6 +35,10 @@ const adviceRouter = require('./routes/adviceRouter')
 const chatRouter = require('./routes/chatRouter')
 const exerciseRouter = require('./routes/exerciseRouter')
 const calorieRouter = require('./routes/calorieRouter')
+const productRouter = require('./routes/productRouter')
+const mealLogRouter = require('./routes/mealLogRouter')
+const reviewRouter = require('./routes/reviewRouter')
+const weightRouter = require('./routes/weightRouter')
 
 const app = express();
 // app.use(cors());
@@ -58,7 +62,11 @@ app.use('/api/questions', questionRouter)
 app.use('/api/advices', adviceRouter)
 app.use('/api/chat', chatRouter )
 app.use('/api/exercises', exerciseRouter)
-app.use('/api/calories', calorieRouter)
+app.use('/api/calorie', calorieRouter)
+app.use('/api/products', productRouter)
+app.use('/api/mealLogs', mealLogRouter)
+app.use('/api/reviews', reviewRouter)
+app.use('/api/weights', weightRouter)
 
 
 app.use('/api', router);
@@ -70,7 +78,7 @@ const start = async () => {
   try {
       await sequelize.authenticate();
       console.log('Соединение с базой данных успешно!');
-      await sequelize.sync(); 
+      await sequelize.sync({ alter: true })
       app.listen(PORT, () => {
           console.log(`Server running at http://localhost:${PORT}`);
       });

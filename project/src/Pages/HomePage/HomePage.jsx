@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import Toolbar from '../../Components/Toolbar/Toolbar.jsx';
 import Progress from '../../Components/Progress/Progress.jsx';
 import '../HomePage/HomePage.css';
+import WeightDiary from '../../Components/WeightDiary/WeightDiary.jsx'
 
 export default function HomePage() {
     const scrollableRef = useRef(null);
@@ -29,7 +30,9 @@ export default function HomePage() {
                 <div className="progressDiv">
                     <Progress />
                 </div>
+                
             </div>
+             <WeightDiary/>
         </div>
     );
 }

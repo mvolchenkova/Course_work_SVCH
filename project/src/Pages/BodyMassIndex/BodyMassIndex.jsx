@@ -29,7 +29,7 @@ export default function BodyMassIndex() {
     };
 
     return (
-        <main className='bodyMassIndexMain smalle'>
+        <main className='bodyMassIndexMain artika'>
             <p className='bmiTitle'>{t('bmi_main_title')}</p>
             
             <div className="BMIinfo">

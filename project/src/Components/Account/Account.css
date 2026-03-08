@@ -1,74 +1,287 @@
-.accMain{
+
+
+/* Main Container */
+.account-page {
     display: flex;
-    align-items: center;
     justify-content: center;
+    padding: 40px 20px;
 }
-.accDiv1{
-    display: flex;
-    flex-direction: row;
-    align-items:center;
-    justify-content: center;
+
+.account-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 30px;
+    width: 100%;
+    max-width: 1200px;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
-.profileImageAcc{
-    width: 100px;
+
+/* Left Panel - Profile Section */
+.profile-aside-large {
+    background-color: #f8f5fe;
+    padding: 25px;
+    border-radius: 15px;
+    text-align: center;
 }
-.nameSurname{
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
+
+.avatar-wrapper {
+    position: relative;
+    margin-bottom: 20px;
 }
-.acc{
-    display: flex;
-    flex-direction: column;
-    align-items:center;
-    justify-content: center;
-    gap: 40px;
+
+.main-avatar-large {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
 }
-.otherInfo{
-    display: flex;
-    flex-direction: column;
-    align-items:center;
+
+.main-avatar-large:hover {
+    transform: scale(1.05);
 }
-.otherInfo>p{
-    margin: 5px;
-    font-size: 1.2em;
+
+.blocked-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #9b4dca;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
 }
-.accButtons{
-    display: flex;
-    flex-direction: row;
+
+.aside-info {
+    margin-top: 15px;
+}
+
+.user-fullname {
+    font-size: 24px;
+    font-weight: 600;
+    color: #4c2c92;
+}
+
+.role-tag {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 15px;
+    font-size: 14px;
+    border-radius: 20px;
+    background-color: #8e44ad;
+    color: #fff;
+}
+
+.registration-date {
+    font-size: 14px;
+    margin-top: 12px;
+    color: #7a7a7a;
+}
+
+.btn-change-pass-main {
+    margin-top: 25px;
+    padding: 12px 25px;
+    background-color: #9b4dca;
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-change-pass-main:hover {
+    background-color: #7e33a1;
+}
+
+/* Right Panel - Profile Details */
+.profile-details-expanded {
+    padding: 25px;
+    background-color: #f5f3fb;
+    border-radius: 15px;
+}
+
+.details-card {
+    margin-bottom: 20px;
+}
+
+.card-header h2 {
+    font-size: 22px;
+    font-weight: 500;
+    margin-bottom: 12px;
+    color: #4c2c92;
+}
+
+.header-line {
+    width: 50px;
+    height: 3px;
+    background-color: #9b4dca;
+    margin-bottom: 12px;
+}
+
+.details-grid-large {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 20px;
-    font-family: 'Pixelify Sans';
 }
-.deleteAccBut{
-    background-color: rgba(234, 35, 91, 0.37);
+
+.detail-box {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.3s ease;
 }
-.modal {
+
+.detail-box:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.detail-label {
+    font-size: 15px;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.detail-value {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+}
+
+.diploma-text {
+    font-size: 14px;
+    color: #9b4dca;
+}
+
+.full-width {
+    grid-column: span 2;
+}
+
+/* Modal Styles */
+.modal-backdrop {
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 1000;
 }
 
-.modalContent {
-    background-color: white;
+.modal-box {
+    background-color: #fff;
+    width: 380px;
+    border-radius: 12px;
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    background-color: #9b4dca;
+    color: #fff;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+.modal-body {
     padding: 20px;
-    border-radius: 8px;
-    text-align: center;
-}
-input{
-    width: 90%;
 }
 
-@media(max-width: 450px){
-    .accMain{
-        font-size: 0.8em;
+.input-group {
+    margin-bottom: 18px;
+}
+
+.input-group label {
+    font-size: 14px;
+    color: #444;
+    margin-bottom: 6px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    font-size: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.input-group input:focus {
+    border-color: #9b4dca;
+}
+
+.modal-footer {
+    padding: 15px;
+    display: flex;
+    justify-content: flex-end;
+    background-color: #f7f7f7;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+.btn-cancel-link {
+    background-color: #f1f1f1;
+    color: #333;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 30px;
+    margin-right: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-cancel-link:hover {
+    background-color: #e0e0e0;
+}
+
+.btn-save-prime {
+    background-color: #9b4dca;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-save-prime:hover {
+    background-color: #7e33a1;
+}
+
+/* Keyframe for Modal Fade-in */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.9);
     }
-    .profileImageAcc{
-        width: 60px;
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .account-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-aside-large,
+    .profile-details-expanded {
+        margin-bottom: 30px;
+    }
+
+    .details-grid-large {
+        grid-template-columns: 1fr;
     }
 }

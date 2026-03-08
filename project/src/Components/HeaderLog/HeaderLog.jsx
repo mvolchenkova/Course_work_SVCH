@@ -45,7 +45,7 @@ export default function HeaderLog() {
                 {currentUser ? (
                     <>
                         {/* Переключатель языка */}
-                        <button className="langSwitcher smalle" onClick={toggleLanguage}>
+                        <button className="langSwitcher" onClick={toggleLanguage}>
                             {i18n.language === 'en' ? 'EN' : 'RU'}
                         </button>
 
@@ -66,10 +66,10 @@ export default function HeaderLog() {
                         )}
 
                         <Link to='/account'>
-                            <span className="userName smalle">{currentUser.name}</span>
+                            <span className="userName">{currentUser.name}</span>
                         </Link>
                         
-                        <button className="logoutButton smalle" onClick={handleLogout}>
+                        <button className="logoutButton" onClick={handleLogout}>
                             {t('logout')}
                         </button>
                     </>

@@ -7,6 +7,7 @@ const taskRouter = require('./taskRouter')
 const recipeRouter = require('./recipeRouter')
 const articleRouter = require('./acrticleRouter')
 const exerciseRouter = require('./exerciseRouter')
+const reviewRouter = require('./reviewRouter')
 
 router.use('/tplans', tplanRouter)
 router.use('/users', userRouter)
@@ -15,6 +16,7 @@ router.use('/tasks', taskRouter)
 router.use('/recipes', recipeRouter)
 router.use('/articles', articleRouter)
 router.use('/exercises', exerciseRouter)
+router.use('/reviews', reviewRouter)
 
 router.get('/health', (req, res) => {
     res.status(200).json({

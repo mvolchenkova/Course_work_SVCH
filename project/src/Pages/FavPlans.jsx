@@ -62,7 +62,7 @@ export default function FavPlans() {
                         <p>Loading plans...</p>
                     ) : plans ? (
                         plans.map(plan => (
-                            <div key={plan.idTplan} className="planData smalle">
+                            <div key={plan.idTplan} className="planData artika">
                                 <Link to='/plan' key={plan.idTplan} onClick={() => handlePlanClick(plan)} style={{ textDecoration: 'none' }}>
                                     <img src={`http://localhost:5000/${plan.img}`} alt={plan.title} className="planImg" />
                                     <div className="planText">

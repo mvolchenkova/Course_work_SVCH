@@ -13,8 +13,8 @@ export default function StartPlanning() {
 
     return (
         <div className="startPlanningDiv">
-            <p className="changeTitle smalle">{t('start_planning_title')}</p>
-            <p className="changeText smalle">
+            <p className="changeTitle">{t('start_planning_title')}</p>
+            <p className="changeText">
                 {t('start_planning_text')}
             </p>
             

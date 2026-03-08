@@ -55,8 +55,8 @@ i18n
         "about_workout_text": "Unleash your full potential by customizing workouts that suit your fitness goals and preferences. Whether you're aiming to build strength, improve endurance, or simply stay active, our workout tracker empowers you to select routines that resonate with your body and spirit. From high-intensity interval training to calming yoga flows, the diverse range of exercises caters to all levels of expertise. Embrace the freedom to curate a fitness regimen that not only challenges you but also inspires you to push beyond your limits.",
         "about_nutrition_title": "Nutritious Recipes for Fuel",
         "about_nutrition_text": "Elevate your fitness journey with a collection of nutritious recipes designed to fuel your body for optimal performance. Explore a variety of dishes that blend taste and health, providing the essential nutrients needed to support your active lifestyle. From protein-packed smoothie bowls to energy-boosting snacks, these recipes are crafted to keep you energized and satisfied throughout the day. Embrace the art of mindful eating and discover how the right balance of nutrients can enhance your workouts and contribute to your overall well-being.",
-        "start_planning_title": "CHANGE YOUR LIFESTYLE NOW",
-        "start_planning_text": "You deserve to be the best version of yourself. Let's create this miracle together! Keep moving forward, never stop, and one day you'll look in the mirror and see your proudest victory staring back at you – the victory over yourself.",
+        "start_planning_title": "TRACK YOUR ACTIVITY",
+        "start_planning_text": "An easy way to track your workouts, set goals and see your progress every day",
         "btn_start_planning": "START PLANNING",
         "total_xp": "TOTAL XP",
         "this_week": "this week",
@@ -152,7 +152,8 @@ i18n
         "bmi_recomm_1": "If the indicator is less than 18.5, increase daily calories by 300-500 kcal.",
         "bmi_recomm_2": "With a BMI over 25, reduce daily calorie intake by 500 kcal.",
         "bmi_recomm_3": "For values over 40, a doctor may recommend a reduction of 700 kcal or more.",
-        "alert_bmi_error": "Please enter a valid weight and height."
+        "alert_bmi_error": "Please enter a valid weight and height.",
+        "Calories_calc":"Calories calculator"
         }
       },
       ru: {
@@ -203,8 +204,8 @@ i18n
         "about_workout_text": "Раскройте свой потенциал, настраивая тренировки в соответствии с вашими фитнес-целями и предпочтениями. Наш трекер позволяет выбирать программы, которые подходят именно вашему телу и духу — будь то силовые тренировки, развитие выносливости или просто поддержание активности. От высокоинтенсивных интервальных тренировок до успокаивающей йоги — разнообразие упражнений подходит для любого уровня подготовки. Создайте свой режим тренировок, который будет не только бросать вам вызов, но и вдохновлять на новые достижения.",
         "about_nutrition_title": "Питательные рецепты для вашей энергии",
         "about_nutrition_text": "Сделайте свой путь к фитнесу эффективнее с коллекцией полезных рецептов, созданных для оптимальной работы вашего организма. Откройте для себя разнообразие блюд, в которых сочетаются вкус и польза, обеспечивая вас необходимыми нутриентами для активного образа жизни. От протеиновых смузи-боулов до перекусов, заряжающих энергией — эти рецепты помогут вам чувствовать себя бодрыми и сытыми в течение всего дня. Постигните искусство осознанного питания и узнайте, как правильный баланс веществ улучшает результаты тренировок и общее самочувствие.",
-        "start_planning_title": "ИЗМЕНИ СВОЙ ОБРАЗ ЖИЗНИ ПРЯМО СЕЙЧАС",
-        "start_planning_text": "Вы заслуживаете того, чтобы быть лучшей версией себя. Давайте сотворим это чудо вместе! Двигайтесь только вперед, никогда не останавливайтесь, и однажды вы посмотрите в зеркало и увидите свою самую гордую победу — победу над собой.",
+        "start_planning_title": "ОТСЛЕЖИВАЙ СВОЮ АКТИВНОСТЬ",
+        "start_planning_text": "Простой способ следить за тренировками, ставить цели и видеть свой прогресс каждый день",
         "btn_start_planning": "НАЧАТЬ ПЛАНИРОВАНИЕ",
         "total_xp": "ОБЩИЙ ОПЫТ",
         "this_week": "на этой неделе",
@@ -300,7 +301,8 @@ i18n
         "bmi_recomm_1": "Если показатель меньше 18.5, рекомендуется увеличить калорийность на 300-500 ккал.",
         "bmi_recomm_2": "При ИМТ выше 25, калорийность стоит снизить на 500 ккал.",
         "bmi_recomm_3": "При значениях выше 40 врач может рекомендовать снижение на 700 ккал и более.",
-        "alert_bmi_error": "Пожалуйста, введите корректные данные веса и роста."
+        "alert_bmi_error": "Пожалуйста, введите корректные данные веса и роста.",
+        "Calories_calc":"Калькулятор калорий"
           
         }
       }

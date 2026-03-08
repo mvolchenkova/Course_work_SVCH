@@ -1,10 +1,13 @@
 import '../Progress/Progress.css';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { updateUserThunk } from '../../slices/userSlice'; 
+import { updateUserThunk, fetchNotesThunk, addNoteThunk } from '../../slices/userSlice'; 
 import ProgressBar from "@ramonak/react-progress-bar";
 import AddActivityModal from '../AddActivityModal/AddActivityModal';
 import i18n from '../../i18n';
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import WeightDiary from '../WeightDiary/WeightDiary';
 
 export default function Progress() {
    const t = (key) => i18n.t(key);
@@ -16,6 +19,8 @@ export default function Progress() {
     const [totalPoints, setTotalPoints] = useState(0); // Общие баллы (опыт)
     const [achievements, setAchievements] = useState([]); // Разблокированные ачивки
     const [isModalOpen, setModalOpen] = useState(false);
+    const notes = useSelector(state => state.users.notes);
+    const [noteText, setNoteText] = useState('');
 
     // Константы наград
     const POINTS_PER_STEP = 10;
@@ -33,6 +38,12 @@ export default function Progress() {
 
         checkWeeklyReset();
     }, []);
+
+    useEffect(() => {
+    if (userId) {
+        dispatch(fetchNotesThunk(userId));
+    }
+    }, [dispatch, userId]);
 
     // --- ЛОГИКА ЕЖЕНЕДЕЛЬНОГО СБРОСА ---
     const checkWeeklyReset = () => {
@@ -142,6 +153,11 @@ export default function Progress() {
         i18n.changeLanguage(lng);
     };
 
+    const handleAddNote = () => {
+        if (!noteText.trim()) return;
+        dispatch(addNoteThunk({ userId, text: noteText }));
+        setNoteText('');
+    };
     return (
         <div className="progressDiv">
             {/* Header: Общий уровень и очки */}
@@ -179,7 +195,7 @@ export default function Progress() {
                             <div className="icon-box">
                                 {act.current >= act.aim ? '🔥' : '⚡'}
                             </div>
-                            <h3 className="smalle">{t(`activity_${act.title.replace(/\s+/g, '_')}`)}</h3>
+                            <h3>{t(`activity_${act.title.replace(/\s+/g, '_')}`)}</h3>
                         </div>
                         
                         <button 
@@ -225,6 +241,29 @@ export default function Progress() {
                  {t('add_new_goal')}
             </button>
 
+            <div className="notes-preview">
+                <h3>Notes</h3>
+
+                <textarea
+                    value={noteText}
+                    onChange={(e) => setNoteText(e.target.value)}
+                    placeholder="Write a note..."
+                />
+
+                <button onClick={handleAddNote}>Save</button>
+
+                {/* Всегда отображаем последние 2 заметки (если есть) */}
+                {notes.length > 0 && notes.slice(-2).map(note => (
+                    <div key={note.id} className="note-item">
+                        {note.text}
+                    </div>
+                ))}
+
+                {/* Ссылка на страницу всех заметок */}
+                <Link to="/notes" className="view-all-notes">
+                    View All Notes
+                </Link>
+            </div>
             
             <AddActivityModal 
                 isOpen={isModalOpen} 
@@ -232,5 +271,6 @@ export default function Progress() {
                 onAdd={addNewActivity} 
             /> 
         </div>
+        
     );
 }

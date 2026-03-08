@@ -15,26 +15,26 @@ export default function Footer(){
                 </div>
                 <div className="footerBlocks">
                     <div className="contact">
-                        <div className="contactBlock smalle">
+                        <div className="contactBlock">
                             <a href="https://t.me/hhrnyy" target="_blank" rel="noopener noreferrer" className='contactLink'>
                                 <img src="data/images/footerTG.svg" alt="Telegram" />
                                 <p>hhrnyy</p>
                             </a>
                         </div>
-                        <div className="contactBlock smalle">
+                        <div className="contactBlock">
                             <a href="mailto:mvolchenkova7@gmail.com" target="_blank" rel="noopener noreferrer" className='contactLink'>
                                 <img src="data/images/footerMAIL.svg" alt="Email" />
                                 <p>mvolchenkova7@gmail.com</p>
                             </a>
                         </div>
-                        <div className="contactBlock smalle">
+                        <div className="contactBlock">
                             <a href="https://instagram.com/hhoornyyy" target="_blank" rel="noopener noreferrer" className='contactLink'>
                                 <img src="data/images/footerINST.svg" alt="Instagram" />
                                 <p>hhoornyyy</p>
                             </a>
                         </div>
                     </div>
-                    <div className="smalle footerLinks">
+                    <div className="footerLinks">
                         <Link to="/ask">Ask a question</Link>
                         {role === 'user' && (
                             <Link to="/becomecoach">Become a coach</Link>

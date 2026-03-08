@@ -62,7 +62,7 @@ export default function FavRecipes() {
                     ) : (
                         recipes ? (
                             recipes.map(recipe => (
-                                <div key={recipe.idRecipe} className="planData smalle">
+                                <div key={recipe.idRecipe} className="planData artika">
                                     <Link to='/recipe' key={recipe.idRecipe} onClick={() => handleRecipeClick(recipe)} style={{ textDecoration: 'none' }}>
                                         <img src={`http://localhost:5000/${recipe.img}`} alt={recipe.title} className="planImg" />
                                         <div className="planText">

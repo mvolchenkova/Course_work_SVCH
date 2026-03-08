@@ -22,6 +22,10 @@ router.put('/becomeCoach/:id', userController.becomeCoach)
 router.patch('/:id/block', userController.block)
 router.put('/:id/addFavoritePlan', userController.addFavoritePlan)
 router.put('/:id/addFavoriteRecipe', userController.addFavoriteRecipe)
+router.get('/:userId/notes', userController.getUserNotes);
+router.post('/:userId/notes', userController.addUserNote);
+router.delete('/notes/:noteId', userController.deleteUserNote);
+router.put('/notes/:noteId', userController.updateUserNote);
 
 // , upload.single('file')
 module.exports = router

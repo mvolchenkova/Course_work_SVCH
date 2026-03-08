@@ -5,7 +5,7 @@ import { registerUser } from '../../slices/userSlice';
 import { useNavigate } from 'react-router-dom';
 import Checkbox from '@mui/material/Checkbox';
 import { Link } from 'react-router-dom';
-
+import axios from 'axios';
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
 export default function Registration() {
@@ -32,7 +32,7 @@ export default function Registration() {
             alert("Пароли не совпадают!");
             return;
         }
-
+        const response = await axios.post('/api/user/registration', formData);
         try {
             const userData = {
                 surname: formData.surname,
@@ -55,7 +55,8 @@ export default function Registration() {
             localStorage.setItem('userId', result.idUser);
             localStorage.setItem('favPlans', [])
             localStorage.setItem('favRecipes', [])
-            localStorage.setItem('user', JSON.stringify(userData))
+            localStorage.setItem('user', JSON.stringify(response.data));
+            // localStorage.setItem('user', JSON.stringify(userData))
             navigate('/homePage')
         } catch (error) {
             console.error('Ошибка при регистрации:', error);
@@ -64,7 +65,7 @@ export default function Registration() {
     };
 
     return (
-        <div className="regAuthDiv smalle">
+        <div className="regAuthDiv">
             <img src="data/images/regBoy.png" alt="Registration" className="regImg" />
             <form className="regAuthForm" onSubmit={handleSubmit}>
                 <h2>Registration</h2>
@@ -103,7 +104,7 @@ export default function Registration() {
                     <input type="text" id="sex" value={formData.sex} onChange={handleChange} required />
                 </div>
 
-                <button type="submit" className="btnReg smalle">Registration</button>
+                <button type="submit" className="btnReg">Registration</button>
                 <div className='checkboxDiv'>
                     <Checkbox {...label} />
                     <p>I agree to the terms of <Link to="/userAgreement"><span className="yellowText">USER AGREEMENT</span></Link></p>

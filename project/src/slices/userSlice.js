@@ -5,6 +5,7 @@ const initialState = {
     users: [],
     favPlans: [],
     favRecipes: [],
+    notes: [],
     loading: false,
     currentUser: null,
     error: null,
@@ -93,6 +94,31 @@ export const addFavoriteRecipe = createAsyncThunk('api/users/:id/addFavoriteReci
 //     const response = await axios.get(`${process.env.REACT_APP_API_URL}/users/${userId}/favoritePlans`);
 //     return response.data;
 // });
+export const fetchNotesThunk = createAsyncThunk('user/fetchNotes', async (userId) => {
+    const response = await axios.get(`http://localhost:5000/api/users/${userId}/notes`);
+    return response.data;
+  }
+);
+
+export const addNoteThunk = createAsyncThunk('user/addNote', async ({ userId, text }) => {
+    const response = await axios.post(`http://localhost:5000/api/users/${userId}/notes`, { text });
+    return response.data;
+  }
+);
+
+export const deleteNoteThunk = createAsyncThunk('user/deleteNote', async (noteId) => {
+    await axios.delete(`http://localhost:5000/api/users/notes/${noteId}`);
+    return noteId;
+  }
+);
+
+export const updateNoteThunk = createAsyncThunk(
+  'user/updateNote',
+  async ({ noteId, text }) => {
+    const response = await axios.put(`http://localhost:5000/api/users/notes/${noteId}`, { text });
+    return response.data;
+  }
+);
 
 const userSlice = createSlice({
     name: 'users',
@@ -186,7 +212,15 @@ const userSlice = createSlice({
              .addCase(addFavoriteRecipe.fulfilled, (state, action) => {
                 state.currentUser = action.payload;
              })
-            
+            .addCase(fetchNotesThunk.fulfilled, (state, action) => {
+                state.notes = action.payload;
+            })
+            .addCase(addNoteThunk.fulfilled, (state, action) => {
+                state.notes.unshift(action.payload);
+            })
+            .addCase(deleteNoteThunk.fulfilled, (state, action) => {
+                state.notes = state.notes.filter(n => n.id !== action.payload);
+            });
     },
 });
 

@@ -188,4 +188,4 @@ export default function NestedList() {
 
 // Вынес стили для чистоты кода
 const listStyle = { width: '100%', maxWidth: 360, bgcolor: 'rgb(0, 200, 220)', borderRadius: '30px', marginTop: '10px', margin: '10px 0' };
-const textStyle = { fontFamily: 'smalle', margin: 0 };
+const textStyle = { fontFamily: 'artika', margin: 0 };

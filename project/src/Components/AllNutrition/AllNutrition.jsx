@@ -78,7 +78,7 @@ export default function AllNutrition() {
 
     return (
         <main className="allplansMain">
-            <p className="smalle allPlansTitle">
+            <p className="allPlansTitle">
                 Lose weight, gain weight or always stay in shape - choose what's right for you!
             </p>
             
@@ -98,7 +98,7 @@ export default function AllNutrition() {
                         <p>Loading recipes...</p>
                     ) : filteredRecipes ? (
                         filteredRecipes.map(recipe => (
-                            <div key={recipe.idRecipe} className="planData smalle">
+                            <div key={recipe.idRecipe} className="planData">
                                 <Link to='/recipe' key={recipe.idRecipe} onClick={() => handleRecipeClick(recipe)} style={{ textDecoration: 'none' }}>
                                     <img src={`http://localhost:5000/${recipe.img}`} alt={recipe.title} className="planImg" />
                                     <div className="planText">
