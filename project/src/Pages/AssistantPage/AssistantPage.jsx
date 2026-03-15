@@ -93,11 +93,12 @@ export default function AssistantPage() {
         {/* ОБОРУДОВАНИЕ */}
         <FormControl fullWidth>
           <InputLabel>{t('plan_equipment')}</InputLabel>
-          <Select name="equipment" value={planData.equipment} label={t('plan_equipment')} onChange={handlePlanInputChange}>
-            <MenuItem value="gym">{t('eq_gym')}</MenuItem>
-            <MenuItem value="home">{t('eq_dumbbells')}</MenuItem>
-            <MenuItem value="minimal">{t('eq_nothing')}</MenuItem>
-          </Select>
+          <MenuItem value="gym">{t('eq_gym')}</MenuItem>
+          <MenuItem value="dumbbells_barbell">{t('eq_dumbbells_barbell')}</MenuItem>
+          <MenuItem value="dumbbells">{t('eq_dumbbells')}</MenuItem>
+          <MenuItem value="barbell">{t('eq_barbell')}</MenuItem>
+          <MenuItem value="fitnessband">{t('eq_band')}</MenuItem>
+          <MenuItem value="minimal">{t('eq_nothing')}</MenuItem>
         </FormControl>
 
         {/* КОЛИЧЕСТВО ТРЕНИРОВОК */}

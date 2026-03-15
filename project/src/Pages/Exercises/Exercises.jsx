@@ -131,9 +131,10 @@ const Exercises = () => {
             <label>Тип</label>
             <select name="type" value={filters.type} onChange={handleFilterChange}>
               <option value="">Все типы</option>
-              <option value="силовое">Силовое</option>
-              <option value="кардио">Кардио</option>
-              <option value="растяжка">Растяжка</option>
+              <option value="жимовое">Жимовое</option>
+              <option value="тяговое">Тяговое</option>
+              <option value="толчковое">Толчковое</option>
+              <option value="разводящее">Разводящее</option>
             </select>
           </div>
 
@@ -141,9 +142,12 @@ const Exercises = () => {
             <label>Оборудование</label>
             <select name="equipment" value={filters.equipment} onChange={handleFilterChange}>
               <option value="">Все</option>
-              <option value="gym">Тренажерный зал</option>
-              <option value="home">Домашние</option>
-              <option value="minimal">Минимум</option>
+              <option value="gym">Тренажёрный зал</option>
+              <option value="dumbbells_barbell">Дом: гантели + штанга</option>
+              <option value="dumbbells">Дом: только гантели</option>
+              <option value="barbell">Дом: только штанга</option>
+              <option value="fitnessband">Дом: только фитнес-резинки</option>
+              <option value="minimal">Свой вес</option>
             </select>
           </div>
         </div>

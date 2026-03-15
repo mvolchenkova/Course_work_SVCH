@@ -187,9 +187,12 @@ const ExerciseForm = ({ onSuccess, onCancel, exerciseToEdit }) => {
         <div className="form-group">
           <label>Оборудование</label>
           <select name="equipment" value={formData.equipment} onChange={handleInputChange}>
-            <option value="gym">Зал</option>
-            <option value="home">Дом</option>
-            <option value="minimal">Минимум</option>
+            <option value="gym">Тренажёрный зал</option>
+            <option value="dumbbells_barbell">Гантели + штанга</option>
+            <option value="dumbbells">Только гантели</option>
+            <option value="barbell">Только штанга</option>
+            <option value="fitnessband">Фитнес-резинки</option>
+            <option value="minimal">Свой вес</option>
           </select>
         </div>
       </div>

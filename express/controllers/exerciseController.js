@@ -11,6 +11,17 @@ const RESTRICTION_MAP = {
   'cardio': 'сердце'
 };
 const HEALTH_RESTRICTIONS = ['back', 'knees', 'shoulders', 'neck', 'elbows', 'cardio'];
+function getEquipmentFilter(equipment) {
+  const filters = {
+    'gym':               null,  // зал — доступно всё, фильтр не нужен
+    'fitnessband':       ['fitnessband', 'minimal'],
+    'dumbbells':         ['dumbbells', 'dumbbells_barbell', 'minimal'],
+    'barbell':           ['barbell',   'dumbbells_barbell', 'minimal'],
+    'dumbbells_barbell': ['dumbbells', 'barbell', 'dumbbells_barbell', 'minimal'],
+    'minimal':           ['minimal'],
+  };
+  return filters[equipment] ?? null;
+}
 class exerciseController {
  async create(req, res) {
   const t = await sequelize.transaction();
@@ -85,6 +96,7 @@ class exerciseController {
   }
 }
 
+
   async getAll(req, res) {
     try {
       let { page, limit, experience, type, equipment, search } = req.query;
@@ -97,7 +109,12 @@ class exerciseController {
       // Фильтры
       if (experience) where.experience = experience;
       if (type) where.type = type;
-      if (equipment) where.equipment = equipment;
+      if (equipment) {
+        const eqFilter = getEquipmentFilter(equipment);
+        if (eqFilter) where.equipment = { [Op.in]: eqFilter };
+        // если null (gym) — фильтр не добавляем, показываем всё
+      }
+
       if (search) {
         where.exName = { [Op.iLike]: `%${search}%` }; // iLike для регистронезависимого поиска
       }
@@ -165,8 +182,9 @@ async getRandomExercises(req, res) {
       experience: { [Op.in]: allowedLevels }
     };
 
-    if (userEquipment !== 'gym' && userEquipment !== '') {
-      whereCondition.equipment = userEquipment;
+    if (userEquipment) {
+      const eqFilter = getEquipmentFilter(userEquipment);
+      if (eqFilter) whereCondition.equipment = { [Op.in]: eqFilter };
     }
 
     const allExercisesRaw = await Exercise.findAll({

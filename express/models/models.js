@@ -273,6 +273,7 @@ const Exercise = sequelize.define('exercise', {
         type: DataTypes.STRING, 
         allowNull: true 
     },
+    technique:     { type: DataTypes.TEXT, allowNull: true },
 }, {
     tableName: 'exercises',
     timestamps: true

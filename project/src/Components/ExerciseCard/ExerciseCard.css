@@ -138,11 +138,17 @@
   margin-top: 15px;
 }
 
-.muscles-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
+.muscles-load-grid {
+  display: flex;
+  gap:40px;
+  flex-direction: column;
   margin-top: 10px;
+  margin-bottom: 40px;
+}
+.muscle-load-item{
+  display: flex;
+  flex-direction: column;
+  gap: 8px
 }
 
 .muscle-detail {
@@ -153,7 +159,12 @@
   border-radius: 6px;
   font-size: 13px;
 }
-
+.muscle-info{
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+}
 .load-value {
   color: #667eea;
   font-weight: 600;
@@ -163,7 +174,6 @@
   height: 8px;
   border-radius: 4px;
   flex-grow: 1;
-  margin: 0 10px;
   position: relative;
 }
 .load-bar {
