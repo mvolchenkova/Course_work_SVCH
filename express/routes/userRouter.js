@@ -1,8 +1,24 @@
-const Router = require('express')
-const router = new Router()
+const Router = require('express');
+const router = new Router();
 const multer = require('multer');
-const userController = require('../controllers/userController')
-const upload = multer({ dest: '/data/diplomas' });
+const path = require('path');
+const userController = require('../controllers/userController');
+
+// Настройка хранилища
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'public/uploads/avatars');
+    },
+    filename: (req, file, cb) => {
+        const ext = path.extname(file.originalname);
+        cb(null, `user_${req.body.userId}_${Date.now()}${ext}`);
+    }
+});
+
+const upload = multer({ storage });
+
+// Роут. Обратите внимание: метод контроллера передается вторым аргументом
+router.post('/upload-avatar', upload.single('avatar'), userController.uploadAvatar);
 
 router.post('/', userController.create)
 router.get('/', userController.getAll)
@@ -27,5 +43,5 @@ router.post('/:userId/notes', userController.addUserNote);
 router.delete('/notes/:noteId', userController.deleteUserNote);
 router.put('/notes/:noteId', userController.updateUserNote);
 
-// , upload.single('file')
+
 module.exports = router

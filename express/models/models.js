@@ -63,8 +63,8 @@ const User = sequelize.define('User', {
     trAim: { type: DataTypes.INTEGER, allowNull: true },
     finishedTr: { type: DataTypes.INTEGER, allowNull: true },
     lastTrainingDate: { type: DataTypes.DATE },
-    isBlocked: { type: DataTypes.BOOLEAN, defaultValue: false }
-    // favPlans и favRecipes УДАЛЕНЫ (теперь это отдельные таблицы)
+    isBlocked: { type: DataTypes.BOOLEAN, defaultValue: false },
+    avatar: { type: DataTypes.TEXT, allowNull: true }
 }, {
     timestamps: true,
     tableName: 'users',
@@ -251,24 +251,28 @@ const Exercise = sequelize.define('exercise', {
     },
     experience: { 
         type: DataTypes.STRING, 
-        allowNull: false // Новичок, Средний, Профи
+        allowNull: false 
     },
     baseIsolation: { 
         type: DataTypes.STRING, 
-        allowNull: false // База или Изоляция
+        allowNull: false 
     },
     type: { 
         type: DataTypes.STRING, 
-        allowNull: true // Силовое, Растяжка и т.д.
+        allowNull: true 
     },
     equipment: { 
         type: DataTypes.STRING, 
-        allowNull: true // Гантели, Штанга, Собственный вес
+        allowNull: true 
     },
     restrictions: { 
         type: DataTypes.STRING, 
         allowNull: true 
-    }
+    },
+    videoPath: { 
+        type: DataTypes.STRING, 
+        allowNull: true 
+    },
 }, {
     tableName: 'exercises',
     timestamps: true
@@ -312,7 +316,7 @@ const ExerciseMuscle = sequelize.define('exercise_muscle', {
         type: DataTypes.INTEGER, 
         allowNull: false,
         defaultValue: 0,
-        comment: 'Процент или коэффициент нагрузки на данную мышцу'
+        comment: 'коэффициент нагрузки на данную мышцу'
     },
     isPrimary: { 
         type: DataTypes.BOOLEAN, 
@@ -487,5 +491,7 @@ module.exports = {
     Product,
     MealLog, 
     Note,
-    Weight
+    Weight,
+    Muscle,
+    ExerciseMuscle
 };

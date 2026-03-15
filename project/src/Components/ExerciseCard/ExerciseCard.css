@@ -1,0 +1,174 @@
+/* src/components/ExerciseCard/ExerciseCard.css */
+.exercise-card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.exercise-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.exercise-card.expanded {
+  grid-column: span 1;
+  grid-row: span 1;
+}
+
+.exercise-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.exercise-card-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.exercise-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.badge.experience-0-6\ месяцев {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.badge.experience-6-18\ месяцев {
+  background: #e8f5e8;
+  color: #2e7d32;
+}
+
+.badge.experience-18\+\ месяцев {
+  background: #fff3e0;
+  color: #f57c00;
+}
+
+.badge.type-базовое {
+  background: #f3e5f5;
+  color: #7b1fa2;
+}
+
+.badge.type-изолирующее {
+  background: #ffebee;
+  color: #c2185b;
+}
+
+.exercise-card-preview {
+  margin-bottom: 12px;
+}
+
+.primary-muscles {
+  font-size: 14px;
+}
+
+.muscle-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.muscle-tag {
+  padding: 4px 10px;
+  background: #f0f0f0;
+  border-radius: 16px;
+  font-size: 12px;
+  color: #666;
+}
+
+.muscle-tag.more {
+  background: #e0e0e0;
+  font-weight: 600;
+}
+
+.exercise-card-details {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #eee;
+}
+
+.detail-row {
+  display: flex;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.detail-label {
+  width: 100px;
+  color: #666;
+}
+
+.restriction {
+  color: #c00;
+  font-weight: 500;
+}
+
+.technique {
+  margin: 15px 0;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.technique p {
+  margin-top: 8px;
+  color: #555;
+}
+
+.muscles-list {
+  margin-top: 15px;
+}
+
+.muscles-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.muscle-detail {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 10px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.load-value {
+  color: #667eea;
+  font-weight: 600;
+}
+.load-bar-container {
+  background: #eee;
+  height: 8px;
+  border-radius: 4px;
+  flex-grow: 1;
+  margin: 0 10px;
+  position: relative;
+}
+.load-bar {
+  height: 100%;
+  border-radius: 4px;
+}
+.load-bar.primary { background: #ff4757; }
+.load-bar.secondary { background: #2f3542; }

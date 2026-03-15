@@ -481,6 +481,31 @@ class UserController {
             res.status(500).json({ message: 'Error updating note' });
         }
     }
+
+    async uploadAvatar(req, res) {
+        try {
+            const { userId } = req.body;
+            const file = req.file;
+
+            if (!file) {
+                return res.status(400).json({ message: 'Файл не выбран' });
+            }
+
+            const avatarPath = `/uploads/avatars/${file.filename}`;
+
+            // Обновляем в БД
+            await User.update(
+                { avatar: avatarPath },
+                { where: { idUser: userId } }
+            );
+
+            // Возвращаем путь, чтобы фронтенд обновил состояние
+            return res.json({ avatar: avatarPath });
+        } catch (e) {
+            console.error(e);
+            return res.status(500).json({ message: 'Ошибка при сохранении аватара' });
+        }
+    }
 }
 
 module.exports = new UserController();

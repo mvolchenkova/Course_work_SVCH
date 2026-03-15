@@ -1,7 +1,7 @@
 import '../Account/Account.css';
 import { useDispatch } from 'react-redux'; 
-import { useState } from 'react';
-import { updateUserThunk } from '../../slices/userSlice';
+import { useState, useRef } from 'react';
+import { updateUserThunk, uploadAvatarThunk } from '../../slices/userSlice';
 import i18n from '../../i18n';
 
 export default function Account() {
@@ -11,7 +11,7 @@ export default function Account() {
     const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
-    
+    const fileInputRef = useRef(null);
     const currentUser = JSON.parse(localStorage.getItem('user'));
 
     const openChangePasswordModal = () => setIsChangePasswordOpen(true);
@@ -31,6 +31,33 @@ export default function Account() {
         }
     };
 
+   const handleAvatarUpload = async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        try {
+            // Вызываем санку
+            await dispatch(uploadAvatarThunk({ 
+                userId: currentUser.idUser, 
+                file 
+            })).unwrap();
+            
+            alert(t('avatar_success') || 'Фото обновлено');
+        } catch (error) {
+            alert(error || 'Ошибка при загрузке');
+        }
+    }
+};
+
+    // Определение источника картинки
+    const getAvatarSrc = () => {
+        if (currentUser?.avatar) {
+            // Если в БД есть путь к фото, берем его с сервера
+            return `http://localhost:5000${currentUser.avatar}`; 
+        }
+        // Иначе показываем дефолтные
+        return currentUser.sex === 'male' ? "/data/images/boyProfile.png" : "/data/images/girlProfile.png";
+    };
+
     const formatDate = (date) => date ? new Date(date).toLocaleDateString() : '—';
 
     return (
@@ -38,15 +65,30 @@ export default function Account() {
             <div className="account-grid expanded">
                 {currentUser ? (
                     <>
-                        {/* ЛЕВАЯ ПАНЕЛЬ: Увеличенный акцент на профиле */}
                         <aside className="profile-aside-large">
-                            <div className="avatar-wrapper">
+                            {/* Обертка аватара теперь кликабельна */}
+                            <div 
+                                className="avatar-wrapper" 
+                                onClick={() => fileInputRef.current.click()} 
+                                style={{ cursor: 'pointer', position: 'relative' }}
+                                title="Изменить фото"
+                            >
                                 <img 
-                                    src={currentUser.sex === 'male' ? "/data/images/boyProfile.png" : "/data/images/girlProfile.png"} 
+                                    src={getAvatarSrc()} 
                                     alt="User Avatar" 
                                     className="main-avatar-large"
                                 />
+                                <div className="avatar-overlay">📷 Сменить</div> {/* CSS для ховера */}
                                 {currentUser.isBlocked && <div className="blocked-badge">{t('status_blocked')}</div>}
+                                
+                                {/* Скрытый инпут */}
+                                <input 
+                                    type="file" 
+                                    ref={fileInputRef} 
+                                    style={{ display: 'none' }} 
+                                    accept="image/*"
+                                    onChange={handleAvatarUpload}
+                                />
                             </div>
                             
                             <div className="aside-info">

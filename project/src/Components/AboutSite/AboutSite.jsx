@@ -22,7 +22,7 @@ const AboutSite = ({ currentUser }) => {
     const userFromStorage = JSON.parse(localStorage.getItem('user'));
     const activeUser = currentUser || userFromStorage;
     const isAdmin = activeUser?.role === 'ADMIN' || activeUser?.role === 'admin';
-    const username= activeUser.name
+    const username = activeUser?.name ?? 'Гость'; 
     
     // const maxIndex = reviews.length > reviewsPerView ? reviews.length - reviewsPerView : 0;
 const maxIndex = Math.max(0, reviews.length - reviewsPerView);
@@ -175,7 +175,7 @@ const maxIndex = Math.max(0, reviews.length - reviewsPerView);
 
             <form className="add-review-styled" onSubmit={submitReview}>
                 <h3 style={{ textTransform: 'uppercase', marginBottom: '20px' }}>
-                    {activeUser ? `Оставить отзыв как ${activeUser.name || 'пользователь'}` : "Оставить отзыв"}
+                    {activeUser ? `Оставить отзыв как ${activeUser?.name || 'пользователь'}` : "Оставить отзыв"}
                 </h3>
                 <div className='rev'>
                     <textarea 

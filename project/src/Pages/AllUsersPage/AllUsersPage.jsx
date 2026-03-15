@@ -39,8 +39,8 @@ export default function AllUsersPage() {
     const dispatch = useDispatch();
     const { users, loading: loadingUsers, error: errorUsers } = useSelector(state => state.users);  
     const { questions, loading: loadingQuestions, error: errorQuestions } = useSelector(state => state.questions);
-    const { exercises, loading: loadingExercises, error: errorExercises, randomExercises } = useSelector(state => state.exercises);
-
+    const { items: exercises, status, error: errorExercises } = useSelector(state => state.exercises);
+    const loadingExercises = status === 'loading';
 
     const [pageUsers, setPageUsers] = useState(1);
     const [pageQuestions, setPageQuestions] = useState(1);

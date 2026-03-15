@@ -1,4 +1,3 @@
-// pages/AssistantPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getRandom } from '../../slices/exerciseSlice';
@@ -6,215 +5,125 @@ import WeekBlock from '../../Components/WeekBlock/WeekBlock';
 import {
   Box, FormControl, InputLabel, MenuItem, Select, Button,
   Accordion, AccordionSummary, AccordionDetails,
-  Typography
+  Typography, Alert
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import i18n from '../../i18n';
-
+import { HEALTH_RESTRICTIONS } from '../../utils/constants';
 
 export default function AssistantPage() {
   const dispatch = useDispatch();
   const t = (key) => i18n.t(key);
-  const [amount, setAmount] = useState(3);
-  const { ga = {}, loading, error } = useSelector(state => state.exercises);
-
-  const trainingPlan = JSON.parse(localStorage.getItem('trainingPlan')) || {};
-  const experience = trainingPlan.experience ?? '0-6';
-
+  
+  const { ga: gaRaw, status, error } = useSelector(state => state.exercises);
+  const ga = gaRaw ?? {};
+  const loading = status === 'loading';
   const [planData, setPlanData] = useState({
-          experience: '',
-          diseases: '',
-          workoutsPerWeek: '',
-          workoutsPerGroup: '',
-          periodWeeks: '',
-          preferences: '',
-          equipment: '',
-          duration: '',
-          sex: '',
-          cyclePhase: ''
-      });
+    experience: '0-6',
+    diseases: '',
+    workoutsPerWeek: 3,
+    equipment: 'gym'
+  });
 
-      useEffect(() => {
-        const savedPlan = localStorage.getItem('trainingPlan');
-        if (savedPlan) {
-            setPlanData(JSON.parse(savedPlan));
-        }
-    }, []);
-  const onGenerate = () => {
-    dispatch(getRandom({ amount, exp: experience }));
+  useEffect(() => {
+    const savedPlan = localStorage.getItem('trainingPlan');
+    if (savedPlan) {
+      const parsed = JSON.parse(savedPlan);
+      // Оставляем только нужные поля из сохраненных данных
+      setPlanData({
+        experience: parsed.experience || '0-6',
+        diseases: parsed.diseases || '',
+        workoutsPerWeek: parsed.workoutsPerWeek || 3,
+        equipment: parsed.equipment || 'gym'
+      });
+    }
+  }, []);
+
+  const handlePlanInputChange = (e) => {
+    const { name, value } = e.target;
+    setPlanData(prev => ({ ...prev, [name]: value }));
   };
 
-  // нормализует неделю, убирая лишние поля типа fitness
+  const onGenerate = () => {
+    // Сохраняем перед генерацией
+    localStorage.setItem('trainingPlan', JSON.stringify(planData));
+    
+    // Отправляем только 4 ключевых параметра
+    dispatch(getRandom({ 
+      amount: planData.workoutsPerWeek, 
+      exp: planData.experience,
+      restrictions: planData.diseases, 
+      equipment: planData.equipment
+    }));
+  };
+
   const normalizeWeek = (week) => {
+    if (!week) return [];
     if (Array.isArray(week)) return week;
     return Object.values(week).filter(v => Array.isArray(v));
   };
 
-  const renderWeeks = (weeks = [], titlePrefix = "Week") => (
-    weeks.map((week, i) => (
-      <Accordion key={i} sx={{ mb: 1 }}>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography>
-            {titlePrefix} {i + 1} — Score: {(week.fitness ?? 0).toFixed(3)}
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <WeekBlock week={normalizeWeek(week)} title={`${titlePrefix} ${i + 1}`} />
-        </AccordionDetails>
-      </Accordion>
-    ))
-  );
-
-  const handleCreatePlan = () => {
-        localStorage.setItem('trainingPlan', JSON.stringify(planData));
-        alert(t('alert_plan_saved'));
-    };
-    const handlePlanInputChange = (e) => {
-        const { name, value } = e.target;
-        setPlanData(prev => ({ ...prev, [name]: value }));
-    };
-
   return (
-    <div style={{ padding: 20 }}>
-<div className="planForm">
-                    <h2 className='modal-title'>{t('title_preferences')}</h2>
-                    <label>
-                        {t('plan_experience')}:
-                        <select className="select marginLeft5" name="experience" value={planData.experience} onChange={handlePlanInputChange}>
-                            <option value="">{t('opt_select')}</option>
-                            <option value="0-6">{t('exp_junior')}</option>
-                            <option value="6-18">{t('exp_middle')}</option>
-                            <option value="18+">{t('exp_senior')}</option>
-                        </select>
-                    </label>
-                    <label>
-                        {t('plan_diseases')}:
-                        <input type="text" className="select marginLeft5" name="diseases" value={planData.diseases} onChange={handlePlanInputChange} />
-                    </label>
-                    <label>
-                        {t('plan_per_week')}:
-                        <input type="number" className="select marginLeft5" name="workoutsPerWeek" value={planData.workoutsPerWeek} onChange={handlePlanInputChange} />
-                    </label>
-                    <label>
-                        {t('plan_per_group')}:
-                        <input type="number" className="select marginLeft5" name="workoutsPerGroup" value={planData.workoutsPerGroup} onChange={handlePlanInputChange} />
-                    </label>
-                    <label>
-                        {t('plan_period')}:
-                        <input type="number" className="select marginLeft5" name="periodWeeks" value={planData.periodWeeks} onChange={handlePlanInputChange} />
-                    </label>
-                    <label>
-                        {t('plan_pref_type')}:
-                        <select className="select marginLeft5" name="preferences" value={planData.preferences} onChange={handlePlanInputChange}>
-                            <option value="">{t('opt_select')}</option>
-                            <option value="strength">{t('pref_strength')}</option>
-                            <option value="cardio">{t('pref_cardio')}</option>
-                            <option value="mixed">{t('pref_mixed')}</option>
-                        </select>
-                    </label>
-                    <label>
-                        {t('plan_equipment')}:
-                        <select className="select marginLeft5" name="equipment" value={planData.equipment} onChange={handlePlanInputChange}>
-                            <option value="">{t('opt_select')}</option>
-                            <option value="gym">{t('eq_gym')}</option>
-                            <option value="dumbbells_home">{t('eq_dumbbells')}</option>
-                            <option value="nothing_home">{t('eq_nothing')}</option>
-                            <option value="pullup_bars">{t('eq_bars')}</option>
-                        </select>
-                    </label>
-                    <label>
-                        {t('plan_sex')}:
-                        <select className="select marginLeft5" name="sex" value={planData.sex} onChange={handlePlanInputChange}>
-                            <option value="">{t('opt_select')}</option>
-                            <option value="male">{t('sex_male')}</option>
-                            <option value="female">{t('sex_female')}</option>
-                        </select>
-                    </label>
-                    {planData.sex === 'female' && (
-                        <label>
-                            {t('plan_cycle')}:
-                            <select className="select marginLeft5" name="cyclePhase" value={planData.cyclePhase} onChange={handlePlanInputChange}>
-                                <option value="">{t('opt_select')}</option>
-                                <option value="menstruation">{t('cyc_menstruation')}</option>
-                                <option value="ovulation">{t('cyc_ovulation')}</option>
-                                <option value="luteal">{t('cyc_luteal')}</option>
-                            </select>
-                        </label>
-                    )}
-                    <button onClick={handleCreatePlan}>{t('btn_save_plan')}</button>
-                </div>
+    <div style={{ padding: 20, maxWidth: 800, margin: '0 auto' }}>
+      <Typography variant="h4" gutterBottom>{t('title_preferences')}</Typography>
+      
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mb: 4, p: 2, border: '1px solid #ccc', borderRadius: 2 }}>
+        
+        {/* ОПЫТ */}
+        <FormControl fullWidth>
+          <InputLabel>{t('plan_experience')}</InputLabel>
+          <Select name="experience" value={planData.experience} label={t('plan_experience')} onChange={handlePlanInputChange}>
+            <MenuItem value="0-6">{t('exp_junior')}</MenuItem>
+            <MenuItem value="6-18">{t('exp_middle')}</MenuItem>
+            <MenuItem value="18+">{t('exp_senior')}</MenuItem>
+        </Select>
+        </FormControl>
 
-      <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginBottom: 20 }}>
-        <Box sx={{ minWidth: 120 }}>
-          <FormControl fullWidth>
-            <InputLabel>Workouts / week</InputLabel>
-            <Select
-              value={amount}
-              label="Workouts / week"
-              onChange={(e) => setAmount(Number(e.target.value))}
-            >
-              {[1,2,3,4,5,6,7].map(n => <MenuItem key={n} value={n}>{n}</MenuItem>)}
-            </Select>
-          </FormControl>
-        </Box>
-        <Button variant="contained" onClick={onGenerate} disabled={loading}>
-          Generate (20 weeks)
+        {/* ОГРАНИЧЕНИЯ */}
+        <FormControl fullWidth>
+          <InputLabel>{t('plan_diseases')}</InputLabel>
+          <Select name="diseases" value={planData.diseases} label={t('plan_diseases')} onChange={handlePlanInputChange}>
+            <MenuItem value=""><em>{t('no_restrictions')}</em></MenuItem>
+            {HEALTH_RESTRICTIONS.map(item => (
+              <MenuItem key={item.id} value={item.id}>{item.label}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        {/* ОБОРУДОВАНИЕ */}
+        <FormControl fullWidth>
+          <InputLabel>{t('plan_equipment')}</InputLabel>
+          <Select name="equipment" value={planData.equipment} label={t('plan_equipment')} onChange={handlePlanInputChange}>
+            <MenuItem value="gym">{t('eq_gym')}</MenuItem>
+            <MenuItem value="home">{t('eq_dumbbells')}</MenuItem>
+            <MenuItem value="minimal">{t('eq_nothing')}</MenuItem>
+          </Select>
+        </FormControl>
+
+        {/* КОЛИЧЕСТВО ТРЕНИРОВОК */}
+        <FormControl fullWidth>
+          <InputLabel>{t('plan_per_week')}</InputLabel>
+          <Select name="workoutsPerWeek" value={planData.workoutsPerWeek} label={t('plan_per_week')} onChange={(e) => setPlanData(prev => ({...prev, workoutsPerWeek: Number(e.target.value)}))}>
+            {[2, 3, 4, 5].map(n => <MenuItem key={n} value={n}>{n}</MenuItem>)}
+          </Select>
+        </FormControl>
+
+        <Button variant="contained" color="primary" size="large" onClick={onGenerate} disabled={loading}>
+          {loading ? t('loading') : t('btn_generate_plan')}
         </Button>
-      </div>
+      </Box>
 
-      {loading && <p>Loading...</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
 
-      {/* Initial population */}
-      {ga.initialPopulation?.length > 0 && (
-        <>
-          <h2>Initial population (20 weeks)</h2>
-          {renderWeeks(ga.initialPopulation, "Initial week")}
-        </>
-      )}
-
-      {/* Generations */}
-      {ga.generations?.length > 0 && (
-        <>
-          <h2>Evolution steps</h2>
-          {ga.generations.map((g) => (
-            <Accordion key={g.gen} sx={{ mb: 2 }}>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography>
-                  Generation {g.gen} — Best fitness: {g.bestFitness.toFixed(3)}
-                </Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <WeekBlock week={normalizeWeek(g.best)} title={`Best of generation ${g.gen}`} />
-              </AccordionDetails>
-            </Accordion>
-          ))}
-        </>
-      )}
-
-      {/* Final population */}
-      {ga.finalPopulation?.length > 0 && (
-        <>
-          <h2>Final population (20 weeks)</h2>
-          {renderWeeks(ga.finalPopulation, "Final week")}
-        </>
-      )}
-
-      {/* Best week */}
+      {/* ОТОБРАЖЕНИЕ РЕЗУЛЬТАТА (Только финальный план на 1 неделю) */}
       {ga.bestWeek && (
-        <>
-          <h2>Your optimized training plan</h2>
-          <Accordion sx={{ mb: 2 }}>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography>
-                Best week — Score: {ga.bestFitness?.toFixed(3)}
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <WeekBlock week={normalizeWeek(ga.bestWeek)} title="Best week" />
-            </AccordionDetails>
-          </Accordion>
-        </>
+        <Box>
+          <Typography variant="h5" gutterBottom>{t('your_optimized_plan')}</Typography>
+          <WeekBlock week={normalizeWeek(ga.bestWeek)} title={t('single_week_plan')} />
+          <Typography variant="caption" color="textSecondary">
+            Fitness Score: {ga.bestFitness?.toFixed(3)}
+          </Typography>
+        </Box>
       )}
     </div>
   );

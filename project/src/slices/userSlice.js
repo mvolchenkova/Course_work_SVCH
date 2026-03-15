@@ -120,6 +120,34 @@ export const updateNoteThunk = createAsyncThunk(
   }
 );
 
+export const uploadAvatarThunk = createAsyncThunk(
+    'user/uploadAvatar',
+    async ({ userId, file }, thunkAPI) => {
+        try {
+            const formData = new FormData();
+            formData.append('avatar', file); // Имя 'avatar' должно совпадать с upload.single('avatar') в роутере
+            formData.append('userId', userId);
+
+            const response = await axios.post('http://localhost:5000/api/users/upload-avatar', formData, {
+                // ВАЖНО: Убираем ручную установку Content-Type, 
+                // позволяя axios и браузеру сделать это самим.
+                headers: {
+                    'Accept': 'application/json',
+                }
+            });
+
+            // Обновляем localStorage
+            const user = JSON.parse(localStorage.getItem('user'));
+            const updatedUser = { ...user, avatar: response.data.avatar };
+            localStorage.setItem('user', JSON.stringify(updatedUser));
+
+            return response.data.avatar;
+        } catch (e) {
+            return thunkAPI.rejectWithValue(e.response?.data?.message || e.message);
+        }
+    }
+);
+
 const userSlice = createSlice({
     name: 'users',
     initialState,
@@ -220,6 +248,11 @@ const userSlice = createSlice({
             })
             .addCase(deleteNoteThunk.fulfilled, (state, action) => {
                 state.notes = state.notes.filter(n => n.id !== action.payload);
+            })
+            .addCase(uploadAvatarThunk.fulfilled, (state, action) => {
+            if (state.currentUser) {
+                state.currentUser.avatar = action.payload;
+            }
             });
     },
 });
