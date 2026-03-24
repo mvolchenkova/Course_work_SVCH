@@ -4,26 +4,21 @@ const { Op } = require('sequelize');
 
 const productController = {
     createProduct: async (req, res) => {
-        console.log("!!! ЗАПРОС ПРИШЕЛ НА СЕРВЕР !!!");
-    console.log("Данные из тела запроса:", req.body);
         try {
-            // Фронтенд присылает { name, calories, protein, fat, carbs }
             const { name, calories, protein, fat, carbs } = req.body;
 
             if (!name) {
                 return res.status(400).json({ message: "Название продукта обязательно" });
             }
 
-            // Используем метод .create() — это стандарт Sequelize
             const newProduct = await Product.create({
-                productName: name, // Маппим 'name' с фронта в 'productName' базы
+                productName: name, 
                 calories: calories || 0,
                 protein: protein || 0,
                 fat: fat || 0,
                 carbs: carbs || 0
             });
 
-            // Возвращаем созданный объект
             res.status(201).json(newProduct);
         } catch (error) {
             console.error("Ошибка при создании продукта:", error);

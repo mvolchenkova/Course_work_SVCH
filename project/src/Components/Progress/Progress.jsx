@@ -242,15 +242,15 @@ export default function Progress() {
             </button>
 
             <div className="notes-preview">
-                <h3>Notes</h3>
+                <h3>Заметки</h3>
 
                 <textarea
                     value={noteText}
                     onChange={(e) => setNoteText(e.target.value)}
-                    placeholder="Write a note..."
+                    placeholder="Написать заметку..."
                 />
 
-                <button onClick={handleAddNote}>Save</button>
+                <button onClick={handleAddNote}>Сохранить</button>
 
                 {/* Всегда отображаем последние 2 заметки (если есть) */}
                 {notes.length > 0 && notes.slice(-2).map(note => (
@@ -261,7 +261,7 @@ export default function Progress() {
 
                 {/* Ссылка на страницу всех заметок */}
                 <Link to="/notes" className="view-all-notes">
-                    View All Notes
+                    Все заметки
                 </Link>
             </div>
             

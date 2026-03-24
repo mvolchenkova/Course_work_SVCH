@@ -118,7 +118,7 @@ const RecipeIngredient = sequelize.define('recipe_ingredient', {
     id: { type: DataTypes.BIGINT, primaryKey: true, autoIncrement: true },
     idRecipe: { type: DataTypes.BIGINT, references: { model: 'recipes', key: 'idRecipe' } },
     name: { type: DataTypes.TEXT, allowNull: false },
-    amount: { type: DataTypes.TEXT } // Например, "200г" или "2 шт"
+    amount: { type: DataTypes.TEXT } 
 });
 
 // 1НФ: Выносим инструкции (шаги приготовления)

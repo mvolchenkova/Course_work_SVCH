@@ -2,6 +2,10 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchWeightsThunk, addWeightThunk } from "../../slices/weightSlice";
 import "./WeightDiary.css";
+import {jsPDF} from 'jspdf';
+import 'jspdf-autotable';
+import html2canvas from 'html2canvas';
+import { useRef } from 'react';
 
 // Импортируем компоненты из Chart.js
 import {
@@ -28,6 +32,7 @@ ChartJS.register(
 );
 
 export default function WeightDiary() {
+  const chartRef = useRef(null);
   const dispatch = useDispatch();
   const userId = Number(localStorage.getItem("userId"));
 
@@ -107,15 +112,86 @@ export default function WeightDiary() {
     },
   };
 
+  const handleDownloadReport = async () => {
+    try {
+        if (sortedWeights.length === 0) return;
+
+        // 2. Инициализация (убедимся, что параметры - строки)
+        const doc = new jsPDF({
+            orientation: 'p',
+            unit: 'mm',
+            format: 'a4'
+        });
+
+        const accentColor = [0, 200, 220];
+        
+        // Шапка
+        doc.setFillColor(245, 245, 245);
+        doc.rect(0, 0, 210, 40, 'F');
+        
+        doc.setFontSize(22);
+        doc.setTextColor(40, 40, 40);
+        doc.text("WEIGHT PROGRESS REPORT", 14, 25);
+
+        // 3. Захват графика с проверкой
+        if (chartRef.current) {
+            const canvas = await html2canvas(chartRef.current, {
+                scale: 2, // Улучшаем качество скриншота
+                logging: false,
+                useCORS: true
+            });
+            
+            const imgData = canvas.toDataURL('image/png');
+            
+            // Проверяем, что imgData не пустой
+            if (imgData && imgData !== "data:,") {
+                // Вставляем изображение: x, y, width, height
+                doc.addImage(imgData, 'PNG', 14, 70, 180, 90, undefined, 'FAST');
+            }
+        }
+
+        // 4. Статистика
+        const startW = Number(sortedWeights[0].weight);
+        const currentW = Number(sortedWeights[sortedWeights.length - 1].weight);
+        const diff = (currentW - startW).toFixed(1);
+
+        doc.setFontSize(12);
+        doc.setTextColor(0, 0, 0);
+        doc.text(`Start: ${startW} kg`, 14, 55);
+        doc.text(`Current: ${currentW} kg`, 60, 55);
+        doc.text(`Change: ${diff > 0 ? '+' : ''}${diff} kg`, 110, 55);
+
+        // 5. Таблица (используем плагин autotable через doc.autoTable)
+        const tableRows = sortedWeights.map(w => [
+            new Date(w.date).toLocaleDateString(),
+            `${w.weight} kg`
+        ]);
+
+        doc.autoTable({
+            startY: 170, // Смещаем ниже графика
+            head: [['Date', 'Weight']],
+            body: tableRows,
+            headStyles: { fillColor: accentColor },
+            margin: { left: 14, right: 14 }
+        });
+
+        doc.save(`Weight_Report_${userId}.pdf`);
+
+    } catch (err) {
+        console.error("Ошибка при генерации PDF:", err);
+        alert("Не удалось создать отчет. Проверьте консоль для деталей.");
+    }
+};
+
   return (
     <div className="weight-diary-container artika">
-      <h2>Weight Diary</h2>
+      <h2>Дневник веса</h2>
 
       <div className="weight-inputs artika">
         <input
           type="number"
           step="0.1"
-          placeholder="Weight (kg)"
+          placeholder="Вес (kg)"
           value={weightInput}
           onChange={(e) => setWeightInput(e.target.value)}
         />
@@ -126,16 +202,18 @@ export default function WeightDiary() {
           onChange={(e) => setDateInput(e.target.value)}
         />
 
-        <button onClick={handleAddWeight}>Add</button>
+        <button onClick={handleAddWeight}>Добавить</button>
+        <button onClick={handleDownloadReport}>Отчет</button>
       </div>
 
       {sortedWeights.length > 0 ? (
-        <div style={{ width: "800px", height: "350px", marginTop: "30px" }}>
+        <div ref={chartRef} style={{ width: "800px", height: "350px", marginTop: "30px" }}>
           <Line data={chartData} options={chartOptions} />
         </div>
       ) : (
-        <p style={{ marginTop: "20px" }}>No weight records yet</p>
+        <p style={{ marginTop: "20px" }}>Еще нет записей</p>
       )}
+
 
       <div className="weight-list">
         {sortedWeights.map((entry) => (
@@ -145,6 +223,7 @@ export default function WeightDiary() {
           </div>
         ))}
       </div>
+      
     </div>
   );
 }

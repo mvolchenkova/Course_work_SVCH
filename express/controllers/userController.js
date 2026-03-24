@@ -33,6 +33,7 @@ class UserController {
             body('phone').notEmpty().withMessage('Phone required').withMessage('Invalid phone number format'),
             body('password').notEmpty().withMessage('Password required').isLength({ min: 6 }).withMessage('The password must be at least 6 characters'),
             body('sex').isIn(['male', 'female']).withMessage('Sex should be male/female'), 
+            body('role').isIn(['user', 'trainer']).withMessage('Invalid role type'),
         ];
     
         await Promise.all(validationRules.map(validation => validation.run(req)));
@@ -45,24 +46,22 @@ class UserController {
     
         try {
             const { surname, name, phone, password, birthdate, sex, role } = req.body;
-    const hashPassword = await bcrypt.hash(password, 15);
-    
-    const user = await User.create({ surname, name, phone, password: hashPassword, birthdate, sex, role });
-    
-    // Вместо просто json(user), вернем объект явно, чтобы убедиться, что idUser там есть
-    return res.status(201).json({
-        idUser: user.idUser, // Вот этот ключ критически важен!
-        name: user.name,
-        surname: user.surname,
-        phone: user.phone,
-        role: user.role
-    });}
-     catch (error) {
-            console.error('Ошибка при создании пользователя:', error);
-            return res.status(500).json({ message: 'Ошибка при создании пользователя' });
-        }
-    }
-    // Получение списка записей с поддержкой пагинации
+            const hashPassword = await bcrypt.hash(password, 15);
+            
+            const user = await User.create({ surname, name, phone, password: hashPassword, birthdate, sex, role: role || 'user' });
+            
+            return res.status(201).json({
+                idUser: user.idUser, 
+                name: user.name,
+                surname: user.surname,
+                phone: user.phone,
+                role: user.role
+            });}
+            catch (error) {
+                    console.error('Ошибка при создании пользователя:', error);
+                    return res.status(500).json({ message: 'Ошибка при создании пользователя' });
+                }
+            }
     async getAll(req, res) {
         try {
             const { page = 1, limit = 10 } = req.query;

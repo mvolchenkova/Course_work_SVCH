@@ -1,26 +1,17 @@
 import '../Registration/Registration.css';
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import Checkbox from '@mui/material/Checkbox';
 import axios from 'axios';
 
 const API_URL = 'http://localhost:5000';
-const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
 export default function Registration() {
     const navigate = useNavigate();
-
     const [formData, setFormData] = React.useState({
-        surname: '',
-        name: '',
-        phone: '',
-        birthdate: '',
-        password: '',
-        repeatPassword: '',
-        sex: '',
+        surname: '', name: '', phone: '', birthdate: '',
+        password: '', repeatPassword: '', sex: '', role: 'user'
     });
-
     const [agreed, setAgreed] = React.useState(false);
     const [errorMsg, setErrorMsg] = React.useState('');
 
@@ -31,151 +22,84 @@ export default function Registration() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setErrorMsg('');
-
-        if (formData.password !== formData.repeatPassword) {
-            setErrorMsg('Пароли не совпадают!');
-            return;
-        }
-
-        if (!agreed) {
-            setErrorMsg('Необходимо принять пользовательское соглашение');
-            return;
-        }
+        if (formData.password !== formData.repeatPassword) return setErrorMsg('Пароли не совпадают!');
+        if (!agreed) return setErrorMsg('Примите соглашение');
 
         try {
-            const response = await axios.post(`${API_URL}/api/users`, {
-                surname: formData.surname,
-                name: formData.name,
-                phone: formData.phone,
-                password: formData.password,
-                birthdate: formData.birthdate,
-                sex: formData.sex,
-                role: 'user',
-            });
-
-            // Сохраняем только нужное — один объект user, не россыпь ключей
+            const response = await axios.post(`${API_URL}/api/users`, formData);
             localStorage.setItem('user', JSON.stringify(response.data));
             localStorage.setItem('userId', response.data.idUser);
-            localStorage.setItem('favPlans', JSON.stringify([]));
-            localStorage.setItem('favRecipes', JSON.stringify([]));
-
             navigate('/homePage');
         } catch (error) {
-            console.error('Ошибка при регистрации:', error);
-            // Показываем первую ошибку валидации с бэкенда, если есть
-            const backendError = error.response?.data?.errors?.[0]?.msg
-                || error.response?.data?.message
-                || 'Ошибка при регистрации. Попробуйте ещё раз.';
-            setErrorMsg(backendError);
+            setErrorMsg(error.response?.data?.message || 'Ошибка регистрации');
         }
     };
 
     return (
-        <div className="regAuthDiv">
-            <img src="data/images/regBoy.png" alt="Registration" className="regImg" />
-            <form className="regAuthForm" onSubmit={handleSubmit}>
-                <h2>Registration</h2>
+        <div className='mainDiv'>
+            <div className="regAuthContainer">
+                <div className="regFormWrapper">
+                    <form className="regModernForm" onSubmit={handleSubmit}>
+                        <div className="formHeader">
+                            <h2>Создать аккаунт</h2>
+                            <p>Уже есть аккаунт? <Link to="/authorization" className="yellowText">Войти</Link></p>
+                        </div>
 
-                <div className="formGroup">
-                    <label htmlFor="surname">Surname</label>
-                    <input
-                        type="text"
-                        id="surname"
-                        value={formData.surname}
-                        onChange={handleChange}
-                        required
-                    />
+                        <div className="inputsGrid">
+                            <div className="formGroup">
+                                <label>Имя</label>
+                                <input type="text" id="name" placeholder="Иван" value={formData.name} onChange={handleChange} required />
+                            </div>
+                            <div className="formGroup">
+                                <label>Фамилия</label>
+                                <input type="text" id="surname" placeholder="Иванов" value={formData.surname} onChange={handleChange} required />
+                            </div>
+                            <div className="formGroup">
+                                <label>Телефон</label>
+                                <input type="text" id="phone" placeholder="+7 (999) 000-00-00" value={formData.phone} onChange={handleChange} required />
+                            </div>
+                            <div className="formGroup">
+                                <label>Дата рождения</label>
+                                <input type="date" id="birthdate" value={formData.birthdate} onChange={handleChange} required />
+                            </div>
+                            <div className="formGroup">
+                                <label>Пароль</label>
+                                <input type="password" id="password" placeholder="••••••••" value={formData.password} onChange={handleChange} required />
+                            </div>
+                            <div className="formGroup">
+                                <label>Повтор пароля</label>
+                                <input type="password" id="repeatPassword" placeholder="••••••••" value={formData.repeatPassword} onChange={handleChange} required />
+                            </div>
+                            <div className="formGroup">
+                                <label>Пол</label>
+                                <select id="sex" value={formData.sex} onChange={handleChange} required>
+                                    <option value="">Выбрать</option>
+                                    <option value="male">Мужской</option>
+                                    <option value="female">Женский</option>
+                                </select>
+                            </div>
+                            <div className="formGroup">
+                                <label>Я пришел как...</label>
+                                <select id="role" className="roleSelect" value={formData.role} onChange={handleChange} required>
+                                    <option value="user">Атлет</option>
+                                    <option value="trainer">Тренер</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        {errorMsg && <div className="errorBadge">{errorMsg}</div>}
+
+                        <div className="agreementRow">
+                            <Checkbox checked={agreed} onChange={(e) => setAgreed(e.target.checked)} 
+                                sx={{ color: '#FFD700', '&.Mui-checked': { color: '#FFD700' } }} />
+                            <p>Я согласен с <Link to="/userAgreement" className="yellowText">пользовательским соглашением</Link></p>
+                        </div>
+
+                        <button type="submit" className="mainRegBtn">Зарегистрироваться</button>
+                    </form>
                 </div>
-
-                <div className="formGroup">
-                    <label htmlFor="name">Name</label>
-                    <input
-                        type="text"
-                        id="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-
-                <div className="formGroup">
-                    <label htmlFor="phone">Phone</label>
-                    <input
-                        type="text"
-                        id="phone"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-
-                <div className="formGroup">
-                    <label htmlFor="birthdate">Birth date</label>
-                    <input
-                        type="date"
-                        id="birthdate"
-                        value={formData.birthdate}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-
-                <div className="formGroup">
-                    <label htmlFor="password">Password</label>
-                    <input
-                        type="password"
-                        id="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-
-                <div className="formGroup">
-                    <label htmlFor="repeatPassword">Repeat password</label>
-                    <input
-                        type="password"
-                        id="repeatPassword"
-                        value={formData.repeatPassword}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-
-                {/* select вместо input — бэкенд принимает только 'male' | 'female' */}
-                <div className="formGroup">
-                    <label htmlFor="sex">Sex</label>
-                    <select id="sex" value={formData.sex} onChange={handleChange} required>
-                        <option value="">Выберите пол</option>
-                        <option value="male">Мужской</option>
-                        <option value="female">Женский</option>
-                    </select>
-                </div>
-
-                {/* Ошибка — одно место вместо alert */}
-                {errorMsg && (
-                    <div className="error-message" style={{ color: 'red', marginBottom: '10px' }}>
-                        {errorMsg}
-                    </div>
-                )}
-
-                <button type="submit" className="btnReg">Registration</button>
-
-                <div className='checkboxDiv'>
-                    <Checkbox
-                        {...label}
-                        checked={agreed}
-                        onChange={(e) => setAgreed(e.target.checked)}
-                    />
-                    <p>
-                        I agree to the terms of{' '}
-                        <Link to="/userAgreement">
-                            <span className="yellowText">USER AGREEMENT</span>
-                        </Link>
-                    </p>
-                </div>
-            </form>
+            </div>
         </div>
+        
     );
 }

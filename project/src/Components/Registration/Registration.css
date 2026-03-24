@@ -1,59 +1,136 @@
-.regAuthDiv{
+/* Основной контейнер-обертка */
+.regAuthContainer {
     display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    flex-wrap: wrap;
+    height: min-content;
+    width: min-content  ;
+    background-color: #ffffff61;
+    border-radius: 20px;
+}
+
+.mainDiv{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.regSideImage img {
     width: 100%;
-    align-items:center;
-}
-.regImg{
-    width: fit-content;
-    height: fit-content;
-}
-.formGroup {
-    margin-bottom: 15px;
-    width: 150px; 
+    height: 100%;
+    object-fit: cover;
 }
 
-label {
-    display: block; /* Блоковое отображение меток */
-    margin-bottom: 5px; /* Отступ между меткой и полем ввода */
+/* Правая часть с формой */
+.regFormWrapper {
+    flex: 1.2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
 }
 
-input {
-    background-color: transparent;
-    width: 200px; /* Полная ширина полей ввода */
-    padding: 10px; /* Внутренний отступ */
-    border-radius: 5px; /* Скругление углов */
-    border: 1px solid black;
-}
-#surname, #name, #birthdate, #repeatPassword, #sex{
-    width: 230px;
-}
-Link{
-    text-decoration: none;
-}
-.registerPrompt {
-    margin-top: 15px; /* Отступ сверху */
-}
-.regAuthForm{
+.regModernForm {
+    width: 100%;
+    max-width: 500px;
     display: flex;
     flex-direction: column;
-    align-items:center;
-    justify-content: space-between;
-    width: 30%;
-    gap:0
+    gap: 20px;
 }
-.checkboxDiv{
+
+.formHeader h2 {
+    font-size: 2rem;
+    margin-bottom: 5px;
+    font-family: 'artika', sans-serif;
+}
+
+/* Сетка полей в две колонки */
+.inputsGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Две равные колонки */
+    gap: 15px;
+}
+
+.formGroup {
     display: flex;
-    flex-direction: row;
-    align-items:center;
+    flex-direction: column;
 }
-button{
-    background-color: rgb(0, 200, 220);
-    font-family: 'artika';
+
+.formGroup label {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.formGroup input, 
+.formGroup select {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    background-color: #f9f9f9;
+    transition: all 0.3s ease;
+    width: 100%; /* Теперь они подстраиваются под колонку */
+    box-sizing: border-box;
+}
+
+.formGroup input:focus, 
+.formGroup select:focus {
+    outline: none;
+    border-color: #FFD700; /* Желтый акцент при фокусе */
+    background-color: #fff;
+    box-shadow: 0 0 5px rgba(255, 215, 0, 0.2);
+}
+
+/* Ошибка */
+.errorBadge {
+    background-color: #ffebee;
+    color: #c62828;
     padding: 10px;
+    border-radius: 5px;
+    font-size: 13px;
+    text-align: center;
+}
+
+/* Соглашение и чекбокс */
+.agreementRow {
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+}
+
+.agreementRow p {
+    margin: 0;
+}
+
+.yellowText {
+    color: #e6c200;
     font-weight: bold;
-    border-radius: 10px;
+    text-decoration: none;
+}
+
+/* Кнопка регистрации */
+.mainRegBtn {
+    background-color: #00c8dc; 
+    padding: 15px;
     border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    text-transform: uppercase;
+}
+
+.mainRegBtn:hover {
+    background-color: #00b4c8;
+    transform: translateY(-1px);
+}
+
+/* Адаптивность для мобилок */
+@media (max-width: 900px) {
+    .regSideImage {
+        display: none; /* Прячем картинку на телефонах */
+    }
+    .inputsGrid {
+        grid-template-columns: 1fr; /* Поля в одну колонку */
+    }
 }

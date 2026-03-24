@@ -1,0 +1,87 @@
+/* Центрирование и фон как на страницах входа */
+.assistantMainDiv {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* Контейнер-карточка */
+.assistantContainer {
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 850px; /* Шире, так как данных много */
+    padding: 40px;
+    box-sizing: border-box;
+}
+
+/* Заголовок в стиле формы */
+.assistantHeader h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    font-family: 'artika', sans-serif;
+    color: #000;
+    text-align: center;
+}
+
+/* Сетка параметров (аналог inputsGrid) */
+.paramsGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+/* Стилизация MUI Select и Input через CSS (если не хватает sx) */
+.assistantContainer .MuiOutlinedInput-root {
+    border-radius: 10px;
+    background-color: #f9f9f9;
+}
+
+.assistantContainer .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: #00c8dc !important;
+}
+
+.assistantContainer .MuiInputLabel-root.Mui-focused {
+    color: #00b4c8 !important;
+}
+
+/* Кнопка генерации в вашем стиле */
+.generateBtn {
+    background-color: #00c8dc !important;
+    color: white !important;
+    padding: 16px !important;
+    border-radius: 12px !important;
+    font-size: 16px !important;
+    font-weight: bold !important;
+    transition: all 0.3s ease !important;
+    text-transform: uppercase !important;
+    box-shadow: none !important;
+}
+
+.generateBtn:hover {
+    background-color: #00b4c8 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 200, 220, 0.3) !important;
+}
+
+/* Результат (план) */
+.planResultSection {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px solid #f0f0f0;
+}
+
+/* Адаптивность */
+@media (max-width: 600px) {
+    .paramsGrid {
+        grid-template-columns: 1fr;
+    }
+    .assistantContainer {
+        padding: 20px;
+    }
+}

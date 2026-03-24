@@ -10,6 +10,7 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import i18n from '../../i18n';
 import { HEALTH_RESTRICTIONS } from '../../utils/constants';
+import '../AssistantPage/AssistantPage.css'
 
 export default function AssistantPage() {
   const dispatch = useDispatch();
@@ -63,69 +64,86 @@ export default function AssistantPage() {
     return Object.values(week).filter(v => Array.isArray(v));
   };
 
-  return (
-    <div style={{ padding: 20, maxWidth: 800, margin: '0 auto' }}>
-      <Typography variant="h4" gutterBottom>{t('title_preferences')}</Typography>
-      
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mb: 4, p: 2, border: '1px solid #ccc', borderRadius: 2 }}>
+return (
+    <div className="assistantMainDiv"> {/* Общая обертка */}
+      <div className="assistantContainer"> {/* Карточка */}
         
-        {/* ОПЫТ */}
-        <FormControl fullWidth>
-          <InputLabel>{t('plan_experience')}</InputLabel>
-          <Select name="experience" value={planData.experience} label={t('plan_experience')} onChange={handlePlanInputChange}>
-            <MenuItem value="0-6">{t('exp_junior')}</MenuItem>
-            <MenuItem value="6-18">{t('exp_middle')}</MenuItem>
-            <MenuItem value="18+">{t('exp_senior')}</MenuItem>
-        </Select>
-        </FormControl>
+        <div className="assistantHeader">
+          <h2>{t('title_preferences')}</h2>
+          <p style={{ textAlign: 'center', color: '#666', marginBottom: '20px' }}>
+            Настройте параметры для создания оптимального плана
+          </p>
+        </div>
 
-        {/* ОГРАНИЧЕНИЯ */}
-        <FormControl fullWidth>
-          <InputLabel>{t('plan_diseases')}</InputLabel>
-          <Select name="diseases" value={planData.diseases} label={t('plan_diseases')} onChange={handlePlanInputChange}>
-            <MenuItem value=""><em>{t('no_restrictions')}</em></MenuItem>
-            {HEALTH_RESTRICTIONS.map(item => (
-              <MenuItem key={item.id} value={item.id}>{item.label}</MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <div className="paramsGrid"> {/* Сетка 2х2 */}
+          {/* ОПЫТ */}
+          <FormControl fullWidth>
+            <InputLabel>{t('plan_experience')}</InputLabel>
+            <Select name="experience" value={planData.experience} label={t('plan_experience')} onChange={handlePlanInputChange}>
+              <MenuItem value="0-6">{t('exp_junior')}</MenuItem>
+              <MenuItem value="6-18">{t('exp_middle')}</MenuItem>
+              <MenuItem value="18+">{t('exp_senior')}</MenuItem>
+            </Select>
+          </FormControl>
 
-        {/* ОБОРУДОВАНИЕ */}
-        <FormControl fullWidth>
-          <InputLabel>{t('plan_equipment')}</InputLabel>
-          <MenuItem value="gym">{t('eq_gym')}</MenuItem>
-          <MenuItem value="dumbbells_barbell">{t('eq_dumbbells_barbell')}</MenuItem>
-          <MenuItem value="dumbbells">{t('eq_dumbbells')}</MenuItem>
-          <MenuItem value="barbell">{t('eq_barbell')}</MenuItem>
-          <MenuItem value="fitnessband">{t('eq_band')}</MenuItem>
-          <MenuItem value="minimal">{t('eq_nothing')}</MenuItem>
-        </FormControl>
+          {/* ОГРАНИЧЕНИЯ */}
+          <FormControl fullWidth>
+            <InputLabel>{t('plan_diseases')}</InputLabel>
+            <Select name="diseases" value={planData.diseases} label={t('plan_diseases')} onChange={handlePlanInputChange}>
+              <MenuItem value=""><em>{t('no_restrictions')}</em></MenuItem>
+              {HEALTH_RESTRICTIONS.map(item => (
+                <MenuItem key={item.id} value={item.id}>{item.label}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
 
-        {/* КОЛИЧЕСТВО ТРЕНИРОВОК */}
-        <FormControl fullWidth>
-          <InputLabel>{t('plan_per_week')}</InputLabel>
-          <Select name="workoutsPerWeek" value={planData.workoutsPerWeek} label={t('plan_per_week')} onChange={(e) => setPlanData(prev => ({...prev, workoutsPerWeek: Number(e.target.value)}))}>
-            {[2, 3, 4, 5].map(n => <MenuItem key={n} value={n}>{n}</MenuItem>)}
-          </Select>
-        </FormControl>
+          {/* ОБОРУДОВАНИЕ */}
+          <FormControl fullWidth>
+            <InputLabel>{t('plan_equipment')}</InputLabel>
+            <Select name="equipment" value={planData.equipment} label={t('plan_equipment')} onChange={handlePlanInputChange}>
+              <MenuItem value="gym">{t('eq_gym')}</MenuItem>
+              <MenuItem value="dumbbells_barbell">{t('eq_dumbbells_barbell')}</MenuItem>
+              <MenuItem value="dumbbells">{t('eq_dumbbells')}</MenuItem>
+              <MenuItem value="barbell">{t('eq_barbell')}</MenuItem>
+              <MenuItem value="fitnessband">{t('eq_band')}</MenuItem>
+              <MenuItem value="minimal">{t('eq_nothing')}</MenuItem>
+            </Select>
+          </FormControl>
 
-        <Button variant="contained" color="primary" size="large" onClick={onGenerate} disabled={loading}>
+          {/* КОЛИЧЕСТВО ТРЕНИРОВОК */}
+          <FormControl fullWidth>
+            <InputLabel>{t('plan_per_week')}</InputLabel>
+            <Select name="workoutsPerWeek" value={planData.workoutsPerWeek} label={t('plan_per_week')} onChange={(e) => setPlanData(prev => ({...prev, workoutsPerWeek: Number(e.target.value)}))}>
+              {[2, 3, 4, 5].map(n => <MenuItem key={n} value={n}>{n}</MenuItem>)}
+            </Select>
+          </FormControl>
+        </div>
+
+        <Button 
+          variant="contained" 
+          className="generateBtn" 
+          fullWidth 
+          onClick={onGenerate} 
+          disabled={loading}
+        >
           {loading ? t('loading') : t('btn_generate_plan')}
         </Button>
-      </Box>
 
-      {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+        {error && <Alert severity="error" sx={{ mt: 2, borderRadius: '10px' }}>{error}</Alert>}
 
-      {/* ОТОБРАЖЕНИЕ РЕЗУЛЬТАТА (Только финальный план на 1 неделю) */}
-      {ga.bestWeek && (
-        <Box>
-          <Typography variant="h5" gutterBottom>{t('your_optimized_plan')}</Typography>
-          <WeekBlock week={normalizeWeek(ga.bestWeek)} title={t('single_week_plan')} />
-          <Typography variant="caption" color="textSecondary">
-            Fitness Score: {ga.bestFitness?.toFixed(3)}
-          </Typography>
-        </Box>
-      )}
+        {/* ОТОБРАЖЕНИЕ РЕЗУЛЬТАТА */}
+        {ga.bestWeek && (
+          <Box className="planResultSection">
+            <Typography variant="h5" sx={{ fontFamily: 'artika', mb: 2 }}>
+              {t('your_optimized_plan')}
+            </Typography>
+            <WeekBlock week={normalizeWeek(ga.bestWeek)} title={t('single_week_plan')} />
+            <Typography variant="caption" sx={{ mt: 1, display: 'block', color: 'grey.500' }}>
+              Fitness Score: {ga.bestFitness?.toFixed(3)}
+            </Typography>
+          </Box>
+        )}
+      </div>
     </div>
   );
 }
